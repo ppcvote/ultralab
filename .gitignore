@@ -24,3 +24,8 @@ Thumbs.db
 scripts/
 
 .vercel
+
+# Sensitive keys — NEVER commit
+**/firebase-key.json
+**/service-account*.json
+deploy_package/
