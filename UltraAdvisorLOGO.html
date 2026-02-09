@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra Advisor - Static Logo</title>
+    <style>
+        :root {
+            --bg-color: #050b14;
+            --grid-line: rgba(77, 163, 255, 0.05);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        svg {
+            width: 320px;
+            height: 420px;
+            overflow: visible;
+        }
+
+        .logo-path {
+            fill: none;
+            stroke-width: 14;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 1; /* Changed from 0 to 1 for static visibility */
+        }
+
+        #purpleLine {
+            stroke-width: 10.2;
+        }
+
+        .glow-blue {
+            filter: drop-shadow(0 0 12px rgba(46, 107, 255, 0.7));
+        }
+        
+        .glow-red {
+            filter: drop-shadow(0 0 12px rgba(255, 58, 58, 0.7));
+        }
+        
+        .glow-purple-stretched {
+            filter: url(#stretched-glow);
+        }
+
+        .text-group {
+            margin-top: 10px;
+            text-align: center;
+            opacity: 1; /* Changed from 0 to 1 */
+            transform: translateY(0); /* Removed Y offset */
+        }
+
+        .main-title {
+            font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .sub-title {
+            font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+            font-size: 12px;
+            color: #4DA3FF;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <svg viewBox="0 0 320 420">
+            <defs>
+                <linearGradient id="gradBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#4DA3FF" />
+                    <stop offset="100%" style="stop-color:#2E6BFF" />
+                </linearGradient>
+
+                <linearGradient id="gradRed" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FF6A6A" />
+                    <stop offset="100%" style="stop-color:#FF3A3A" />
+                </linearGradient>
+
+                <!-- 
+                   PURPLE GRADIENT (Static)
+                -->
+                <linearGradient id="gradPurpleNode" gradientUnits="userSpaceOnUse" x1="91.5" y1="0" x2="228.5" y2="0">
+                    <stop offset="0%" style="stop-color:#8A5CFF; stop-opacity: 0" />
+                    <stop offset="20%" style="stop-color:#CE4DFF; stop-opacity: 0.5" />
+                    <stop offset="50%" style="stop-color:#E8E0FF; stop-opacity: 1" />
+                    <stop offset="80%" style="stop-color:#CE4DFF; stop-opacity: 0.5" />
+                    <stop offset="100%" style="stop-color:#8A5CFF; stop-opacity: 0" />
+                </linearGradient>
+
+                <!-- SVG FILTER: Horizontal Stretch -->
+                <filter id="stretched-glow" filterUnits="userSpaceOnUse" x="0" y="0" width="320" height="420">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="28 1" result="blur" />
+                    <feColorMatrix in="blur" type="matrix" values="
+                        0 0 0 0 0.6 
+                        0 0 0 0 0.4 
+                        0 0 0 0 1 
+                        0 0 0 0.9 0" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <!-- Blue Curve (U Left / A Right Leg) -->
+            <path id="blueLine" class="logo-path glow-blue" stroke="url(#gradBlue)"
+                  d="M 90,40 C 90,160 130,220 242,380" />
+
+            <!-- Red Curve (U Right / A Left Leg) -->
+            <path id="redLine" class="logo-path glow-red" stroke="url(#gradRed)"
+                  d="M 230,40 C 230,160 190,220 78,380" />
+
+            <!-- Purple Line -->
+            <path id="purpleLine" class="logo-path glow-purple-stretched" stroke="url(#gradPurpleNode)"
+                  d="M 91.5,314 L 228.5,314" />
+        </svg>
+
+        <div class="text-group" id="textGroup">
+            <div class="main-title">ULTRA ADVISOR</div>
+            <div class="sub-title">AI FINANCIAL PLATFORM</div>
+        </div>
+    </div>
+
+</body>
+</html>

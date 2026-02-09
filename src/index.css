@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ===== Custom Theme ===== */
+@theme {
+  --font-outfit: 'Outfit', system-ui, sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
+
+  --color-lab-bg: #0A0515;
+  --color-lab-card: rgba(15, 10, 30, 0.8);
+  --color-lab-border: rgba(138, 92, 255, 0.15);
+  --color-lab-grid: rgba(138, 92, 255, 0.05);
+
+  --color-primary: #8A5CFF;
+  --color-primary-mid: #CE4DFF;
+  --color-primary-light: #E8E0FF;
+
+  --color-strategy-blue: #4DA3FF;
+  --color-strategy-blue-dark: #2E6BFF;
+  --color-signal-red: #FF6A6A;
+  --color-signal-red-dark: #FF3A3A;
+  --color-amber-gold: #F59E0B;
+  --color-success-green: #10B981;
+  --color-teal: #14B8A6;
+}
+
+/* ===== Global Styles ===== */
+/* IMPORTANT: Do NOT put global resets (* { margin: 0 }) outside of @layer.
+   In Tailwind v4, unlayered CSS overrides @layer utilities,
+   which breaks mx-auto, px-*, and ALL Tailwind margin/padding utilities. */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background-color: #0A0515;
+    color: #F8FAFC;
+    overflow-x: hidden;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0515;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(138, 92, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(138, 92, 255, 0.5);
+  }
+}
+
+/* ===== Animations (keyframes are not affected by layers) ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(138, 92, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(138, 92, 255, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ===== Custom Component Styles ===== */
+@layer components {
+  /* Lab Grid Background */
+  .bg-lab {
+    background-color: #0A0515;
+    background-image:
+      linear-gradient(rgba(138, 92, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(138, 92, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Animation Classes */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  /* Stagger delays */
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-400 { animation-delay: 0.4s; }
+  .delay-500 { animation-delay: 0.5s; }
+  .delay-600 { animation-delay: 0.6s; }
+  .delay-700 { animation-delay: 0.7s; }
+  .delay-800 { animation-delay: 0.8s; }
+
+  /* Gradient Text */
+  .text-gradient-purple {
+    background: linear-gradient(135deg, #8A5CFF, #CE4DFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #4DA3FF, #8A5CFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-hero {
+    background: linear-gradient(135deg, #8A5CFF 0%, #CE4DFF 50%, #4DA3FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow Effects */
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(138, 92, 255, 0.4);
+  }
+
+  .glow-purple-hover:hover {
+    box-shadow: 0 0 40px rgba(138, 92, 255, 0.6);
+  }
+
+  /* Card Base */
+  .card-lab {
+    background: rgba(15, 10, 30, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(138, 92, 255, 0.15);
+    border-radius: 16px;
+    padding: 24px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .card-lab:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Dark select dropdown options */
+  select option {
+    background: #0f0a1e;
+    color: #f8fafc;
+  }
+}

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0A0515" />
+
+    <!-- Primary SEO -->
+    <title>Ultra Lab — Build. Ship. Scale. | 全自動社群發布 × AI × SaaS 建置</title>
+    <meta name="description" content="Ultra Lab 是傲創實業旗下技術服務品牌，提供 IG Reel 全自動發布、Threads 多帳號自動化、短影音產製、SaaS 建置、AI 串接等五大服務。從驗證到量產的技術夥伴。" />
+    <meta name="keywords" content="Ultra Lab, 自動發布, IG Reel, Threads 自動化, SaaS 建置, AI 串接, 短影音, 傲創實業" />
+    <link rel="canonical" href="https://ultralab.tw" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ultralab.tw" />
+    <meta property="og:title" content="Ultra Lab — Build. Ship. Scale." />
+    <meta property="og:description" content="全自動社群發布 × AI 內容生成 × SaaS 建置 — 從驗證到量產的技術夥伴" />
+    <meta property="og:image" content="https://ultralab.tw/og-image.png" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:site_name" content="Ultra Lab" />
+
+    <!-- Twitter / Threads Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ultra Lab — Build. Ship. Scale." />
+    <meta name="twitter:description" content="全自動社群發布 × AI 內容生成 × SaaS 建置 — 從驗證到量產的技術夥伴" />
+    <meta name="twitter:image" content="https://ultralab.tw/og-image.png" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ultra Lab",
+      "url": "https://ultralab.tw",
+      "logo": "https://ultralab.tw/logo.svg",
+      "description": "傲創實業旗下技術服務品牌，提供全自動社群發布、AI 內容生成、SaaS 建置服務。",
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "傲創實業 Ultra Creation Co., Ltd."
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "contact@ultracreation.tw",
+        "contactType": "customer service",
+        "availableLanguage": ["zh-TW", "en"]
+      },
+      "sameAs": [
+        "https://www.threads.net/@ultralab.tw",
+        "https://www.instagram.com/ultralab.tw"
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts: preconnect + load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!-- Google Analytics 4 (動態載入，只在有設定 Measurement ID 時啟用) -->
+    <script>
+      (function() {
+        var gaId = '%VITE_GA_MEASUREMENT_ID%';
+        if (!gaId || gaId.indexOf('VITE_') !== -1 || gaId === 'G-XXXXXXXXXX') return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function() { dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', gaId);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

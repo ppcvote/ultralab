@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420" width="320" height="420">
+  <defs>
+    <linearGradient id="gradPurple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#CE4DFF" />
+      <stop offset="100%" style="stop-color:#8A5CFF" />
+    </linearGradient>
+
+    <linearGradient id="gradTeal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#14B8A6" />
+      <stop offset="100%" style="stop-color:#10B981" />
+    </linearGradient>
+
+    <linearGradient id="gradBar" gradientUnits="userSpaceOnUse" x1="91.5" y1="0" x2="228.5" y2="0">
+      <stop offset="0%" style="stop-color:#8A5CFF; stop-opacity: 0" />
+      <stop offset="20%" style="stop-color:#CE4DFF; stop-opacity: 0.5" />
+      <stop offset="50%" style="stop-color:#E8E0FF; stop-opacity: 1" />
+      <stop offset="80%" style="stop-color:#CE4DFF; stop-opacity: 0.5" />
+      <stop offset="100%" style="stop-color:#8A5CFF; stop-opacity: 0" />
+    </linearGradient>
+
+    <filter id="glow-p" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="glow-t" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="glow-bar" filterUnits="userSpaceOnUse" x="0" y="0" width="320" height="420">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="28 1" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="
+        0 0 0 0 0.54
+        0 0 0 0 0.36
+        0 0 0 0 1
+        0 0 0 0.9 0" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Purple Curve (U Left / A Right Leg) -->
+  <path fill="none" stroke="url(#gradPurple)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+        filter="url(#glow-p)"
+        d="M 90,40 C 90,160 130,220 242,380" />
+
+  <!-- Teal Curve (U Right / A Left Leg) -->
+  <path fill="none" stroke="url(#gradTeal)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+        filter="url(#glow-t)"
+        d="M 230,40 C 230,160 190,220 78,380" />
+
+  <!-- Glowing Bar -->
+  <path fill="none" stroke="url(#gradBar)" stroke-width="10.2" stroke-linecap="round"
+        filter="url(#glow-bar)"
+        d="M 91.5,314 L 228.5,314" />
+</svg>
