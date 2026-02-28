@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420" width="320" height="420">
+  <defs>
+    <!-- Red Gradient (Alert/Danger) -->
+    <linearGradient id="gradRed" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6A6A" />
+      <stop offset="100%" style="stop-color:#FF3A3A" />
+    </linearGradient>
+
+    <!-- Blue Gradient (Security/Trust) -->
+    <linearGradient id="gradBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6" />
+      <stop offset="100%" style="stop-color:#2E6BFF" />
+    </linearGradient>
+
+    <!-- Cyan Accent (Scanning Effect) -->
+    <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00F0FF; stop-opacity: 0" />
+      <stop offset="50%" style="stop-color:#00F0FF; stop-opacity: 1" />
+      <stop offset="100%" style="stop-color:#00F0FF; stop-opacity: 0" />
+    </linearGradient>
+
+    <!-- Red Glow -->
+    <filter id="glow-red" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Blue Glow -->
+    <filter id="glow-blue" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Scan Line Glow -->
+    <filter id="glow-scan" filterUnits="userSpaceOnUse" x="0" y="0" width="320" height="420">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4 1" result="blur" />
+      <feColorMatrix in="blur" type="matrix" values="
+        0 0 0 0 0
+        0 0 0 0 0.94
+        0 0 0 0 1
+        0 0 0 0.9 0" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Shield Shape - Left Side (Red - Vulnerability Detection) -->
+  <path fill="none" stroke="url(#gradRed)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+        filter="url(#glow-red)"
+        d="M 160,40 L 70,110 L 70,240 C 70,310 100,360 160,400" />
+
+  <!-- Shield Shape - Right Side (Blue - Security) -->
+  <path fill="none" stroke="url(#gradBlue)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+        filter="url(#glow-blue)"
+        d="M 160,40 L 250,110 L 250,240 C 250,310 220,360 160,400" />
+
+  <!-- Radar Scan Line 1 (Top) -->
+  <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+        filter="url(#glow-scan)"
+        d="M 85,135 L 235,135">
+    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Radar Scan Line 2 (Middle) -->
+  <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+        filter="url(#glow-scan)"
+        d="M 80,210 L 240,210">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0.7s" />
+  </path>
+
+  <!-- Radar Scan Line 3 (Bottom) -->
+  <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+        filter="url(#glow-scan)"
+        d="M 95,285 L 225,285">
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="1.3s" />
+  </path>
+
+  <!-- Central Cross (Targeting) -->
+  <path fill="none" stroke="#00F0FF" stroke-width="3" stroke-linecap="round" opacity="0.6"
+        d="M 160,180 L 160,260 M 120,220 L 200,220" />
+
+  <!-- Vulnerability Markers (Small Dots) -->
+  <circle cx="130" cy="165" r="4" fill="#FF3A3A" opacity="0.8">
+    <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
+  </circle>
+  <circle cx="190" cy="195" r="4" fill="#FF3A3A" opacity="0.8">
+    <animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite" begin="0.5s" />
+  </circle>
+  <circle cx="145" cy="245" r="4" fill="#FF3A3A" opacity="0.8">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite" begin="1s" />
+  </circle>
+</svg>
