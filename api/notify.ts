@@ -1,27 +1,74 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
+import { createInquiryPage } from './_notion.js'
+
+const TG_API = 'https://api.telegram.org/bot'
+
+async function sendTelegram(text: string) {
+  const token = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+  if (!token || !chatId) return
+
+  await fetch(`${TG_API}${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+  })
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const { name, email, phone, lineId, contactMethod, company, service, budget, message } = req.body
+  const { name, email, phone, lineId, contactMethod, company, service, budget, message, source } = req.body || {}
 
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_APP_PASSWORD,
-    },
-  })
-
+  const isMinYi = source === 'minyi-page'
   const contactMethodLabel = contactMethod === 'line' ? 'LINE' : contactMethod === 'phone' ? '電話' : 'Email'
 
-  const html = `
+  // === Telegram notification ===
+  const tgLines = isMinYi
+    ? [
+        `📩 <b>新諮詢（MinYi）</b>`,
+        ``,
+        `<b>姓名：</b>${name}`,
+        `<b>電話：</b>${phone}`,
+        `<b>Email：</b>${email}`,
+        message ? `<b>想聊：</b>${message}` : '',
+      ].filter(Boolean).join('\n')
+    : [
+        `🔔 <b>新客戶諮詢</b>`,
+        ``,
+        `<b>姓名：</b>${name}`,
+        company ? `<b>公司：</b>${company}` : '',
+        `<b>Email：</b>${email}`,
+        phone ? `<b>電話：</b>${phone}` : '',
+        lineId ? `<b>LINE：</b>${lineId}` : '',
+        `<b>偏好聯繫：</b>${contactMethodLabel}`,
+        `<b>服務：</b>${service}`,
+        budget ? `<b>預算：</b>${budget}` : '',
+        message ? `\n<b>需求：</b>\n${message}` : '',
+        ``,
+        `👉 <a href="https://ultralab.tw/admin">開啟後台</a>`,
+      ].filter(Boolean).join('\n')
+
+  // === Email notification via Resend ===
+  const html = isMinYi
+    ? `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
+    <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+      <h2 style="color: #1E40AF; margin-bottom: 16px;">新詢問 — 謝民義</h2>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr><td style="padding: 6px 0; color: #666; width: 80px;">姓名</td><td style="padding: 6px 0; font-weight: bold;">${name}</td></tr>
+        <tr><td style="padding: 6px 0; color: #666;">電話</td><td style="padding: 6px 0;"><a href="tel:${phone}">${phone}</a></td></tr>
+        <tr><td style="padding: 6px 0; color: #666;">Email</td><td style="padding: 6px 0;"><a href="mailto:${email}">${email}</a></td></tr>
+        ${message ? `<tr><td style="padding: 6px 0; color: #666;">想聊</td><td style="padding: 6px 0;">${message}</td></tr>` : ''}
+      </table>
+      <p style="margin-top: 16px; color: #999; font-size: 11px;">來自 ultralab.tw/minyi</p>
+    </div>
+  </body></html>`
+    : `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
       <h2 style="color: #8A5CFF; border-bottom: 2px solid #8A5CFF; padding-bottom: 8px;">
         Ultra Lab — 新客戶諮詢
@@ -41,18 +88,61 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         來源：ultralab.tw 聯繫表單
       </p>
     </div>
-  `
+  </body></html>`
+
+  const results = { email: false, telegram: false, notion: false }
 
   try {
-    await transporter.sendMail({
-      from: `"Ultra Lab" <${process.env.GMAIL_USER}>`,
-      to: process.env.GMAIL_USER!,
-      subject: `[新客戶] ${name} — ${service}`,
-      html,
-    })
-    return res.status(200).json({ ok: true })
+    const [emailResult, tgResult, notionResult] = await Promise.allSettled([
+      (async () => {
+        const resend = new Resend(process.env.RESEND_API_KEY)
+        await resend.emails.send({
+          from: isMinYi
+            ? 'Min Yi <minyi@ultralab.tw>'
+            : 'Ultra Lab <contact@ultralab.tw>',
+          to: process.env.VITE_ADMIN_EMAIL || 'risky9763@gmail.com',
+          subject: isMinYi
+            ? `[新詢問] ${name} — 財務諮詢`
+            : `[新客戶] ${name} — ${service}`,
+          html,
+        })
+        results.email = true
+      })(),
+      (async () => {
+        await sendTelegram(tgLines)
+        results.telegram = true
+      })(),
+      (async () => {
+        await createInquiryPage({
+          name,
+          email,
+          phone,
+          lineId,
+          company,
+          service,
+          budget,
+          contactMethod,
+          message,
+          source: source || 'landing-page',
+          createdAt: new Date(),
+        })
+        results.notion = true
+      })(),
+    ])
+
+    if (emailResult.status === 'rejected') {
+      console.error('Email failed:', emailResult.reason)
+    }
+    if (tgResult.status === 'rejected') {
+      console.error('Telegram failed:', tgResult.reason)
+    }
+    if (notionResult.status === 'rejected') {
+      console.error('Notion failed:', notionResult.reason)
+    }
+
+    return res.status(200).json({ ok: true, ...results })
   } catch (err) {
-    console.error('Email send failed:', err)
-    return res.status(500).json({ error: 'Failed to send notification' })
+    console.error('Notification error:', err)
+    return res.status(200).json({ ok: true, ...results })
   }
 }
