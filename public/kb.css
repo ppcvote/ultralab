@@ -1225,6 +1225,327 @@ section {
 }
 
 /* ========================
+   Interactive Notion Preview
+   ======================== */
+
+.interactive-preview {
+  margin: 5rem 0 4rem;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(74, 115, 38, 0.03) 0%, rgba(139, 69, 19, 0.03) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(74, 115, 38, 0.15);
+}
+
+.preview-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'Noto Serif TC', Georgia, serif;
+}
+
+.preview-subtitle {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #6a6a6a;
+  margin-bottom: 3rem;
+}
+
+.notion-workspace {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.05);
+  min-height: 600px;
+}
+
+/* Sidebar */
+.notion-sidebar {
+  background: #f7f6f3;
+  padding: 1.5rem;
+  border-right: 1px solid #e3e2df;
+}
+
+.workspace-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.workspace-icon {
+  font-size: 1.5rem;
+}
+
+.workspace-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.125rem;
+}
+
+.sidebar-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.database-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.375rem;
+  position: relative;
+}
+
+.database-item:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.database-item.active {
+  background: linear-gradient(135deg, rgba(74, 115, 38, 0.1) 0%, rgba(139, 69, 19, 0.08) 100%);
+  font-weight: 600;
+}
+
+.database-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 70%;
+  background: linear-gradient(180deg, #4a7326, #6ba33e);
+  border-radius: 0 2px 2px 0;
+}
+
+.db-icon {
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.db-name {
+  flex: 1;
+  font-size: 0.9375rem;
+  color: #2c2c2c;
+}
+
+.db-count {
+  font-size: 0.8125rem;
+  color: #9a9a9a;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Main Content */
+.notion-content {
+  padding: 2rem;
+  background: #ffffff;
+}
+
+.content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e3e2df;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+  color: #6a6a6a;
+}
+
+.breadcrumb .separator {
+  color: #d0d0d0;
+}
+
+.breadcrumb .current-db {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.view-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e3e2df;
+  background: #ffffff;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-btn:hover {
+  background: #f7f6f3;
+}
+
+.view-btn.active {
+  background: linear-gradient(135deg, rgba(74, 115, 38, 0.1) 0%, rgba(139, 69, 19, 0.08) 100%);
+  border-color: rgba(74, 115, 38, 0.3);
+  font-weight: 600;
+}
+
+/* Database Table */
+.database-table {
+  overflow-x: auto;
+}
+
+.database-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.database-table thead {
+  border-bottom: 1px solid #e3e2df;
+}
+
+.database-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.database-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.database-table tbody tr:hover {
+  background: #fafaf9;
+}
+
+.database-table td {
+  padding: 1rem;
+  font-size: 0.9375rem;
+  color: #2c2c2c;
+}
+
+.cell-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.page-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.status-badge.active,
+.status-badge.live,
+.status-badge.published,
+.status-badge.complete,
+.status-badge.ready,
+.status-badge.accepted {
+  background: rgba(74, 115, 38, 0.12);
+  color: #4a7326;
+}
+
+.status-badge.beta {
+  background: rgba(205, 133, 63, 0.12);
+  color: #cd853f;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  background: #f0f0f0;
+  color: #5a5a5a;
+  font-size: 0.8125rem;
+  border-radius: 4px;
+  margin-right: 0.375rem;
+  font-weight: 500;
+}
+
+.database-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.875rem;
+  color: #9a9a9a;
+}
+
+.row-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.count-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: #4a7326;
+}
+
+.last-edited time {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.preview-hint {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  border: 1px dashed rgba(74, 115, 38, 0.3);
+}
+
+.preview-hint p {
+  font-size: 0.9375rem;
+  color: #5a5a5a;
+  margin: 0;
+}
+
+/* ========================
    Responsive Design
    ======================== */
 
@@ -1317,6 +1638,19 @@ section {
   .footer-links {
     flex-direction: column;
     gap: 2.5rem;
+  }
+
+  .notion-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .notion-sidebar {
+    border-right: none;
+    border-bottom: 1px solid #e3e2df;
+  }
+
+  .database-table {
+    font-size: 0.875rem;
   }
 }
 

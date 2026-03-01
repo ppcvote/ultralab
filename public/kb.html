@@ -443,6 +443,185 @@
             </div>
           </div>
 
+          <!-- Interactive Notion Preview -->
+          <div class="interactive-preview">
+            <h3 class="preview-title">
+              <span data-i18n="demo.preview.title">🎮 互動式預覽：探索我們的 Knowledge Base</span>
+            </h3>
+            <p class="preview-subtitle" data-i18n="demo.preview.subtitle">
+              點擊下方 Databases 查看真實內容（模擬 Notion 介面）
+            </p>
+
+            <!-- Notion-like Workspace -->
+            <div class="notion-workspace">
+              <!-- Sidebar -->
+              <div class="notion-sidebar">
+                <div class="workspace-title">
+                  <span class="workspace-icon">🎯</span>
+                  <span class="workspace-name">Ultra KB</span>
+                </div>
+
+                <div class="sidebar-section">
+                  <div class="section-title">📊 Core Databases</div>
+                  <div class="database-item" data-db="products">
+                    <span class="db-icon">📦</span>
+                    <span class="db-name">Products</span>
+                    <span class="db-count">5</span>
+                  </div>
+                  <div class="database-item" data-db="blog">
+                    <span class="db-icon">📝</span>
+                    <span class="db-name">Blog Posts</span>
+                    <span class="db-count">79</span>
+                  </div>
+                  <div class="database-item" data-db="tech">
+                    <span class="db-icon">🔧</span>
+                    <span class="db-name">Tech Stack</span>
+                    <span class="db-count">40+</span>
+                  </div>
+                  <div class="database-item" data-db="apis">
+                    <span class="db-icon">🔌</span>
+                    <span class="db-name">API Endpoints</span>
+                    <span class="db-count">22+</span>
+                  </div>
+                  <div class="database-item" data-db="components">
+                    <span class="db-icon">🧩</span>
+                    <span class="db-name">Components</span>
+                    <span class="db-count">86+</span>
+                  </div>
+                </div>
+
+                <div class="sidebar-section">
+                  <div class="section-title">📚 Documentation</div>
+                  <div class="database-item" data-db="brand">
+                    <span class="db-icon">🎨</span>
+                    <span class="db-name">Brand Guidelines</span>
+                    <span class="db-count">5</span>
+                  </div>
+                  <div class="database-item" data-db="adr">
+                    <span class="db-icon">⚙️</span>
+                    <span class="db-name">ADR</span>
+                    <span class="db-count">10+</span>
+                  </div>
+                  <div class="database-item" data-db="templates">
+                    <span class="db-icon">📧</span>
+                    <span class="db-name">Email Templates</span>
+                    <span class="db-count">12+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Main Content Area -->
+              <div class="notion-content">
+                <div class="content-header">
+                  <div class="breadcrumb">
+                    <span>Ultra KB</span>
+                    <span class="separator">/</span>
+                    <span class="current-db">Products Database</span>
+                  </div>
+                  <div class="view-controls">
+                    <button class="view-btn active">📋 Table</button>
+                    <button class="view-btn">🎴 Gallery</button>
+                    <button class="view-btn">📊 Board</button>
+                  </div>
+                </div>
+
+                <!-- Database Table View -->
+                <div class="database-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Type</th>
+                        <th>Tech Stack</th>
+                        <th>Launch Date</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-body">
+                      <!-- Products DB Content -->
+                      <tr class="db-row" data-category="products">
+                        <td>
+                          <div class="cell-content">
+                            <span class="page-icon">🏢</span>
+                            <span class="page-title">Ultra Lab</span>
+                          </div>
+                        </td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td><span class="tag">Service</span></td>
+                        <td><span class="tag">React</span><span class="tag">Vite</span></td>
+                        <td>2024-01-15</td>
+                      </tr>
+                      <tr class="db-row" data-category="products">
+                        <td>
+                          <div class="cell-content">
+                            <span class="page-icon">💰</span>
+                            <span class="page-title">Ultra Advisor</span>
+                          </div>
+                        </td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td><span class="tag">SaaS</span></td>
+                        <td><span class="tag">React</span><span class="tag">Firebase</span></td>
+                        <td>2024-06-01</td>
+                      </tr>
+                      <tr class="db-row" data-category="products">
+                        <td>
+                          <div class="cell-content">
+                            <span class="page-icon">🧵</span>
+                            <span class="page-title">Mind Threads</span>
+                          </div>
+                        </td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td><span class="tag">SaaS</span></td>
+                        <td><span class="tag">Node.js</span><span class="tag">Gemini</span></td>
+                        <td>2024-08-15</td>
+                      </tr>
+                      <tr class="db-row" data-category="products">
+                        <td>
+                          <div class="cell-content">
+                            <span class="page-icon">🔍</span>
+                            <span class="page-title">UltraProbe</span>
+                          </div>
+                        </td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td><span class="tag">Feature</span></td>
+                        <td><span class="tag">Gemini</span><span class="tag">API</span></td>
+                        <td>2024-10-01</td>
+                      </tr>
+                      <tr class="db-row" data-category="products">
+                        <td>
+                          <div class="cell-content">
+                            <span class="page-icon">👤</span>
+                            <span class="page-title">MinYi Personal</span>
+                          </div>
+                        </td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td><span class="tag">Feature</span></td>
+                        <td><span class="tag">React</span><span class="tag">Tailwind</span></td>
+                        <td>2024-11-01</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="database-footer">
+                  <div class="row-count">
+                    <span class="count-number">5</span>
+                    <span>entries</span>
+                  </div>
+                  <div class="last-edited">
+                    Last edited: <time>2026-02-28</time>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="preview-hint">
+              <p data-i18n="demo.preview.hint">
+                💡 這是基於真實資料的互動式展示。點擊左側 Databases 可切換不同內容。
+              </p>
+            </div>
+          </div>
+
           <!-- CTA to View Our KB -->
           <div class="demo-cta">
             <p data-i18n="demo.cta.text">想看我們完整的 Knowledge Base？</p>
@@ -813,6 +992,9 @@
           'demo.metrics.automation': 'Automation Rate',
           'demo.metrics.completeness': 'Avg Completeness',
           'demo.metrics.time': 'Total Time Invested',
+          'demo.preview.title': '🎮 互動式預覽：探索我們的 Knowledge Base',
+          'demo.preview.subtitle': '點擊下方 Databases 查看真實內容（模擬 Notion 介面）',
+          'demo.preview.hint': '💡 這是基於真實資料的互動式展示。點擊左側 Databases 可切換不同內容。',
           'demo.cta.text': '想看我們完整的 Knowledge Base？',
           'demo.cta.button': '查看 Ultra Lab Master Dashboard',
 
@@ -968,6 +1150,9 @@
           'demo.metrics.automation': 'Automation Rate',
           'demo.metrics.completeness': 'Avg Completeness',
           'demo.metrics.time': 'Total Time Invested',
+          'demo.preview.title': '🎮 Interactive Preview: Explore Our Knowledge Base',
+          'demo.preview.subtitle': 'Click on Databases below to view real content (Notion-like interface)',
+          'demo.preview.hint': '💡 This is an interactive demonstration based on real data. Click on databases in the left sidebar to switch content.',
           'demo.cta.text': 'Want to see our complete Knowledge Base?',
           'demo.cta.button': 'View Ultra Lab Master Dashboard',
 
@@ -1085,6 +1270,142 @@
           }
         })
       })
+
+      // Interactive Notion Preview
+      const databaseData = {
+        products: {
+          name: 'Products Database',
+          rows: [
+            { icon: '🏢', title: 'Ultra Lab', status: 'Active', type: 'Service', tags: ['React', 'Vite'], date: '2024-01-15' },
+            { icon: '💰', title: 'Ultra Advisor', status: 'Active', type: 'SaaS', tags: ['React', 'Firebase'], date: '2024-06-01' },
+            { icon: '🧵', title: 'Mind Threads', status: 'Active', type: 'SaaS', tags: ['Node.js', 'Gemini'], date: '2024-08-15' },
+            { icon: '🔍', title: 'UltraProbe', status: 'Active', type: 'Feature', tags: ['Gemini', 'API'], date: '2024-10-01' },
+            { icon: '👤', title: 'MinYi Personal', status: 'Active', type: 'Feature', tags: ['React', 'Tailwind'], date: '2024-11-01' }
+          ]
+        },
+        blog: {
+          name: 'Blog Posts Database',
+          rows: [
+            { icon: '📝', title: 'IG Reel 自動化完全指南', status: 'Published', type: 'Tutorial', tags: ['Automation', 'IG'], date: '2024-10-15' },
+            { icon: '📝', title: 'Threads API 開發實戰', status: 'Published', type: 'Tutorial', tags: ['Threads', 'API'], date: '2024-11-01' },
+            { icon: '📝', title: 'Gemini AI 提示工程技巧', status: 'Published', type: 'AI', tags: ['Gemini', 'Prompt'], date: '2024-11-15' },
+            { icon: '📝', title: 'React 18 最佳實踐', status: 'Published', type: 'Frontend', tags: ['React', 'Best Practice'], date: '2024-12-01' },
+            { icon: '📝', title: 'Firebase 效能優化', status: 'Published', type: 'Backend', tags: ['Firebase', 'Performance'], date: '2024-12-15' }
+          ]
+        },
+        tech: {
+          name: 'Tech Stack Registry',
+          rows: [
+            { icon: '⚛️', title: 'React 18', status: 'Active', type: 'Frontend', tags: ['UI', 'Library'], date: '18.3.1' },
+            { icon: '🔥', title: 'Firebase', status: 'Active', type: 'Backend', tags: ['Database', 'Auth'], date: '12.9.0' },
+            { icon: '⚡', title: 'Vite', status: 'Active', type: 'Build Tool', tags: ['Bundler', 'Dev'], date: '6.4.1' },
+            { icon: '🎨', title: 'Tailwind CSS', status: 'Active', type: 'CSS', tags: ['Utility', 'Styling'], date: '4.1.18' },
+            { icon: '🤖', title: 'Gemini 2.5 Flash', status: 'Active', type: 'AI', tags: ['LLM', 'API'], date: '2.5' }
+          ]
+        },
+        apis: {
+          name: 'API Endpoints Registry',
+          rows: [
+            { icon: '🔌', title: '/api/notify', status: 'Live', type: 'POST', tags: ['Telegram', 'Email'], date: 'v1' },
+            { icon: '🔌', title: '/api/probe-scan-prompt', status: 'Live', type: 'POST', tags: ['Security', 'AI'], date: 'v1' },
+            { icon: '🔌', title: '/api/probe-scan-url', status: 'Live', type: 'POST', tags: ['Security', 'URL'], date: 'v1' },
+            { icon: '🔌', title: '/api/send-email', status: 'Live', type: 'POST', tags: ['Resend', 'Email'], date: 'v1' },
+            { icon: '🔌', title: '/api/payuni-checkout', status: 'Live', type: 'POST', tags: ['Payment', 'PayUni'], date: 'v1' }
+          ]
+        },
+        components: {
+          name: 'Component Library',
+          rows: [
+            { icon: '🧩', title: 'Hero', status: 'Active', type: 'Layout', tags: ['Landing', 'Section'], date: '150 LOC' },
+            { icon: '🧩', title: 'Navbar', status: 'Active', type: 'Navigation', tags: ['Header', 'Menu'], date: '120 LOC' },
+            { icon: '🧩', title: 'MortgageCalculator', status: 'Active', type: 'Feature', tags: ['Form', 'Financial'], date: '300 LOC' },
+            { icon: '🧩', title: 'PricingCard', status: 'Active', type: 'UI', tags: ['Card', 'Pricing'], date: '80 LOC' },
+            { icon: '🧩', title: 'ContactForm', status: 'Active', type: 'Form', tags: ['Input', 'Validation'], date: '200 LOC' }
+          ]
+        },
+        brand: {
+          name: 'Brand Guidelines',
+          rows: [
+            { icon: '🎨', title: 'Ultra Lab', status: 'Complete', type: 'Dark', tags: ['Purple', '#8A5CFF'], date: 'Outfit' },
+            { icon: '🎨', title: 'Ultra Advisor', status: 'Complete', type: 'Light', tags: ['Blue', '#2E6BFF'], date: 'Inter' },
+            { icon: '🎨', title: 'Mind Threads', status: 'Complete', type: 'Mixed', tags: ['Purple', 'Gradient'], date: 'DM Sans' },
+            { icon: '🎨', title: 'UltraProbe', status: 'Complete', type: 'Dark', tags: ['Teal', '#14B8A6'], date: 'Inter' },
+            { icon: '🎨', title: 'MinYi', status: 'Complete', type: 'Light', tags: ['Blue', '#1E40AF'], date: 'Noto Sans' }
+          ]
+        },
+        adr: {
+          name: 'Architecture Decisions (ADR)',
+          rows: [
+            { icon: '⚙️', title: 'ADR-001: Tailwind v4 CSS Layers', status: 'Accepted', type: 'Critical', tags: ['CSS', 'Tailwind'], date: '2024-01-10' },
+            { icon: '⚙️', title: 'ADR-002: Vercel + Firebase Admin', status: 'Accepted', type: 'Critical', tags: ['Deployment', 'Backend'], date: '2024-01-15' },
+            { icon: '⚙️', title: 'ADR-003: Fire-and-Forget Notion Sync', status: 'Accepted', type: 'High', tags: ['Integration', 'Notion'], date: '2024-02-01' },
+            { icon: '⚙️', title: 'ADR-004: Multi-page SPA without Router', status: 'Accepted', type: 'Medium', tags: ['Architecture', 'React'], date: '2024-02-10' },
+            { icon: '⚙️', title: 'ADR-005: Hybrid Revenue Model', status: 'Accepted', type: 'High', tags: ['Business', 'Strategy'], date: '2024-02-20' }
+          ]
+        },
+        templates: {
+          name: 'Email Templates',
+          rows: [
+            { icon: '📧', title: 'Inquiry Response - Threads', status: 'Ready', type: 'Follow-up', tags: ['Budget', 'Discuss'], date: 'Template' },
+            { icon: '📧', title: 'Inquiry Response - IG Reel', status: 'Ready', type: 'Follow-up', tags: ['Automation', 'Video'], date: 'Template' },
+            { icon: '📧', title: 'UltraProbe Lead Follow-up', status: 'Ready', type: 'Lead Gen', tags: ['Security', 'Free Trial'], date: 'Template' },
+            { icon: '📧', title: 'Onboarding Welcome', status: 'Ready', type: 'Onboarding', tags: ['Welcome', 'Getting Started'], date: 'Template' },
+            { icon: '📧', title: 'Technical Support', status: 'Ready', type: 'Support', tags: ['Troubleshooting', 'Help'], date: 'Template' }
+          ]
+        }
+      }
+
+      // Initialize interactive preview
+      const databaseItems = document.querySelectorAll('.database-item')
+      const tableBody = document.querySelector('.table-body')
+      const currentDbElement = document.querySelector('.current-db')
+      const rowCountElement = document.querySelector('.count-number')
+
+      function renderDatabase(dbKey) {
+        const db = databaseData[dbKey]
+        if (!db) return
+
+        // Update breadcrumb
+        currentDbElement.textContent = db.name
+
+        // Update row count
+        rowCountElement.textContent = db.rows.length
+
+        // Render table rows
+        tableBody.innerHTML = db.rows.map(row => `
+          <tr class="db-row" data-category="${dbKey}">
+            <td>
+              <div class="cell-content">
+                <span class="page-icon">${row.icon}</span>
+                <span class="page-title">${row.title}</span>
+              </div>
+            </td>
+            <td><span class="status-badge ${row.status.toLowerCase()}">${row.status}</span></td>
+            <td><span class="tag">${row.type}</span></td>
+            <td>${row.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</td>
+            <td>${row.date}</td>
+          </tr>
+        `).join('')
+      }
+
+      // Add click events to database items
+      databaseItems.forEach(item => {
+        item.addEventListener('click', () => {
+          // Remove active from all
+          databaseItems.forEach(i => i.classList.remove('active'))
+          // Add active to clicked
+          item.classList.add('active')
+          // Render database
+          const dbKey = item.getAttribute('data-db')
+          renderDatabase(dbKey)
+        })
+      })
+
+      // Set first database as active by default
+      if (databaseItems.length > 0) {
+        databaseItems[0].classList.add('active')
+        renderDatabase(databaseItems[0].getAttribute('data-db'))
+      }
     </script>
   </body>
 </html>
