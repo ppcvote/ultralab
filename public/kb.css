@@ -1395,6 +1395,9 @@ section {
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-card:hover {
@@ -1409,6 +1412,11 @@ section {
   margin-bottom: 1.5rem;
   text-align: center;
   font-family: 'Noto Sans TC', sans-serif;
+}
+
+.chart-card canvas {
+  flex: 1;
+  max-height: 280px;
 }
 
 /* ========================
