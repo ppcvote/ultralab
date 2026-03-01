@@ -1,6 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { getAdminDb } from './_firebase.js'
 import { createProbeLeadPage } from './_notion.js'
+import { setCorsHeaders } from './_cors.js'
+import { isValidEmail as validateEmail } from './_validation.js'
 
 interface CollectEmailRequest {
   email: string
@@ -13,12 +15,6 @@ interface CollectEmailRequest {
 }
 
 const TG_API = 'https://api.telegram.org/bot'
-
-// Simple email validation
-function isValidEmail(email: string): boolean {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return re.test(email)
-}
 
 async function notifyTelegram(email: string, scanType: string, metadata?: any) {
   const token = process.env.TELEGRAM_BOT_TOKEN
@@ -60,12 +56,7 @@ async function notifyTelegram(email: string, scanType: string, metadata?: any) {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-
-  if (req.method === 'OPTIONS') {
+  if (setCorsHeaders(req, res)) {
     return res.status(200).end()
   }
 
@@ -80,8 +71,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: '請提供有效的 Email 地址。' })
   }
 
-  if (!isValidEmail(email.trim())) {
-    return res.status(400).json({ error: 'Email 格式不正確。' })
+  if (!validateEmail(email.trim())) {
+    return res.status(400).json({ error: 'Email 格式不正確或使用免洗信箱。' })
   }
 
   // Validate scanType
