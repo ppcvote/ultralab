@@ -4,13 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ultra KB — Agent-Ready Knowledge Infrastructure</title>
-    <meta name="description" content="從分散文檔到 Agent-Ready 知識中樞。30 分鐘 onboard 人類。0 秒 onboard AI Agents。" />
+    <meta
+      name="description"
+      content="從分散文檔到 Agent-Ready 知識中樞。30 分鐘 onboard 人類。0 秒 onboard AI Agents。"
+    />
 
-    <!-- Fonts -->
+    <!-- Fonts (使用 Notion 的字體：Inter + Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
 
@@ -18,40 +21,71 @@
     <link rel="stylesheet" href="/kb.css" />
   </head>
   <body>
+    <!-- Language Toggle (Fixed Top-Right) -->
+    <div class="language-toggle">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">English</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="nav-content">
+          <a href="/" class="logo">
+            <span class="logo-icon">📚</span>
+            <span class="logo-text" data-i18n="nav.title">Ultra KB</span>
+          </a>
+          <div class="nav-links">
+            <a href="#what-we-build" data-i18n="nav.services">服務內容</a>
+            <a href="#why-different" data-i18n="nav.advantages">差異化優勢</a>
+            <a href="#demo" data-i18n="nav.demo">案例展示</a>
+            <a href="#pricing" data-i18n="nav.pricing">定價方案</a>
+            <a href="#contact" class="btn-nav" data-i18n="nav.contact">立即預約</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <!-- Hero Section -->
     <section class="hero">
       <div class="container">
         <div class="hero-content">
-          <div class="badge">🤖 Agent-Ready Knowledge Infrastructure</div>
+          <div class="badge">
+            <span data-i18n="hero.badge">🤖 Agent-Ready Knowledge Infrastructure</span>
+          </div>
           <h1 class="hero-title">
-            從分散文檔到<br />
-            <span class="gradient-text">統一知識中樞</span>
+            <span data-i18n="hero.title.line1">從分散文檔到</span><br />
+            <span class="gradient-text" data-i18n="hero.title.line2">統一知識中樞</span>
           </h1>
           <p class="hero-subtitle">
-            30 分鐘 onboard 人類。0 秒 onboard AI Agents。
+            <span data-i18n="hero.subtitle">30 分鐘 onboard 人類。0 秒 onboard AI Agents。</span>
           </p>
           <div class="hero-buttons">
-            <a href="#pricing" class="btn btn-primary">查看方案</a>
-            <a href="#demo" class="btn btn-secondary">查看 Demo</a>
+            <a href="#pricing" class="btn btn-primary">
+              <span data-i18n="hero.cta.primary">查看方案</span>
+            </a>
+            <a href="#demo" class="btn btn-secondary">
+              <span data-i18n="hero.cta.secondary">查看 Demo</span>
+            </a>
           </div>
 
           <!-- Stats -->
           <div class="stats-grid">
             <div class="stat-item">
               <div class="stat-number">232+</div>
-              <div class="stat-label">Pages 自動匯入</div>
+              <div class="stat-label" data-i18n="hero.stats.pages">Pages 自動匯入</div>
             </div>
             <div class="stat-item">
               <div class="stat-number">70%</div>
-              <div class="stat-label">自動化程度</div>
+              <div class="stat-label" data-i18n="hero.stats.automation">自動化程度</div>
             </div>
             <div class="stat-item">
-              <div class="stat-number">30 分鐘</div>
-              <div class="stat-label">Onboarding 時間</div>
+              <div class="stat-number">30 <span data-i18n="hero.stats.minutes">分鐘</span></div>
+              <div class="stat-label" data-i18n="hero.stats.onboarding">Onboarding 時間</div>
             </div>
             <div class="stat-item">
               <div class="stat-number">90%+</div>
-              <div class="stat-label">文檔完整度</div>
+              <div class="stat-label" data-i18n="hero.stats.coverage">文檔完整度</div>
             </div>
           </div>
         </div>
@@ -61,259 +95,579 @@
     <!-- Pain Points Section -->
     <section class="pain-points">
       <div class="container">
-        <h2 class="section-title">你的團隊是否遇到這些問題？</h2>
+        <h2 class="section-title" data-i18n="pain.title">你的團隊是否遇到這些問題？</h2>
 
         <div class="pain-grid">
           <div class="pain-card">
             <div class="pain-icon">❌</div>
-            <div class="pain-text">新開發者 onboarding 需要 1-2 週閱讀分散文件</div>
+            <div class="pain-text" data-i18n="pain.point1">
+              新開發者 onboarding 需要 1-2 週閱讀分散文件
+            </div>
           </div>
 
           <div class="pain-card">
             <div class="pain-icon">❌</div>
-            <div class="pain-text">技術決策散落在 Slack、email、腦袋裡，沒有系統化記錄</div>
+            <div class="pain-text" data-i18n="pain.point2">
+              技術決策散落在 Slack、email、腦袋裡，沒有系統化記錄
+            </div>
           </div>
 
           <div class="pain-card">
             <div class="pain-icon">❌</div>
-            <div class="pain-text">多個產品的 blog、API、components 沒有統一管理</div>
+            <div class="pain-text" data-i18n="pain.point3">
+              多個產品的 blog、API、components 沒有統一管理
+            </div>
           </div>
 
           <div class="pain-card">
             <div class="pain-icon">❌</div>
-            <div class="pain-text">品牌視覺語言不一致，每個產品各自為政</div>
+            <div class="pain-text" data-i18n="pain.point4">
+              品牌視覺語言不一致，每個產品各自為政
+            </div>
           </div>
 
           <div class="pain-card">
             <div class="pain-icon">❌</div>
-            <div class="pain-text">踩過的坑重複踩，知識沒有傳承</div>
+            <div class="pain-text" data-i18n="pain.point5">踩過的坑重複踩，知識沒有傳承</div>
           </div>
 
           <div class="pain-card solution">
             <div class="pain-icon">✅</div>
-            <div class="pain-text"><strong>Ultra KB 幫你建立統一的 Notion Knowledge Base，解決所有問題</strong></div>
+            <div class="pain-text">
+              <strong data-i18n="pain.solution"
+                >Ultra KB 幫你建立統一的 Notion Knowledge Base，解決所有問題</strong
+              >
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- What We Build Section -->
-    <section class="what-we-build">
+    <section id="what-we-build" class="what-we-build">
       <div class="container">
-        <h2 class="section-title">我們為你建置什麼？</h2>
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="build.title">我們為你建立什麼？</h2>
+          <p class="section-subtitle" data-i18n="build.subtitle">
+            9 個 Notion Databases + 200+ Pages，70% 自動化匯入
+          </p>
+        </div>
 
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">📦</div>
-            <h3>Core Databases</h3>
-            <ul>
-              <li>Products Database — 產品線完整資訊</li>
-              <li>Blog Posts Database — 文章集中管理</li>
-              <li>Tech Stack Registry — 技術依賴追蹤</li>
-              <li>API Endpoints Registry — API 文檔</li>
-              <li>Component Library — React components</li>
-            </ul>
+        <div class="build-grid">
+          <!-- Database 1: Products -->
+          <div class="build-card">
+            <div class="card-icon">📦</div>
+            <h3 class="card-title" data-i18n="build.db1.title">Products Database</h3>
+            <p class="card-description" data-i18n="build.db1.desc">
+              5 個產品的中央資訊樞紐（Tech Stack, APIs, Components, Blog Posts）
+            </p>
+            <div class="card-tags">
+              <span class="tag">5 products</span>
+              <span class="tag">Tech stack tracking</span>
+            </div>
           </div>
 
-          <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3>Documentation Hub</h3>
-            <ul>
-              <li>Brand Guidelines — 品牌視覺規範</li>
-              <li>Architecture Decisions (ADR) — 技術決策記錄</li>
-              <li>Email Templates — 客戶溝通標準化</li>
-              <li>Onboarding Guide — 30 分鐘快速導覽</li>
-              <li>Master Dashboard — 統計 + 快速連結</li>
-            </ul>
+          <!-- Database 2: Blog Posts -->
+          <div class="build-card">
+            <div class="card-icon">📝</div>
+            <h3 class="card-title" data-i18n="build.db2.title">Blog Posts Database</h3>
+            <p class="card-description" data-i18n="build.db2.desc">
+              79 篇文章集中管理 + SEO 追蹤 + Content Calendar
+            </p>
+            <div class="card-tags">
+              <span class="tag">79 articles</span>
+              <span class="tag">Auto-imported</span>
+            </div>
           </div>
 
-          <div class="feature-card">
-            <div class="feature-icon">🤖</div>
-            <h3>Automation Scripts</h3>
-            <ul>
-              <li>Blog 自動匯入 (.md, .ts, .html 格式)</li>
-              <li>Tech Stack 提取 (從 package.json)</li>
-              <li>API Endpoints 提取 (從 api/ folders)</li>
-              <li>Component Library 提取 (從 src/components/)</li>
-              <li>GitHub Actions 持續同步 (optional)</li>
-            </ul>
+          <!-- Database 3: Tech Stack -->
+          <div class="build-card">
+            <div class="card-icon">🔧</div>
+            <h3 class="card-title" data-i18n="build.db3.title">Tech Stack Registry</h3>
+            <p class="card-description" data-i18n="build.db3.desc">
+              40+ 技術依賴追蹤（版本、成本、Critical Dependencies）
+            </p>
+            <div class="card-tags">
+              <span class="tag">40+ dependencies</span>
+              <span class="tag">Cost tracking</span>
+            </div>
+          </div>
+
+          <!-- Database 4: API Endpoints -->
+          <div class="build-card">
+            <div class="card-icon">🔌</div>
+            <h3 class="card-title" data-i18n="build.db4.title">API Endpoints Registry</h3>
+            <p class="card-description" data-i18n="build.db4.desc">
+              22+ API 完整文檔（Method, Auth, Rate Limit, Public/Private）
+            </p>
+            <div class="card-tags">
+              <span class="tag">22+ endpoints</span>
+              <span class="tag">Auto-documented</span>
+            </div>
+          </div>
+
+          <!-- Database 5: Components -->
+          <div class="build-card">
+            <div class="card-icon">🧩</div>
+            <h3 class="card-title" data-i18n="build.db5.title">Component Library</h3>
+            <p class="card-description" data-i18n="build.db5.desc">
+              86+ React components 追蹤（Complexity, Reusable, Status）
+            </p>
+            <div class="card-tags">
+              <span class="tag">86+ components</span>
+              <span class="tag">Reusability tracking</span>
+            </div>
+          </div>
+
+          <!-- Database 6: Brand Guidelines -->
+          <div class="build-card">
+            <div class="card-icon">🎨</div>
+            <h3 class="card-title" data-i18n="build.db6.title">Brand Guidelines</h3>
+            <p class="card-description" data-i18n="build.db6.desc">
+              5 個品牌的視覺一致性保證（Colors, Typography, Logos）
+            </p>
+            <div class="card-tags">
+              <span class="tag">5 brands</span>
+              <span class="tag">Visual consistency</span>
+            </div>
+          </div>
+
+          <!-- Database 7: Architecture Decisions (ADR) -->
+          <div class="build-card">
+            <div class="card-icon">⚙️</div>
+            <h3 class="card-title" data-i18n="build.db7.title">Architecture Decisions (ADR)</h3>
+            <p class="card-description" data-i18n="build.db7.desc">
+              10+ 關鍵技術決策的脈絡保存（Context, Decision, Consequences）
+            </p>
+            <div class="card-tags">
+              <span class="tag">10+ ADRs</span>
+              <span class="tag">Knowledge preservation</span>
+            </div>
+          </div>
+
+          <!-- Database 8: Email Templates -->
+          <div class="build-card">
+            <div class="card-icon">📧</div>
+            <h3 class="card-title" data-i18n="build.db8.title">Email Templates</h3>
+            <p class="card-description" data-i18n="build.db8.desc">
+              12+ 客戶溝通標準化模板（Inquiry, Follow-up, Onboarding）
+            </p>
+            <div class="card-tags">
+              <span class="tag">12+ templates</span>
+              <span class="tag">Communication standards</span>
+            </div>
+          </div>
+
+          <!-- Database 9: Documentation Hub -->
+          <div class="build-card">
+            <div class="card-icon">📚</div>
+            <h3 class="card-title" data-i18n="build.db9.title">Documentation Hub</h3>
+            <p class="card-description" data-i18n="build.db9.desc">
+              Onboarding Guide + Deployment Checklists + Troubleshooting Playbooks
+            </p>
+            <div class="card-tags">
+              <span class="tag">30-min onboarding</span>
+              <span class="tag">Complete guides</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Why Different Section -->
-    <section class="why-different">
+    <section id="why-different" class="why-different">
       <div class="container">
-        <h2 class="section-title">為什麼選擇 Ultra KB？</h2>
-
-        <div class="comparison-grid">
-          <div class="comparison-column bad">
-            <div class="column-header">❌ 傳統 Notion 顧問</div>
-            <ul>
-              <li>純手工整理，耗時 2-4 週</li>
-              <li>無自動化，難以維護</li>
-              <li>不考慮 AI Agent 需求</li>
-              <li>交付後就結束，無持續支援</li>
-            </ul>
-          </div>
-
-          <div class="comparison-column good">
-            <div class="column-header">✅ Ultra KB</div>
-            <ul>
-              <li>70% 自動化，1-2 週完成</li>
-              <li>提供 open source scripts，可自行維護</li>
-              <li><strong>Agent-Ready 架構</strong>，為 AI 時代準備</li>
-              <li>2-3 個月技術支援期</li>
-            </ul>
-          </div>
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="why.title">為什麼我們不一樣？</h2>
+          <p class="section-subtitle" data-i18n="why.subtitle">
+            不只是 Notion 顧問，而是 Agent-Ready 知識架構專家
+          </p>
         </div>
 
-        <div class="unique-advantages">
-          <h3>🚀 我們的獨特優勢</h3>
-          <div class="advantages-grid">
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>Dogfooding</strong> — 我們自己先用，5 個產品實證成功</span>
+        <div class="comparison-grid">
+          <!-- Advantage 1: Automation -->
+          <div class="comparison-card">
+            <div class="comparison-header">
+              <div class="comparison-icon">🤖</div>
+              <h3 data-i18n="why.adv1.title">70% 自動化</h3>
             </div>
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>70% Automation</strong> — 競品都是手工，我們用 scripts 自動匯入 200+ pages</span>
+            <div class="comparison-content">
+              <div class="comparison-item others">
+                <span class="label" data-i18n="why.others">其他顧問：</span>
+                <span class="value" data-i18n="why.adv1.others">100% 手工整理，耗時 4+ 週</span>
+              </div>
+              <div class="comparison-item us">
+                <span class="label" data-i18n="why.us">我們：</span>
+                <span class="value" data-i18n="why.adv1.us"
+                  >Automation scripts 自動匯入 200+ pages，完成時間 2-3 週</span
+                >
+              </div>
             </div>
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>Agent-Ready</strong> — 唯一強調 AI Agent 協作的方案</span>
+          </div>
+
+          <!-- Advantage 2: Agent-Ready -->
+          <div class="comparison-card">
+            <div class="comparison-header">
+              <div class="comparison-icon">🔮</div>
+              <h3 data-i18n="why.adv2.title">Agent-Ready 架構</h3>
             </div>
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>Open Source Scripts</strong> — 客戶可自行維護，不綁架</span>
+            <div class="comparison-content">
+              <div class="comparison-item others">
+                <span class="label" data-i18n="why.others">其他顧問：</span>
+                <span class="value" data-i18n="why.adv2.others">只是文檔整理，AI 讀不懂</span>
+              </div>
+              <div class="comparison-item us">
+                <span class="label" data-i18n="why.us">我們：</span>
+                <span class="value" data-i18n="why.adv2.us"
+                  >API-first 設計，未來可串接 RAG、chatbot、automation</span
+                >
+              </div>
             </div>
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>Proven ROI</strong> — 量化的投資回報 (2.5-4x)</span>
+          </div>
+
+          <!-- Advantage 3: Dogfooding -->
+          <div class="comparison-card">
+            <div class="comparison-header">
+              <div class="comparison-icon">🚀</div>
+              <h3 data-i18n="why.adv3.title">Dogfooding 實證</h3>
             </div>
-            <div class="advantage-item">
-              <span class="advantage-icon">✅</span>
-              <span class="advantage-text"><strong>Technical DNA</strong> — 我們是技術公司，不是 Notion 顧問</span>
+            <div class="comparison-content">
+              <div class="comparison-item others">
+                <span class="label" data-i18n="why.others">其他顧問：</span>
+                <span class="value" data-i18n="why.adv3.others">理論派，沒有實際案例</span>
+              </div>
+              <div class="comparison-item us">
+                <span class="label" data-i18n="why.us">我們：</span>
+                <span class="value" data-i18n="why.adv3.us"
+                  >Ultra Lab 自己先用，5 個產品 232+ pages 實證成功</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Advantage 4: Open Source -->
+          <div class="comparison-card">
+            <div class="comparison-header">
+              <div class="comparison-icon">🔓</div>
+              <h3 data-i18n="why.adv4.title">Open Source Scripts</h3>
+            </div>
+            <div class="comparison-content">
+              <div class="comparison-item others">
+                <span class="label" data-i18n="why.others">其他顧問：</span>
+                <span class="value" data-i18n="why.adv4.others">黑箱操作，客戶無法自行維護</span>
+              </div>
+              <div class="comparison-item us">
+                <span class="label" data-i18n="why.us">我們：</span>
+                <span class="value" data-i18n="why.adv4.us"
+                  >提供 automation scripts 原始碼，客戶可自行維護、擴展</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Advantage 5: ROI -->
+          <div class="comparison-card">
+            <div class="comparison-header">
+              <div class="comparison-icon">💰</div>
+              <h3 data-i18n="why.adv5.title">量化的 ROI</h3>
+            </div>
+            <div class="comparison-content">
+              <div class="comparison-item others">
+                <span class="label" data-i18n="why.others">其他顧問：</span>
+                <span class="value" data-i18n="why.adv5.others">無法量化價值</span>
+              </div>
+              <div class="comparison-item us">
+                <span class="label" data-i18n="why.us">我們：</span>
+                <span class="value" data-i18n="why.adv5.us"
+                  >每位新開發者省 20+ 小時，3 個月內 2-3x ROI</span
+                >
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Demo/Case Study Section -->
-    <section class="demo" id="demo">
+    <!-- Demo / Case Study Section -->
+    <section id="demo" class="demo">
       <div class="container">
-        <h2 class="section-title">我們先為自己建立了 Knowledge Base</h2>
-
-        <div class="case-study">
-          <p class="case-intro">
-            Ultra Lab 管理 5 個產品品牌（Ultra Advisor, Mind Threads, UltraProbe...），<br />
-            原本新開發者需要 <strong>4+ 小時</strong>才能理解整個生態系統。
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="demo.title">案例展示：Ultra Lab 自己的 KB</h2>
+          <p class="section-subtitle" data-i18n="demo.subtitle">
+            我們先為自己建立了完整的 Knowledge Base，然後才推出這個服務
           </p>
+        </div>
 
+        <div class="demo-content">
+          <!-- Before / After Comparison -->
           <div class="before-after">
             <div class="before">
-              <h3>❌ Before (分散文檔)</h3>
+              <h3 data-i18n="demo.before.title">建立前 ❌</h3>
               <ul>
-                <li>79 篇 blog 文章散落在 2 個 repos</li>
-                <li>技術決策埋在 CLAUDE.md、MEMORY.md</li>
-                <li>5 個品牌各自獨立，無統一規範</li>
-                <li>新人 onboarding: 4+ 小時</li>
+                <li data-i18n="demo.before.point1">新開發者 onboarding 需要 4+ 小時</li>
+                <li data-i18n="demo.before.point2">5 個產品的文檔分散在 2 個 repos</li>
+                <li data-i18n="demo.before.point3">79 篇 blog 文章沒有統一管理</li>
+                <li data-i18n="demo.before.point4">技術決策散落在 CLAUDE.md、MEMORY.md</li>
+                <li data-i18n="demo.before.point5">品牌設計規範未整理</li>
               </ul>
             </div>
-
             <div class="after">
-              <h3>✅ After (Ultra KB)</h3>
+              <h3 data-i18n="demo.after.title">建立後 ✅</h3>
               <ul>
-                <li>232+ pages 整合在 Notion</li>
-                <li>10+ ADRs 完整記錄所有決策</li>
-                <li>5 個品牌統一視覺規範</li>
-                <li><strong>新人 onboarding: 30 分鐘</strong></li>
+                <li data-i18n="demo.after.point1">新開發者 onboarding 只需 30 分鐘</li>
+                <li data-i18n="demo.after.point2">9 個 Databases 統一管理所有資訊</li>
+                <li data-i18n="demo.after.point3">232+ pages 自動匯入，90%+ 完整度</li>
+                <li data-i18n="demo.after.point4">10+ ADRs 記錄所有關鍵技術決策</li>
+                <li data-i18n="demo.after.point5">5 個品牌的視覺規範完整文檔化</li>
               </ul>
             </div>
           </div>
 
-          <p class="case-outro">
-            現在我們把這個流程產品化，幫你的團隊也做到。
-          </p>
+          <!-- Metrics -->
+          <div class="demo-metrics">
+            <div class="metric-card">
+              <div class="metric-number">232+</div>
+              <div class="metric-label" data-i18n="demo.metrics.pages">Pages Created</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-number">70%</div>
+              <div class="metric-label" data-i18n="demo.metrics.automation">Automation Rate</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-number">88.3%</div>
+              <div class="metric-label" data-i18n="demo.metrics.completeness">Avg Completeness</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-number">37.5h</div>
+              <div class="metric-label" data-i18n="demo.metrics.time">Total Time Invested</div>
+            </div>
+          </div>
+
+          <!-- CTA to View Our KB -->
+          <div class="demo-cta">
+            <p data-i18n="demo.cta.text">想看我們完整的 Knowledge Base？</p>
+            <a
+              href="https://www.notion.so/31545842ecf08108ae81cc46d5cea887"
+              target="_blank"
+              class="btn btn-primary"
+            >
+              <span data-i18n="demo.cta.button">查看 Ultra Lab Master Dashboard</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
+    <section id="pricing" class="pricing">
       <div class="container">
-        <h2 class="section-title">服務方案與定價</h2>
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="pricing.title">服務方案與定價</h2>
+          <p class="section-subtitle" data-i18n="pricing.subtitle">
+            現在我們把這個流程產品化，幫你的團隊也做到。
+          </p>
+        </div>
 
         <div class="pricing-grid">
+          <!-- Basic Plan -->
           <div class="pricing-card">
-            <div class="plan-name">Basic</div>
-            <div class="plan-price">NT$50,000</div>
-            <div class="plan-target">單一產品，3-5 人團隊</div>
-            <ul class="plan-features">
-              <li>✅ 6-8 Notion databases</li>
-              <li>✅ 100-200 pages auto-imported</li>
-              <li>✅ Automation scripts（可自行維護）</li>
-              <li>✅ 30-min Onboarding Guide</li>
-              <li>✅ 2 months support</li>
-            </ul>
-            <div class="plan-roi">
-              <strong>ROI:</strong> 省下 80h onboarding × NT$1,000/h = <strong>NT$80,000</strong> (1.6x)
+            <div class="plan-header">
+              <h3 class="plan-name" data-i18n="pricing.basic.name">Basic</h3>
+              <div class="plan-price">
+                <span class="currency">NT$</span>
+                <span class="amount">50,000</span>
+              </div>
+              <p class="plan-target" data-i18n="pricing.basic.target">單一產品 · 3-5 人團隊</p>
             </div>
+            <div class="plan-features">
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.basic.feature1">6-8 Notion databases</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.basic.feature2">100-200 pages auto-imported</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.basic.feature3">Automation scripts（可自行維護）</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.basic.feature4">30-min Onboarding Guide</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.basic.feature5">2 months support</span>
+              </div>
+            </div>
+            <div class="plan-roi">
+              <p class="roi-label" data-i18n="pricing.roi">投資回報：</p>
+              <p class="roi-value" data-i18n="pricing.basic.roi">
+                省下 80h onboarding × NT$1,000/h = NT$80,000（1.6x ROI）
+              </p>
+            </div>
+            <a href="#contact" class="btn btn-outline">
+              <span data-i18n="pricing.cta">立即預約</span>
+            </a>
           </div>
 
-          <div class="pricing-card featured">
-            <div class="popular-badge">最受歡迎</div>
-            <div class="plan-name">Standard</div>
-            <div class="plan-price">NT$80,000</div>
-            <div class="plan-target">2-3 產品，5-15 人團隊</div>
-            <ul class="plan-features">
-              <li>✅ 9-10 Notion databases</li>
-              <li>✅ 200-300 pages auto-imported</li>
-              <li>✅ Automation scripts + GitHub Actions</li>
-              <li>✅ Master Dashboard</li>
-              <li>✅ Brand Guidelines documentation</li>
-              <li>✅ 2 months support</li>
-            </ul>
-            <div class="plan-roi">
-              <strong>ROI:</strong> 省下 200h = <strong>NT$200,000</strong> (2.5x)
+          <!-- Standard Plan (Recommended) -->
+          <div class="pricing-card recommended">
+            <div class="recommended-badge" data-i18n="pricing.recommended">最受歡迎</div>
+            <div class="plan-header">
+              <h3 class="plan-name" data-i18n="pricing.standard.name">Standard</h3>
+              <div class="plan-price">
+                <span class="currency">NT$</span>
+                <span class="amount">80,000</span>
+              </div>
+              <p class="plan-target" data-i18n="pricing.standard.target">2-3 產品 · 5-15 人團隊</p>
             </div>
+            <div class="plan-features">
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature1">9-10 Notion databases</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature2">200-300 pages auto-imported</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature3"
+                  >Automation scripts + GitHub Actions</span
+                >
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature4">Brand Guidelines + ADR Database</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature5">Email Templates + Documentation Hub</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.standard.feature6">2 months support</span>
+              </div>
+            </div>
+            <div class="plan-roi">
+              <p class="roi-label" data-i18n="pricing.roi">投資回報：</p>
+              <p class="roi-value" data-i18n="pricing.standard.roi">
+                省下 200h × NT$1,000/h = NT$200,000（2.5x ROI）
+              </p>
+            </div>
+            <a href="#contact" class="btn btn-primary">
+              <span data-i18n="pricing.cta">立即預約</span>
+            </a>
           </div>
 
+          <!-- Premium Plan -->
           <div class="pricing-card">
-            <div class="plan-name">Premium</div>
-            <div class="plan-price">NT$120,000</div>
-            <div class="plan-target">4+ 產品，15-50 人團隊</div>
-            <ul class="plan-features">
-              <li>✅ 完整 workspace（10+ databases）</li>
-              <li>✅ 300+ pages auto-imported</li>
-              <li>✅ Full automation + CI/CD integration</li>
-              <li>✅ Onboarding video walkthrough</li>
-              <li>✅ Team training workshop</li>
-              <li>✅ 3 months support</li>
-            </ul>
-            <div class="plan-roi">
-              <strong>ROI:</strong> 省下 400h = <strong>NT$400,000</strong> (3.3x)
+            <div class="plan-header">
+              <h3 class="plan-name" data-i18n="pricing.premium.name">Premium</h3>
+              <div class="plan-price">
+                <span class="currency">NT$</span>
+                <span class="amount">120,000</span>
+              </div>
+              <p class="plan-target" data-i18n="pricing.premium.target">4+ 產品 · 15-50 人團隊</p>
             </div>
+            <div class="plan-features">
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature1">完整 workspace（10+ databases）</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature2">300+ pages auto-imported</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature3">Full automation + CI/CD integration</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature4">Complete documentation + training</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature5">Onboarding video walkthrough</span>
+              </div>
+              <div class="feature">
+                <span class="feature-icon">✅</span>
+                <span data-i18n="pricing.premium.feature6">3 months support</span>
+              </div>
+            </div>
+            <div class="plan-roi">
+              <p class="roi-label" data-i18n="pricing.roi">投資回報：</p>
+              <p class="roi-value" data-i18n="pricing.premium.roi">
+                省下 400h × NT$1,000/h = NT$400,000（3.3x ROI）
+              </p>
+            </div>
+            <a href="#contact" class="btn btn-outline">
+              <span data-i18n="pricing.cta">立即預約</span>
+            </a>
           </div>
         </div>
 
-        <div class="pricing-note">
-          💡 所有方案都包含 <strong>open source automation scripts</strong>，交付後你可以完全自行維護，不綁架。
+        <!-- Enterprise Plan -->
+        <div class="enterprise-cta">
+          <h3 data-i18n="pricing.enterprise.title">需要企業級方案？</h3>
+          <p data-i18n="pricing.enterprise.desc">
+            多團隊、ongoing maintenance、custom integrations — 聯絡我們取得客製化報價
+          </p>
+          <a href="#contact" class="btn btn-secondary">
+            <span data-i18n="pricing.enterprise.cta">聯絡我們</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
+    <!-- Contact / CTA Section -->
+    <section id="contact" class="contact">
       <div class="container">
-        <div class="cta-content">
-          <h2 class="cta-title">準備好改變 AI 時代的知識管理方式了嗎？</h2>
-          <p class="cta-subtitle">
-            預約免費 30 分鐘諮詢，我們幫你評估現有文檔狀況、估算工作量、規劃知識庫架構。
+        <div class="contact-content">
+          <h2 class="section-title" data-i18n="contact.title">準備開始了嗎？</h2>
+          <p class="section-subtitle" data-i18n="contact.subtitle">
+            預約免費 30 分鐘 Discovery Workshop，了解我們如何幫你建立 Agent-Ready Knowledge Base
           </p>
-          <a href="/#contact" class="btn btn-primary btn-large">立即預約諮詢</a>
+
+          <div class="contact-buttons">
+            <a href="mailto:contact@ultracreation.tw" class="btn btn-primary">
+              <span data-i18n="contact.cta.email">📧 Email 聯絡</span>
+            </a>
+            <a href="https://ultralab.tw/#contact" class="btn btn-secondary">
+              <span data-i18n="contact.cta.form">填寫諮詢表單</span>
+            </a>
+          </div>
+
+          <!-- Trust Signals -->
+          <div class="trust-signals">
+            <div class="trust-item">
+              <div class="trust-icon">✅</div>
+              <div class="trust-text" data-i18n="contact.trust1">
+                2-3 週完成交付（vs. 行業平均 4+ 週）
+              </div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-icon">✅</div>
+              <div class="trust-text" data-i18n="contact.trust2">
+                70% 自動化，非手工黑箱操作
+              </div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-icon">✅</div>
+              <div class="trust-text" data-i18n="contact.trust3">
+                Open source scripts，客戶可自行維護
+              </div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-icon">✅</div>
+              <div class="trust-text" data-i18n="contact.trust4">
+                Ultra Lab 自己實證成功（232+ pages）
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -322,20 +676,415 @@
     <footer class="footer">
       <div class="container">
         <div class="footer-content">
-          <div class="footer-logo">
-            <a href="/">← 回到 Ultra Lab 首頁</a>
+          <div class="footer-left">
+            <div class="footer-logo">
+              <span class="logo-icon">📚</span>
+              <span class="logo-text">Ultra KB</span>
+            </div>
+            <p class="footer-tagline" data-i18n="footer.tagline">
+              Agent-Ready Knowledge Infrastructure
+            </p>
           </div>
           <div class="footer-links">
-            <a href="/#services">服務項目</a>
-            <a href="/#portfolio">成功案例</a>
-            <a href="/#contact">聯絡我們</a>
+            <div class="footer-column">
+              <h4 data-i18n="footer.services.title">服務</h4>
+              <a href="#what-we-build" data-i18n="footer.services.databases">Notion Databases</a>
+              <a href="#why-different" data-i18n="footer.services.automation">Automation Scripts</a>
+              <a href="#demo" data-i18n="footer.services.case">案例展示</a>
+            </div>
+            <div class="footer-column">
+              <h4 data-i18n="footer.company.title">公司</h4>
+              <a href="https://ultralab.tw" data-i18n="footer.company.ultralab">Ultra Lab</a>
+              <a href="https://ultralab.tw/product-threads" data-i18n="footer.company.threads"
+                >Mind Threads</a
+              >
+              <a href="https://ultralab.tw/probe" data-i18n="footer.company.probe">UltraProbe</a>
+            </div>
+            <div class="footer-column">
+              <h4 data-i18n="footer.resources.title">資源</h4>
+              <a
+                href="https://www.notion.so/31545842ecf08108ae81cc46d5cea887"
+                target="_blank"
+                data-i18n="footer.resources.dashboard"
+                >Master Dashboard</a
+              >
+              <a href="https://github.com/ppcvote/ultralab" target="_blank" data-i18n="footer.resources.github">GitHub</a>
+              <a href="#contact" data-i18n="footer.resources.contact">聯絡我們</a>
+            </div>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2026 Ultra Creation Co., Ltd. All rights reserved.</p>
-          <p class="footer-tagline">Ultra KB — Agent-Ready Knowledge Infrastructure</p>
+          <p data-i18n="footer.copyright">
+            © 2026 Ultra Creation Co., Ltd. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
+
+    <!-- JavaScript for i18n -->
+    <script>
+      // Translation Data
+      const translations = {
+        zh: {
+          'nav.title': 'Ultra KB',
+          'nav.services': '服務內容',
+          'nav.advantages': '差異化優勢',
+          'nav.demo': '案例展示',
+          'nav.pricing': '定價方案',
+          'nav.contact': '立即預約',
+
+          'hero.badge': '🤖 Agent-Ready Knowledge Infrastructure',
+          'hero.title.line1': '從分散文檔到',
+          'hero.title.line2': '統一知識中樞',
+          'hero.subtitle': '30 分鐘 onboard 人類。0 秒 onboard AI Agents。',
+          'hero.cta.primary': '查看方案',
+          'hero.cta.secondary': '查看 Demo',
+          'hero.stats.pages': 'Pages 自動匯入',
+          'hero.stats.automation': '自動化程度',
+          'hero.stats.minutes': '分鐘',
+          'hero.stats.onboarding': 'Onboarding 時間',
+          'hero.stats.coverage': '文檔完整度',
+
+          'pain.title': '你的團隊是否遇到這些問題？',
+          'pain.point1': '新開發者 onboarding 需要 1-2 週閱讀分散文件',
+          'pain.point2': '技術決策散落在 Slack、email、腦袋裡，沒有系統化記錄',
+          'pain.point3': '多個產品的 blog、API、components 沒有統一管理',
+          'pain.point4': '品牌視覺語言不一致，每個產品各自為政',
+          'pain.point5': '踩過的坑重複踩，知識沒有傳承',
+          'pain.solution': 'Ultra KB 幫你建立統一的 Notion Knowledge Base，解決所有問題',
+
+          'build.title': '我們為你建立什麼？',
+          'build.subtitle': '9 個 Notion Databases + 200+ Pages，70% 自動化匯入',
+          'build.db1.title': 'Products Database',
+          'build.db1.desc':
+            '5 個產品的中央資訊樞紐（Tech Stack, APIs, Components, Blog Posts）',
+          'build.db2.title': 'Blog Posts Database',
+          'build.db2.desc': '79 篇文章集中管理 + SEO 追蹤 + Content Calendar',
+          'build.db3.title': 'Tech Stack Registry',
+          'build.db3.desc': '40+ 技術依賴追蹤（版本、成本、Critical Dependencies）',
+          'build.db4.title': 'API Endpoints Registry',
+          'build.db4.desc': '22+ API 完整文檔（Method, Auth, Rate Limit, Public/Private）',
+          'build.db5.title': 'Component Library',
+          'build.db5.desc': '86+ React components 追蹤（Complexity, Reusable, Status）',
+          'build.db6.title': 'Brand Guidelines',
+          'build.db6.desc': '5 個品牌的視覺一致性保證（Colors, Typography, Logos）',
+          'build.db7.title': 'Architecture Decisions (ADR)',
+          'build.db7.desc': '10+ 關鍵技術決策的脈絡保存（Context, Decision, Consequences）',
+          'build.db8.title': 'Email Templates',
+          'build.db8.desc': '12+ 客戶溝通標準化模板（Inquiry, Follow-up, Onboarding）',
+          'build.db9.title': 'Documentation Hub',
+          'build.db9.desc': 'Onboarding Guide + Deployment Checklists + Troubleshooting Playbooks',
+
+          'why.title': '為什麼我們不一樣？',
+          'why.subtitle': '不只是 Notion 顧問，而是 Agent-Ready 知識架構專家',
+          'why.others': '其他顧問：',
+          'why.us': '我們：',
+          'why.adv1.title': '70% 自動化',
+          'why.adv1.others': '100% 手工整理，耗時 4+ 週',
+          'why.adv1.us': 'Automation scripts 自動匯入 200+ pages，完成時間 2-3 週',
+          'why.adv2.title': 'Agent-Ready 架構',
+          'why.adv2.others': '只是文檔整理，AI 讀不懂',
+          'why.adv2.us': 'API-first 設計，未來可串接 RAG、chatbot、automation',
+          'why.adv3.title': 'Dogfooding 實證',
+          'why.adv3.others': '理論派，沒有實際案例',
+          'why.adv3.us': 'Ultra Lab 自己先用，5 個產品 232+ pages 實證成功',
+          'why.adv4.title': 'Open Source Scripts',
+          'why.adv4.others': '黑箱操作，客戶無法自行維護',
+          'why.adv4.us': '提供 automation scripts 原始碼，客戶可自行維護、擴展',
+          'why.adv5.title': '量化的 ROI',
+          'why.adv5.others': '無法量化價值',
+          'why.adv5.us': '每位新開發者省 20+ 小時，3 個月內 2-3x ROI',
+
+          'demo.title': '案例展示：Ultra Lab 自己的 KB',
+          'demo.subtitle': '我們先為自己建立了完整的 Knowledge Base，然後才推出這個服務',
+          'demo.before.title': '建立前 ❌',
+          'demo.before.point1': '新開發者 onboarding 需要 4+ 小時',
+          'demo.before.point2': '5 個產品的文檔分散在 2 個 repos',
+          'demo.before.point3': '79 篇 blog 文章沒有統一管理',
+          'demo.before.point4': '技術決策散落在 CLAUDE.md、MEMORY.md',
+          'demo.before.point5': '品牌設計規範未整理',
+          'demo.after.title': '建立後 ✅',
+          'demo.after.point1': '新開發者 onboarding 只需 30 分鐘',
+          'demo.after.point2': '9 個 Databases 統一管理所有資訊',
+          'demo.after.point3': '232+ pages 自動匯入，90%+ 完整度',
+          'demo.after.point4': '10+ ADRs 記錄所有關鍵技術決策',
+          'demo.after.point5': '5 個品牌的視覺規範完整文檔化',
+          'demo.metrics.pages': 'Pages Created',
+          'demo.metrics.automation': 'Automation Rate',
+          'demo.metrics.completeness': 'Avg Completeness',
+          'demo.metrics.time': 'Total Time Invested',
+          'demo.cta.text': '想看我們完整的 Knowledge Base？',
+          'demo.cta.button': '查看 Ultra Lab Master Dashboard',
+
+          'pricing.title': '服務方案與定價',
+          'pricing.subtitle': '現在我們把這個流程產品化，幫你的團隊也做到。',
+          'pricing.recommended': '最受歡迎',
+          'pricing.roi': '投資回報：',
+          'pricing.cta': '立即預約',
+          'pricing.basic.name': 'Basic',
+          'pricing.basic.target': '單一產品 · 3-5 人團隊',
+          'pricing.basic.feature1': '6-8 Notion databases',
+          'pricing.basic.feature2': '100-200 pages auto-imported',
+          'pricing.basic.feature3': 'Automation scripts（可自行維護）',
+          'pricing.basic.feature4': '30-min Onboarding Guide',
+          'pricing.basic.feature5': '2 months support',
+          'pricing.basic.roi':
+            '省下 80h onboarding × NT$1,000/h = NT$80,000（1.6x ROI）',
+          'pricing.standard.name': 'Standard',
+          'pricing.standard.target': '2-3 產品 · 5-15 人團隊',
+          'pricing.standard.feature1': '9-10 Notion databases',
+          'pricing.standard.feature2': '200-300 pages auto-imported',
+          'pricing.standard.feature3': 'Automation scripts + GitHub Actions',
+          'pricing.standard.feature4': 'Brand Guidelines + ADR Database',
+          'pricing.standard.feature5': 'Email Templates + Documentation Hub',
+          'pricing.standard.feature6': '2 months support',
+          'pricing.standard.roi':
+            '省下 200h × NT$1,000/h = NT$200,000（2.5x ROI）',
+          'pricing.premium.name': 'Premium',
+          'pricing.premium.target': '4+ 產品 · 15-50 人團隊',
+          'pricing.premium.feature1': '完整 workspace（10+ databases）',
+          'pricing.premium.feature2': '300+ pages auto-imported',
+          'pricing.premium.feature3': 'Full automation + CI/CD integration',
+          'pricing.premium.feature4': 'Complete documentation + training',
+          'pricing.premium.feature5': 'Onboarding video walkthrough',
+          'pricing.premium.feature6': '3 months support',
+          'pricing.premium.roi':
+            '省下 400h × NT$1,000/h = NT$400,000（3.3x ROI）',
+          'pricing.enterprise.title': '需要企業級方案？',
+          'pricing.enterprise.desc':
+            '多團隊、ongoing maintenance、custom integrations — 聯絡我們取得客製化報價',
+          'pricing.enterprise.cta': '聯絡我們',
+
+          'contact.title': '準備開始了嗎？',
+          'contact.subtitle':
+            '預約免費 30 分鐘 Discovery Workshop，了解我們如何幫你建立 Agent-Ready Knowledge Base',
+          'contact.cta.email': '📧 Email 聯絡',
+          'contact.cta.form': '填寫諮詢表單',
+          'contact.trust1': '2-3 週完成交付（vs. 行業平均 4+ 週）',
+          'contact.trust2': '70% 自動化，非手工黑箱操作',
+          'contact.trust3': 'Open source scripts，客戶可自行維護',
+          'contact.trust4': 'Ultra Lab 自己實證成功（232+ pages）',
+
+          'footer.tagline': 'Agent-Ready Knowledge Infrastructure',
+          'footer.services.title': '服務',
+          'footer.services.databases': 'Notion Databases',
+          'footer.services.automation': 'Automation Scripts',
+          'footer.services.case': '案例展示',
+          'footer.company.title': '公司',
+          'footer.company.ultralab': 'Ultra Lab',
+          'footer.company.threads': 'Mind Threads',
+          'footer.company.probe': 'UltraProbe',
+          'footer.resources.title': '資源',
+          'footer.resources.dashboard': 'Master Dashboard',
+          'footer.resources.github': 'GitHub',
+          'footer.resources.contact': '聯絡我們',
+          'footer.copyright': '© 2026 Ultra Creation Co., Ltd. All rights reserved.',
+        },
+        en: {
+          'nav.title': 'Ultra KB',
+          'nav.services': 'Services',
+          'nav.advantages': 'Why Us',
+          'nav.demo': 'Demo',
+          'nav.pricing': 'Pricing',
+          'nav.contact': 'Book Now',
+
+          'hero.badge': '🤖 Agent-Ready Knowledge Infrastructure',
+          'hero.title.line1': 'From Scattered Docs to',
+          'hero.title.line2': 'Unified Knowledge Hub',
+          'hero.subtitle': '30-min to onboard humans. 0-sec to onboard AI Agents.',
+          'hero.cta.primary': 'View Plans',
+          'hero.cta.secondary': 'View Demo',
+          'hero.stats.pages': 'Pages Auto-Imported',
+          'hero.stats.automation': 'Automation Rate',
+          'hero.stats.minutes': 'min',
+          'hero.stats.onboarding': 'Onboarding Time',
+          'hero.stats.coverage': 'Documentation Coverage',
+
+          'pain.title': 'Does Your Team Face These Challenges?',
+          'pain.point1': 'New developers need 1-2 weeks to read scattered documentation',
+          'pain.point2': 'Tech decisions scattered in Slack, emails, and people\'s heads — no systematic recording',
+          'pain.point3': 'Multiple products\' blogs, APIs, components have no unified management',
+          'pain.point4': 'Brand visual language is inconsistent, each product operates independently',
+          'pain.point5': 'Repeated mistakes, no knowledge transfer',
+          'pain.solution': 'Ultra KB helps you build a unified Notion Knowledge Base to solve all problems',
+
+          'build.title': 'What We Build for You',
+          'build.subtitle': '9 Notion Databases + 200+ Pages, 70% Automated Import',
+          'build.db1.title': 'Products Database',
+          'build.db1.desc':
+            'Central hub for 5 products (Tech Stack, APIs, Components, Blog Posts)',
+          'build.db2.title': 'Blog Posts Database',
+          'build.db2.desc': '79 articles centralized management + SEO tracking + Content Calendar',
+          'build.db3.title': 'Tech Stack Registry',
+          'build.db3.desc': '40+ tech dependencies tracking (versions, cost, critical dependencies)',
+          'build.db4.title': 'API Endpoints Registry',
+          'build.db4.desc': '22+ API complete documentation (Method, Auth, Rate Limit, Public/Private)',
+          'build.db5.title': 'Component Library',
+          'build.db5.desc': '86+ React components tracking (Complexity, Reusable, Status)',
+          'build.db6.title': 'Brand Guidelines',
+          'build.db6.desc': 'Visual consistency guarantee for 5 brands (Colors, Typography, Logos)',
+          'build.db7.title': 'Architecture Decisions (ADR)',
+          'build.db7.desc': '10+ critical tech decisions preserved (Context, Decision, Consequences)',
+          'build.db8.title': 'Email Templates',
+          'build.db8.desc': '12+ standardized customer communication templates (Inquiry, Follow-up, Onboarding)',
+          'build.db9.title': 'Documentation Hub',
+          'build.db9.desc': 'Onboarding Guide + Deployment Checklists + Troubleshooting Playbooks',
+
+          'why.title': 'Why We\'re Different',
+          'why.subtitle': 'Not just a Notion consultant, but an Agent-Ready knowledge architecture expert',
+          'why.others': 'Other consultants:',
+          'why.us': 'Us:',
+          'why.adv1.title': '70% Automation',
+          'why.adv1.others': '100% manual work, takes 4+ weeks',
+          'why.adv1.us': 'Automation scripts auto-import 200+ pages, completed in 2-3 weeks',
+          'why.adv2.title': 'Agent-Ready Architecture',
+          'why.adv2.others': 'Just documentation cleanup, AI can\'t understand',
+          'why.adv2.us': 'API-first design, future-ready for RAG, chatbot, automation',
+          'why.adv3.title': 'Dogfooding Proof',
+          'why.adv3.others': 'Theoretical, no real cases',
+          'why.adv3.us': 'Ultra Lab uses it ourselves, 5 products 232+ pages proven success',
+          'why.adv4.title': 'Open Source Scripts',
+          'why.adv4.others': 'Black box operation, clients can\'t maintain themselves',
+          'why.adv4.us': 'Provide automation scripts source code, clients can maintain & extend',
+          'why.adv5.title': 'Quantified ROI',
+          'why.adv5.others': 'Cannot quantify value',
+          'why.adv5.us': 'Save 20+ hours per new developer, 2-3x ROI in 3 months',
+
+          'demo.title': 'Case Study: Ultra Lab\'s Own KB',
+          'demo.subtitle': 'We built our own complete Knowledge Base first, then launched this service',
+          'demo.before.title': 'Before ❌',
+          'demo.before.point1': 'New developer onboarding took 4+ hours',
+          'demo.before.point2': '5 products\' documentation scattered across 2 repos',
+          'demo.before.point3': '79 blog articles had no unified management',
+          'demo.before.point4': 'Tech decisions scattered in CLAUDE.md, MEMORY.md',
+          'demo.before.point5': 'Brand design guidelines not organized',
+          'demo.after.title': 'After ✅',
+          'demo.after.point1': 'New developer onboarding only takes 30 minutes',
+          'demo.after.point2': '9 Databases unified management of all information',
+          'demo.after.point3': '232+ pages auto-imported, 90%+ completeness',
+          'demo.after.point4': '10+ ADRs documenting all critical tech decisions',
+          'demo.after.point5': '5 brands\' visual guidelines fully documented',
+          'demo.metrics.pages': 'Pages Created',
+          'demo.metrics.automation': 'Automation Rate',
+          'demo.metrics.completeness': 'Avg Completeness',
+          'demo.metrics.time': 'Total Time Invested',
+          'demo.cta.text': 'Want to see our complete Knowledge Base?',
+          'demo.cta.button': 'View Ultra Lab Master Dashboard',
+
+          'pricing.title': 'Service Plans & Pricing',
+          'pricing.subtitle': 'Now we productize this process to help your team achieve the same.',
+          'pricing.recommended': 'Most Popular',
+          'pricing.roi': 'ROI:',
+          'pricing.cta': 'Book Now',
+          'pricing.basic.name': 'Basic',
+          'pricing.basic.target': 'Single Product · 3-5 Team',
+          'pricing.basic.feature1': '6-8 Notion databases',
+          'pricing.basic.feature2': '100-200 pages auto-imported',
+          'pricing.basic.feature3': 'Automation scripts (self-maintainable)',
+          'pricing.basic.feature4': '30-min Onboarding Guide',
+          'pricing.basic.feature5': '2 months support',
+          'pricing.basic.roi':
+            'Save 80h onboarding × $30/h = $2,400 (1.6x ROI)',
+          'pricing.standard.name': 'Standard',
+          'pricing.standard.target': '2-3 Products · 5-15 Team',
+          'pricing.standard.feature1': '9-10 Notion databases',
+          'pricing.standard.feature2': '200-300 pages auto-imported',
+          'pricing.standard.feature3': 'Automation scripts + GitHub Actions',
+          'pricing.standard.feature4': 'Brand Guidelines + ADR Database',
+          'pricing.standard.feature5': 'Email Templates + Documentation Hub',
+          'pricing.standard.feature6': '2 months support',
+          'pricing.standard.roi':
+            'Save 200h × $30/h = $6,000 (2.5x ROI)',
+          'pricing.premium.name': 'Premium',
+          'pricing.premium.target': '4+ Products · 15-50 Team',
+          'pricing.premium.feature1': 'Complete workspace (10+ databases)',
+          'pricing.premium.feature2': '300+ pages auto-imported',
+          'pricing.premium.feature3': 'Full automation + CI/CD integration',
+          'pricing.premium.feature4': 'Complete documentation + training',
+          'pricing.premium.feature5': 'Onboarding video walkthrough',
+          'pricing.premium.feature6': '3 months support',
+          'pricing.premium.roi':
+            'Save 400h × $30/h = $12,000 (3.3x ROI)',
+          'pricing.enterprise.title': 'Need Enterprise Plan?',
+          'pricing.enterprise.desc':
+            'Multi-team, ongoing maintenance, custom integrations — Contact us for customized quote',
+          'pricing.enterprise.cta': 'Contact Us',
+
+          'contact.title': 'Ready to Get Started?',
+          'contact.subtitle':
+            'Book a free 30-min Discovery Workshop to learn how we help you build an Agent-Ready Knowledge Base',
+          'contact.cta.email': '📧 Email Contact',
+          'contact.cta.form': 'Fill Consultation Form',
+          'contact.trust1': '2-3 weeks delivery (vs. industry avg 4+ weeks)',
+          'contact.trust2': '70% automation, not manual black box',
+          'contact.trust3': 'Open source scripts, clients can maintain',
+          'contact.trust4': 'Ultra Lab proven success (232+ pages)',
+
+          'footer.tagline': 'Agent-Ready Knowledge Infrastructure',
+          'footer.services.title': 'Services',
+          'footer.services.databases': 'Notion Databases',
+          'footer.services.automation': 'Automation Scripts',
+          'footer.services.case': 'Case Study',
+          'footer.company.title': 'Company',
+          'footer.company.ultralab': 'Ultra Lab',
+          'footer.company.threads': 'Mind Threads',
+          'footer.company.probe': 'UltraProbe',
+          'footer.resources.title': 'Resources',
+          'footer.resources.dashboard': 'Master Dashboard',
+          'footer.resources.github': 'GitHub',
+          'footer.resources.contact': 'Contact Us',
+          'footer.copyright': '© 2026 Ultra Creation Co., Ltd. All rights reserved.',
+        },
+      }
+
+      // i18n Functions
+      let currentLang = 'zh'
+
+      function updateContent(lang) {
+        currentLang = lang
+        const t = translations[lang]
+
+        document.querySelectorAll('[data-i18n]').forEach((el) => {
+          const key = el.getAttribute('data-i18n')
+          if (t[key]) {
+            el.textContent = t[key]
+          }
+        })
+
+        // Update lang attribute
+        document.documentElement.lang = lang === 'zh' ? 'zh-TW' : 'en'
+
+        // Update active button
+        document.querySelectorAll('.lang-btn').forEach((btn) => {
+          btn.classList.toggle('active', btn.getAttribute('data-lang') === lang)
+        })
+
+        // Save preference
+        localStorage.setItem('preferredLang', lang)
+      }
+
+      // Language Toggle
+      document.querySelectorAll('.lang-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const lang = btn.getAttribute('data-lang')
+          updateContent(lang)
+        })
+      })
+
+      // Load saved preference
+      const savedLang = localStorage.getItem('preferredLang') || 'zh'
+      updateContent(savedLang)
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault()
+          const target = document.querySelector(this.getAttribute('href'))
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' })
+          }
+        })
+      })
+    </script>
   </body>
 </html>
