@@ -1225,6 +1225,193 @@ section {
 }
 
 /* ========================
+   Live Terminal Animation
+   ======================== */
+
+.terminal-demo {
+  margin: 5rem 0 4rem;
+  padding: 0;
+}
+
+.terminal-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.terminal-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-family: 'Noto Serif TC', Georgia, serif;
+}
+
+.terminal-subtitle {
+  font-size: 1.125rem;
+  color: #6a6a6a;
+}
+
+.terminal-window {
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+.terminal-window-header {
+  background: #2d2d2d;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-button.close {
+  background: #ff5f56;
+}
+
+.terminal-button.minimize {
+  background: #ffbd2e;
+}
+
+.terminal-button.maximize {
+  background: #27c93f;
+}
+
+.terminal-window-title {
+  font-size: 0.875rem;
+  color: #9a9a9a;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  min-height: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: #1a1a1a;
+}
+
+.terminal-line {
+  color: #f5f5f5;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  margin-bottom: 0.25rem;
+}
+
+.terminal-prompt {
+  color: #4a7326;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.terminal-command {
+  color: #ffffff;
+}
+
+.terminal-output {
+  color: #9a9a9a;
+}
+
+.terminal-success {
+  color: #27c93f;
+}
+
+.terminal-error {
+  color: #ff5f56;
+}
+
+.terminal-warning {
+  color: #ffbd2e;
+}
+
+.terminal-emoji {
+  margin-right: 0.5rem;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 18px;
+  background: #4a7326;
+  animation: blink 1s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* ========================
+   Data Visualization Dashboard
+   ======================== */
+
+.data-viz-section {
+  margin: 5rem 0 4rem;
+  padding: 3rem;
+  background: linear-gradient(135deg, rgba(74, 115, 38, 0.03) 0%, rgba(139, 69, 19, 0.03) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(74, 115, 38, 0.15);
+}
+
+.viz-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-family: 'Noto Serif TC', Georgia, serif;
+}
+
+.viz-subtitle {
+  text-align: center;
+  font-size: 1.125rem;
+  color: #6a6a6a;
+  margin-bottom: 3rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.chart-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(74, 115, 38, 0.15);
+}
+
+.chart-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+/* ========================
    Interactive Notion Preview
    ======================== */
 
@@ -1650,6 +1837,20 @@ section {
   }
 
   .database-table {
+    font-size: 0.875rem;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .terminal-demo,
+  .data-viz-section {
+    padding: 2rem 1.5rem;
+  }
+
+  .terminal-body {
+    min-height: 300px;
     font-size: 0.875rem;
   }
 }
