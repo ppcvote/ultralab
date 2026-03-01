@@ -413,7 +413,7 @@ const documentationPages = [
               type: 'text',
               text: {
                 content:
-                  'Fill in Notion API key in .env | 填寫 Notion API key（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）',
+                  'Fill in Notion API key in .env | 填寫 Notion API key（從 Notion Integration 取得）',
               },
             },
           ],
