@@ -156,9 +156,9 @@ section {
 }
 
 .lang-btn.active {
-  background: linear-gradient(135deg, #8b4513 0%, #cd853f 100%);
+  background: linear-gradient(135deg, #4a7326 0%, #6ba33e 100%);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(139, 69, 19, 0.3);
+  box-shadow: 0 2px 8px rgba(74, 115, 38, 0.35);
 }
 
 /* ========================
@@ -230,16 +230,16 @@ section {
 }
 
 .btn-nav {
-  background: linear-gradient(135deg, #8b4513 0%, #cd853f 100%);
+  background: linear-gradient(135deg, #4a7326 0%, #6ba33e 100%);
   color: #ffffff;
   padding: 0.625rem 1.5rem;
   border-radius: 8px;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(139, 69, 19, 0.25);
+  box-shadow: 0 4px 12px rgba(74, 115, 38, 0.3);
 }
 
 .btn-nav:hover {
-  box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+  box-shadow: 0 6px 20px rgba(74, 115, 38, 0.5);
   transform: translateY(-2px);
 }
 
@@ -279,13 +279,13 @@ section {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #8b4513 0%, #cd853f 100%);
+  background: linear-gradient(135deg, #4a7326 0%, #6ba33e 100%);
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(139, 69, 19, 0.3);
+  box-shadow: 0 4px 16px rgba(74, 115, 38, 0.35);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 8px 24px rgba(139, 69, 19, 0.4);
+  box-shadow: 0 8px 24px rgba(74, 115, 38, 0.5);
   transform: translateY(-3px);
 }
 
@@ -959,7 +959,7 @@ section {
   border-radius: 24px;
   font-size: 0.8125rem;
   font-weight: 800;
-  box-shadow: 0 4px 12px rgba(74, 115, 38, 0.3);
+  box-shadow: 0 4px 12px rgba(74, 115, 38, 0.4);
 }
 
 .plan-header {
