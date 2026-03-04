@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UltraTrader — 微台自動交易</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/lightweight-charts@4/dist/lightweight-charts.standalone.production.js"></script>
+<style>
+/* ========================================
+   UltraTrader Dashboard — 深色主題
+   ======================================== */
+:root {
+  --bg-primary: #0a0a1a;
+  --bg-card: rgba(16, 16, 36, 0.95);
+  --bg-hover: rgba(30, 30, 60, 0.8);
+  --border: rgba(138, 92, 255, 0.15);
+  --border-active: rgba(138, 92, 255, 0.5);
+  --purple: #8A5CFF;
+  --purple-glow: rgba(138, 92, 255, 0.3);
+  --blue: #4DA3FF;
+  --green: #10B981;
+  --red: #EF4444;
+  --amber: #F59E0B;
+  --text-primary: #e8e8f0;
+  --text-secondary: #8888aa;
+  --text-muted: #555570;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 背景網格 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(138,92,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(138,92,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---- 佈局 ---- */
+.app { position: relative; z-index: 1; padding: 12px; max-width: 1600px; margin: 0 auto; }
+
+/* ---- Header ---- */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; margin-bottom: 12px;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.logo span { color: var(--purple); }
+.status-badge {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  font-family: var(--font-mono);
+}
+.status-running { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+.status-stopped { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.status-paused { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.status-running .status-dot { background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+.status-stopped .status-dot { background: var(--red); }
+.status-paused .status-dot { background: var(--amber); animation: pulse 2s infinite; }
+
+.header-right { display: flex; gap: 8px; }
+.mode-tag {
+  padding: 4px 10px; border-radius: 6px; font-size: 11px;
+  font-family: var(--font-mono); background: rgba(138,92,255,0.1);
+  color: var(--purple); border: 1px solid rgba(138,92,255,0.2);
+}
+
+/* ---- 指標卡片列 ---- */
+.metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+.metric-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; transition: border-color 0.3s;
+}
+.metric-card:hover { border-color: var(--border-active); }
+.metric-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.metric-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); }
+.metric-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; font-family: var(--font-mono); }
+.text-green { color: var(--green); }
+.text-red { color: var(--red); }
+.text-amber { color: var(--amber); }
+.text-purple { color: var(--purple); }
+
+/* ---- 主內容 ---- */
+.main-grid { display: grid; grid-template-columns: 1fr 360px; gap: 12px; margin-bottom: 12px; }
+
+/* K 線圖容器 */
+.chart-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; min-height: 420px;
+}
+.chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.chart-title { font-size: 14px; font-weight: 600; }
+.timeframe-btns { display: flex; gap: 4px; }
+.tf-btn {
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+  font-size: 11px; font-family: var(--font-mono); transition: all 0.2s;
+}
+.tf-btn:hover { border-color: var(--purple); color: var(--text-primary); }
+.tf-btn.active { background: rgba(138,92,255,0.2); border-color: var(--purple); color: var(--purple); }
+#chart-container { width: 100%; height: 380px; }
+
+/* 右側面板 */
+.side-panel { display: flex; flex-direction: column; gap: 12px; }
+
+.panel-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px;
+}
+.panel-title {
+  font-size: 12px; color: var(--text-secondary); text-transform: uppercase;
+  letter-spacing: 1px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+}
+
+/* 風格選擇 */
+.risk-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.risk-btn {
+  padding: 10px 8px; border: 1px solid var(--border); border-radius: 8px;
+  background: transparent; color: var(--text-secondary); cursor: pointer;
+  font-size: 13px; text-align: center; transition: all 0.2s;
+}
+.risk-btn:hover { border-color: var(--purple); color: var(--text-primary); background: var(--bg-hover); }
+.risk-btn.active { border-color: var(--purple); color: var(--purple); background: rgba(138,92,255,0.1); box-shadow: 0 0 12px var(--purple-glow); }
+.risk-btn-label { font-size: 11px; margin-top: 2px; }
+
+/* 交易紀錄 */
+.trade-list { max-height: 200px; overflow-y: auto; }
+.trade-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 12px; font-family: var(--font-mono);
+}
+.trade-item:last-child { border-bottom: none; }
+.trade-action { font-weight: 600; }
+.trade-pnl { font-weight: 600; }
+
+/* ---- 底部狀態列 ---- */
+.footer-bar {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+}
+.footer-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 16px;
+}
+.footer-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.footer-value { font-size: 13px; font-family: var(--font-mono); margin-top: 4px; }
+
+/* 訊號強度條 */
+.signal-bar-container { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.signal-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+.signal-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+
+/* 控制按鈕 */
+.control-buttons { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+.ctrl-btn {
+  padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+}
+.ctrl-btn:hover { transform: translateY(-1px); }
+.btn-start { background: var(--green); color: #fff; }
+.btn-start:hover { box-shadow: 0 4px 16px rgba(16,185,129,0.4); }
+.btn-stop { background: var(--red); color: #fff; }
+.btn-stop:hover { box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+.btn-close { background: var(--amber); color: #000; }
+.btn-close:hover { box-shadow: 0 4px 16px rgba(245,158,11,0.4); }
+.btn-secondary { background: rgba(138,92,255,0.15); color: var(--purple); border: 1px solid rgba(138,92,255,0.3); }
+
+/* 熔斷指示 */
+.circuit-indicator { display: flex; align-items: center; gap: 6px; }
+.circuit-dot { width: 10px; height: 10px; border-radius: 50%; }
+.circuit-active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.circuit-cooldown { background: var(--amber); animation: pulse 1s infinite; }
+.circuit-halted { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.circuit-emergency { background: var(--red); animation: pulse 0.5s infinite; }
+
+/* 滾動條 */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* 響應式 */
+@media (max-width: 1024px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .metrics-row { grid-template-columns: repeat(2, 1fr); }
+  .footer-bar { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div id="app" class="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">&#9889; Ultra<span>Trader</span></div>
+      <div :class="['status-badge', statusClass]">
+        <div class="status-dot"></div>
+        {{ statusText }}
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="mode-tag">{{ state.trading_mode === 'simulation' ? '模擬模式' : state.trading_mode === 'paper' ? '模擬盤' : '實單' }}</div>
+      <div class="mode-tag">{{ state.contract || 'MXF' }}</div>
+    </div>
+  </div>
+
+  <!-- 指標卡片 -->
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="metric-label">即時價格</div>
+      <div class="metric-value">{{ formatPrice(currentPrice) }}</div>
+      <div class="metric-sub" :class="priceChangeClass">{{ priceChangeText }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">持倉狀態</div>
+      <div class="metric-value" :class="positionColor">{{ positionText }}</div>
+      <div class="metric-sub">{{ positionDetail }}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">今日損益</div>
+      <div class="metric-value" :class="state.daily_pnl >= 0 ? 'text-green' : 'text-red'">
+        {{ state.daily_pnl >= 0 ? '+' : '' }}{{ formatNumber(state.daily_pnl || 0) }} 元
+      </div>
+      <div class="metric-sub">交易 {{ state.daily_trades || 0 }} 次</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">市場狀態</div>
+      <div class="metric-value" style="font-size: 20px;">{{ regimeEmoji }} {{ regimeText }}</div>
+      <div class="metric-sub">ADX {{ state.snapshot?.adx || 0 }} | RSI {{ state.snapshot?.rsi || 50 }}</div>
+    </div>
+  </div>
+
+  <!-- 主內容 -->
+  <div class="main-grid">
+    <!-- K 線圖 -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <div class="chart-title">K 線走勢</div>
+        <div class="timeframe-btns">
+          <button v-for="tf in [1, 5, 15]" :key="tf"
+                  :class="['tf-btn', timeframe === tf ? 'active' : '']"
+                  @click="switchTimeframe(tf)">
+            {{ tf }}m
+          </button>
+        </div>
+      </div>
+      <div id="chart-container"></div>
+    </div>
+
+    <!-- 右側面板 -->
+    <div class="side-panel">
+      <!-- 交易風格 -->
+      <div class="panel-card">
+        <div class="panel-title">&#127902; 交易風格</div>
+        <div class="risk-btns">
+          <button v-for="r in riskProfiles" :key="r.key"
+                  :class="['risk-btn', state.risk_profile === r.key ? 'active' : '']"
+                  @click="setRiskProfile(r.key)">
+            {{ r.icon }}<br>
+            <span class="risk-btn-label">{{ r.label }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 訊號強度 -->
+      <div class="panel-card">
+        <div class="panel-title">&#128202; 訊號強度</div>
+        <div class="signal-bar-container">
+          <div class="signal-bar-bg">
+            <div class="signal-bar-fill" :style="signalBarStyle"></div>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 13px;">{{ signalStrength }}</span>
+        </div>
+        <div style="margin-top: 8px; font-size: 11px; color: var(--text-secondary);">
+          ATR: {{ state.snapshot?.atr || '-' }} | EMA20: {{ formatPrice(state.snapshot?.ema20) }}
+        </div>
+      </div>
+
+      <!-- 交易紀錄 -->
+      <div class="panel-card" style="flex: 1;">
+        <div class="panel-title">&#128203; 交易紀錄</div>
+        <div class="trade-list">
+          <div v-if="trades.length === 0" style="color: var(--text-muted); font-size: 12px; text-align: center; padding: 20px;">
+            尚無交易紀錄
+          </div>
+          <div v-for="(t, i) in trades.slice().reverse().slice(0, 20)" :key="i" class="trade-item">
+            <div>
+              <span class="trade-action" :class="t.action === 'close' ? (t.pnl >= 0 ? 'text-green' : 'text-red') : t.action === 'buy' ? 'text-green' : 'text-red'">
+                {{ t.action === 'buy' ? '買進' : t.action === 'sell' ? '做空' : '平倉' }}
+              </span>
+              <span style="color: var(--text-muted); margin-left: 4px;">@ {{ t.price }}</span>
+            </div>
+            <div>
+              <span v-if="t.pnl !== undefined" class="trade-pnl" :class="t.pnl >= 0 ? 'text-green' : 'text-red'">
+                {{ t.pnl >= 0 ? '+' : '' }}{{ t.pnl }}
+              </span>
+              <span style="color: var(--text-muted); font-size: 10px; margin-left: 4px;">{{ formatTime(t.time) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部 -->
+  <div class="footer-bar">
+    <div class="footer-card">
+      <div class="footer-label">熔斷狀態</div>
+      <div class="footer-value">
+        <div class="circuit-indicator">
+          <div :class="['circuit-dot', circuitDotClass]"></div>
+          {{ circuitText }}
+        </div>
+        <div style="font-size: 10px; color: var(--text-muted); margin-top: 2px;">
+          日虧 {{ state.risk?.circuit_breaker?.daily_loss || 0 }} / {{ state.risk?.circuit_breaker?.max_daily_loss || 500 }} 元
+        </div>
+      </div>
+    </div>
+    <div class="footer-card">
+      <div class="footer-label">風控參數</div>
+      <div class="footer-value">
+        停損倍數: {{ state.strategy?.adaptive_params?.stop_loss_multiplier || 2.0 }}x ATR<br>
+        <span style="font-size: 10px; color: var(--text-muted);">
+          進場門檻: {{ state.strategy?.adaptive_params?.min_signal_strength || 0.55 }}
+        </span>
+      </div>
+    </div>
+    <div class="footer-card">
+      <div class="footer-label">績效統計</div>
+      <div class="footer-value">
+        勝率: {{ stats.win_rate ? stats.win_rate.toFixed(1) + '%' : '-' }} |
+        盈虧比: {{ stats.profit_factor ? stats.profit_factor.toFixed(2) : '-' }}
+      </div>
+    </div>
+  </div>
+
+  <!-- 控制按鈕 -->
+  <div class="control-buttons">
+    <button v-if="state.engine_state !== 'running'" class="ctrl-btn btn-start" @click="engineAction('start')">
+      &#128640; 啟動
+    </button>
+    <button v-if="state.engine_state === 'running'" class="ctrl-btn btn-stop" @click="engineAction('stop')">
+      &#9209; 停止
+    </button>
+    <button v-if="state.engine_state === 'running'" class="ctrl-btn btn-close" @click="engineAction('close')">
+      &#9995; 手動平倉
+    </button>
+    <button v-if="state.engine_state === 'running'" class="ctrl-btn btn-secondary" @click="engineAction('pause')">
+      &#9208; 暫停
+    </button>
+    <button v-if="state.engine_state === 'paused'" class="ctrl-btn btn-secondary" @click="engineAction('resume')">
+      &#9654; 恢復
+    </button>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, computed, onMounted, onUnmounted, nextTick } = Vue;
+
+createApp({
+  setup() {
+    // ---- 狀態 ----
+    const state = ref({
+      engine_state: 'stopped',
+      trading_mode: 'simulation',
+      risk_profile: 'balanced',
+      contract: '',
+      price: 0,
+      position: {},
+      daily_pnl: 0,
+      daily_trades: 0,
+      strategy: {},
+      risk: {},
+      snapshot: {},
+    });
+    const currentPrice = ref(0);
+    const prevPrice = ref(0);
+    const trades = ref([]);
+    const stats = ref({});
+    const timeframe = ref(1);
+
+    // 風格預設
+    const riskProfiles = [
+      { key: 'conservative', icon: '\u{1F6E1}', label: '保守' },
+      { key: 'balanced', icon: '\u2696', label: '平衡' },
+      { key: 'aggressive', icon: '\u{1F525}', label: '積極' },
+    ];
+
+    // ---- K 線圖 ----
+    let chart = null;
+    let candleSeries = null;
+    let volumeSeries = null;
+    let ema20Line = null;
+    let ema60Line = null;
+
+    function initChart() {
+      const container = document.getElementById('chart-container');
+      if (!container || chart) return;
+
+      chart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 380,
+        layout: {
+          background: { type: 'solid', color: 'transparent' },
+          textColor: '#8888aa',
+          fontFamily: "Consolas, 'JetBrains Mono', monospace",
+        },
+        grid: {
+          vertLines: { color: 'rgba(138,92,255,0.05)' },
+          horzLines: { color: 'rgba(138,92,255,0.05)' },
+        },
+        crosshair: {
+          mode: LightweightCharts.CrosshairMode.Normal,
+          vertLine: { color: 'rgba(138,92,255,0.3)', labelBackgroundColor: '#8A5CFF' },
+          horzLine: { color: 'rgba(138,92,255,0.3)', labelBackgroundColor: '#8A5CFF' },
+        },
+        timeScale: {
+          borderColor: 'rgba(138,92,255,0.1)',
+          timeVisible: true,
+          secondsVisible: false,
+        },
+        rightPriceScale: { borderColor: 'rgba(138,92,255,0.1)' },
+      });
+
+      candleSeries = chart.addCandlestickSeries({
+        upColor: '#10B981',
+        downColor: '#EF4444',
+        borderUpColor: '#10B981',
+        borderDownColor: '#EF4444',
+        wickUpColor: '#10B981',
+        wickDownColor: '#EF4444',
+      });
+
+      volumeSeries = chart.addHistogramSeries({
+        priceFormat: { type: 'volume' },
+        priceScaleId: 'volume',
+      });
+      chart.priceScale('volume').applyOptions({
+        scaleMargins: { top: 0.85, bottom: 0 },
+      });
+
+      ema20Line = chart.addLineSeries({
+        color: '#4DA3FF',
+        lineWidth: 1,
+        priceLineVisible: false,
+        lastValueVisible: false,
+      });
+
+      ema60Line = chart.addLineSeries({
+        color: '#F59E0B',
+        lineWidth: 1,
+        priceLineVisible: false,
+        lastValueVisible: false,
+      });
+
+      // 自動調整大小
+      const resizeObserver = new ResizeObserver(entries => {
+        const { width } = entries[0].contentRect;
+        chart.applyOptions({ width });
+      });
+      resizeObserver.observe(container);
+    }
+
+    function toChartTime(isoString) {
+      const d = new Date(isoString);
+      return Math.floor(d.getTime() / 1000);
+    }
+
+    // ---- WebSocket ----
+    let ws = null;
+    let reconnectDelay = 1000;
+
+    function connectWS() {
+      const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${protocol}//${location.host}/ws`);
+
+      ws.onopen = () => {
+        reconnectDelay = 1000;
+      };
+
+      ws.onmessage = (event) => {
+        const msg = JSON.parse(event.data);
+        handleMessage(msg);
+      };
+
+      ws.onclose = () => {
+        setTimeout(connectWS, Math.min(reconnectDelay, 30000));
+        reconnectDelay *= 1.5;
+      };
+    }
+
+    function handleMessage(msg) {
+      const { type, data } = msg;
+
+      if (type === 'state') {
+        state.value = data;
+        currentPrice.value = data.price || currentPrice.value;
+      }
+
+      if (type === 'tick') {
+        prevPrice.value = currentPrice.value;
+        currentPrice.value = data.price;
+      }
+
+      if (type === 'kbar') {
+        if (candleSeries && data.interval === timeframe.value) {
+          const t = toChartTime(data.time);
+          candleSeries.update({ time: t, open: data.open, high: data.high, low: data.low, close: data.close });
+          volumeSeries.update({ time: t, value: data.volume, color: data.close >= data.open ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)' });
+        }
+      }
+
+      if (type === 'signal') {
+        if (state.value.strategy) {
+          state.value.strategy._last_signal_strength = data.signal_strength;
+        }
+        state.value.snapshot = { ...state.value.snapshot, ...data };
+      }
+
+      if (type === 'trade') {
+        trades.value.push(data);
+        fetchStats();
+      }
+
+      if (type === 'engine_state') {
+        state.value.engine_state = data.state;
+      }
+    }
+
+    // ---- API 呼叫 ----
+    async function fetchState() {
+      try {
+        const r = await fetch('/api/state');
+        state.value = await r.json();
+        currentPrice.value = state.value.price || 0;
+      } catch (e) {}
+    }
+
+    async function fetchTrades() {
+      try {
+        const r = await fetch('/api/trades');
+        const data = await r.json();
+        trades.value = data.map(t => ({
+          time: t.exit_time,
+          action: 'close',
+          price: t.exit_price,
+          pnl: t.pnl,
+          side: t.side,
+          reason: t.reason,
+        }));
+      } catch (e) {}
+    }
+
+    async function fetchStats() {
+      try {
+        const r = await fetch('/api/stats');
+        stats.value = await r.json();
+      } catch (e) {}
+    }
+
+    async function fetchKbars() {
+      try {
+        const r = await fetch(`/api/kbars?timeframe=${timeframe.value}&count=200`);
+        const data = await r.json();
+        if (candleSeries && data.length > 0) {
+          const candles = data.map(k => ({ time: toChartTime(k.time), open: k.open, high: k.high, low: k.low, close: k.close }));
+          const volumes = data.map(k => ({ time: toChartTime(k.time), value: k.volume, color: k.close >= k.open ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)' }));
+          candleSeries.setData(candles);
+          volumeSeries.setData(volumes);
+        }
+      } catch (e) {}
+    }
+
+    async function engineAction(action) {
+      try {
+        await fetch(`/api/engine/${action}`, { method: 'POST' });
+        setTimeout(fetchState, 500);
+      } catch (e) {}
+    }
+
+    async function setRiskProfile(profile) {
+      try {
+        await fetch('/api/settings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ risk_profile: profile }),
+        });
+        state.value.risk_profile = profile;
+      } catch (e) {}
+    }
+
+    function switchTimeframe(tf) {
+      timeframe.value = tf;
+      fetchKbars();
+    }
+
+    // ---- 計算屬性 ----
+    const statusClass = computed(() => {
+      const s = state.value.engine_state;
+      if (s === 'running') return 'status-running';
+      if (s === 'paused') return 'status-paused';
+      return 'status-stopped';
+    });
+
+    const statusText = computed(() => {
+      const map = { running: '運行中', paused: '已暫停', stopped: '已停止', initializing: '初始化', error: '錯誤' };
+      return map[state.value.engine_state] || state.value.engine_state;
+    });
+
+    const priceChangeClass = computed(() => {
+      if (currentPrice.value > prevPrice.value) return 'text-green';
+      if (currentPrice.value < prevPrice.value) return 'text-red';
+      return '';
+    });
+
+    const priceChangeText = computed(() => {
+      const diff = currentPrice.value - prevPrice.value;
+      if (diff === 0) return '-';
+      return `${diff > 0 ? '+' : ''}${diff.toFixed(0)} 點`;
+    });
+
+    const positionText = computed(() => {
+      const p = state.value.position;
+      if (!p || p.side === 'flat') return '空倉';
+      return p.side === 'long' ? '多單' : '空單';
+    });
+
+    const positionColor = computed(() => {
+      const p = state.value.position;
+      if (!p || p.side === 'flat') return 'text-secondary';
+      return p.side === 'long' ? 'text-green' : 'text-red';
+    });
+
+    const positionDetail = computed(() => {
+      const p = state.value.position;
+      if (!p || p.side === 'flat') return '等待訊號';
+      const pnl = p.unrealized_pnl || 0;
+      return `@ ${p.entry_price} | ${pnl >= 0 ? '+' : ''}${pnl.toFixed(0)} 元`;
+    });
+
+    const regimeText = computed(() => {
+      return state.value.strategy?.regime || '盤整';
+    });
+
+    const regimeEmoji = computed(() => {
+      const r = state.value.strategy?.regime || '';
+      const map = { '強勢上漲': '\u{1F7E2}', '溫和上漲': '\u{1F7E1}', '盤整': '\u26AA', '溫和下跌': '\u{1F7E0}', '強勢下跌': '\u{1F534}', '劇烈波動': '\u26A1' };
+      return map[r] || '\u26AA';
+    });
+
+    const signalStrength = computed(() => {
+      const s = state.value.strategy?._last_signal_strength || state.value.strategy?.signal_strength || 0;
+      return s.toFixed(2);
+    });
+
+    const signalBarStyle = computed(() => {
+      const s = parseFloat(signalStrength.value);
+      const pct = Math.min(s * 100, 100);
+      let color = '#6B7280';
+      if (s >= 0.7) color = '#10B981';
+      else if (s >= 0.5) color = '#F59E0B';
+      else if (s > 0) color = '#EF4444';
+      return { width: pct + '%', background: color };
+    });
+
+    const circuitDotClass = computed(() => {
+      const cb = state.value.risk?.circuit_breaker;
+      if (!cb) return 'circuit-active';
+      const map = { active: 'circuit-active', cooldown: 'circuit-cooldown', halted: 'circuit-halted', emergency: 'circuit-emergency' };
+      return map[cb.state] || 'circuit-active';
+    });
+
+    const circuitText = computed(() => {
+      const cb = state.value.risk?.circuit_breaker;
+      if (!cb) return '正常';
+      const map = { active: '正常', cooldown: '冷卻中', halted: '已停機', emergency: '緊急停機' };
+      return map[cb.state] || cb.state;
+    });
+
+    // ---- 格式化 ----
+    function formatPrice(p) {
+      if (!p) return '-';
+      return Number(p).toLocaleString('zh-TW', { maximumFractionDigits: 0 });
+    }
+    function formatNumber(n) {
+      return Number(n).toLocaleString('zh-TW', { maximumFractionDigits: 0 });
+    }
+    function formatTime(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return d.toLocaleTimeString('zh-TW', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // ---- 生命週期 ----
+    onMounted(async () => {
+      await nextTick();
+      initChart();
+      await fetchState();
+      await fetchTrades();
+      await fetchStats();
+      await fetchKbars();
+      connectWS();
+    });
+
+    return {
+      state, currentPrice, prevPrice, trades, stats, timeframe,
+      riskProfiles,
+      statusClass, statusText, priceChangeClass, priceChangeText,
+      positionText, positionColor, positionDetail,
+      regimeText, regimeEmoji, signalStrength, signalBarStyle,
+      circuitDotClass, circuitText,
+      formatPrice, formatNumber, formatTime,
+      engineAction, setRiskProfile, switchTimeframe,
+    };
+  },
+}).mount('#app');
+</script>
+</body>
+</html>
