@@ -20,8 +20,8 @@ Thumbs.db
 # Debug logs
 *.log
 
-# Temp files
-scripts/
+# Temp files (root scripts only)
+/scripts/
 
 .vercel
 
@@ -29,3 +29,13 @@ scripts/
 **/firebase-key.json
 **/service-account*.json
 deploy_package/
+
+# UltraTrader Python
+**/__pycache__/
+*.pyc
+UltraTrader/.env
+UltraTrader/data/logs/
+UltraTrader/data/historical/
+UltraTrader/data/backtest_results/
+UltraTrader/data/*.db
+UltraTrader/ca/
