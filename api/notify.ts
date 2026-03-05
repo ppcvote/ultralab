@@ -23,9 +23,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const { name, email, phone, lineId, contactMethod, company, service, budget, message, source } = req.body || {}
+  const { name, email, phone, lineId, contactMethod, company, service, budget, message, source, refCode } = req.body || {}
 
   const isMinYi = source === 'minyi-page'
+
+  // Track Agent referral if refCode present
+  if (refCode && typeof refCode === 'string') {
+    try {
+      const { getFirestore, Timestamp } = await import('firebase-admin/firestore')
+      const { initFirebaseAdmin } = await import('./_firebase.js')
+      initFirebaseAdmin()
+      const db = getFirestore()
+      const partnerQuery = await db.collection('agent_partners').where('refCode', '==', refCode).limit(1).get()
+      if (!partnerQuery.empty) {
+        const partnerRef = partnerQuery.docs[0].ref
+        await partnerRef.update({ totalReferrals: (partnerQuery.docs[0].data().totalReferrals ?? 0) + 1 })
+        await db.collection('agent_referrals').add({
+          refCode, name, email, service: service ?? null, source,
+          createdAt: Timestamp.now(), status: 'lead',
+        })
+      }
+    } catch {}
+  }
   const contactMethodLabel = contactMethod === 'line' ? 'LINE' : contactMethod === 'phone' ? '電話' : 'Email'
 
   // === Telegram notification ===
