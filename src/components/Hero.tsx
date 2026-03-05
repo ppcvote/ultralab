@@ -256,7 +256,7 @@ export default function Hero() {
         {/* Live Products */}
         <div className="mt-10 sm:mt-14 animate-fade-in-up delay-600">
           <p className="text-xs text-slate-600 uppercase tracking-widest mb-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Live Products</p>
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3 max-w-3xl mx-auto">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-3xl mx-auto">
             {[
               { label: 'Mind Threads', desc: 'Threads 自動化 SaaS', href: 'https://mindthread.tw', color: '#14B8A6', external: true },
               { label: 'Ultra Advisor', desc: 'AI 財務顧問 SaaS', href: 'https://ultraadvisor.tw', color: '#2E6BFF', external: true },
@@ -268,7 +268,7 @@ export default function Hero() {
                 key={p.label}
                 href={p.href}
                 {...(p.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
+                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 w-[calc(50%-4px)] sm:w-auto"
                 style={{
                   background: 'rgba(15, 10, 30, 0.6)',
                   borderColor: `${p.color}25`,
