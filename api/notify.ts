@@ -30,10 +30,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Track Agent referral if refCode present
   if (refCode && typeof refCode === 'string') {
     try {
-      const { getFirestore, Timestamp } = await import('firebase-admin/firestore')
-      const { initFirebaseAdmin } = await import('./_firebase.js')
-      initFirebaseAdmin()
-      const db = getFirestore()
+      const { Timestamp } = await import('firebase-admin/firestore')
+      const { getAdminDb } = await import('./_firebase.js')
+      
+      const db = getAdminDb()
       const partnerQuery = await db.collection('agent_partners').where('refCode', '==', refCode).limit(1).get()
       if (!partnerQuery.empty) {
         const partnerRef = partnerQuery.docs[0].ref

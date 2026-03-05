@@ -1,9 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { getFirestore, Timestamp } from 'firebase-admin/firestore'
-import { initFirebaseAdmin } from './_firebase'
+import { Timestamp } from 'firebase-admin/firestore'
+import { getAdminDb } from './_firebase'
 
-initFirebaseAdmin()
-const db = getFirestore()
+const db = getAdminDb()
 
 // Rate limit: 10 registrations per IP per day
 async function checkRateLimit(ip: string): Promise<boolean> {
