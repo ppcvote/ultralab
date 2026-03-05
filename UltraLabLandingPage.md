@@ -370,7 +370,7 @@ CTA 按鈕（大按鈕）:
   圖示: MessageCircle
 
 次要連結:
-  "或 Email 聯繫" → mailto:contact@ultracreation.tw（之後替換）
+  "或 Email 聯繫" → mailto:contact@ultralab.tw（之後替換）
 ```
 
 ### 3.9 Footer
@@ -486,7 +486,7 @@ npm run build
 | 項目 | 佔位符 | 說明 |
 |------|--------|------|
 | LINE 連結 | `https://lin.ee/xxxxx` | 替換為 Ultra Lab 的 LINE OA 連結 |
-| Email | `contact@ultracreation.tw` | 替換為真實 Email |
+| Email | `contact@ultralab.tw` | 替換為真實 Email |
 | Logo 圖片 | `/logo.png` | 放入 Ultra Lab Logo 檔 |
 | Threads 粉絲數 | `XXX 粉絲` | 填入 @ginrollbt 真實粉絲數 |
 | IG Reel 成效數據 | 佔位文字 | 填入真實自動化成效 |

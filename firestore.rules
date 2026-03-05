@@ -2,20 +2,78 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to create an inquiry (contact form submission)
     match /inquiries/{docId} {
+      // Anyone can create an inquiry (contact form)
       allow create: if
-        request.resource.data.keys().hasAll(['name', 'email', 'service', 'message']) &&
+        request.resource.data.keys().hasAll(['name', 'email', 'service']) &&
         request.resource.data.name.size() > 0 &&
         request.resource.data.name.size() < 200 &&
         request.resource.data.email.size() > 0 &&
         request.resource.data.email.size() < 200 &&
-        request.resource.data.message.size() > 0 &&
-        request.resource.data.message.size() < 5000;
-      allow read, update, delete: if false;
+        request.resource.data['service'].size() > 0 &&
+        ('message' in request.resource.data ? request.resource.data['message'].size() < 5000 : true);
+
+      // Admin can read and update inquiries
+      allow read, update: if request.auth != null
+        && request.auth.token.email == 'risky9763@gmail.com';
+
+      allow delete: if false;
+
+      // Email records subcollection
+      match /emails/{emailId} {
+        allow read, create: if request.auth != null
+          && request.auth.token.email == 'risky9763@gmail.com';
+        allow delete, update: if false;
+      }
     }
 
-    // Deny all other access
+    // Products — anyone can read active products
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.auth.token.email == 'risky9763@gmail.com';
+    }
+
+    // Orders — anyone can create, admin can read/update
+    match /orders/{orderId} {
+      allow create: if
+        request.resource.data.keys().hasAll(['items', 'totalAmount', 'customer', 'status']) &&
+        request.resource.data.status == 'pending' &&
+        request.resource.data.totalAmount is number &&
+        request.resource.data.totalAmount > 0;
+
+      allow read, update: if request.auth != null
+        && request.auth.token.email == 'risky9763@gmail.com';
+
+      allow delete: if false;
+    }
+
+    // UltraProbe — server-side only (via firebase-admin)
+    match /rate_limits/{docId} {
+      allow read, write: if false;
+    }
+
+    match /probe_leads/{docId} {
+      allow read, write: if false;
+    }
+
+    match /counters/{counterId} {
+      allow read, write: if false;
+    }
+
+    // UltraProbe API — server-side only
+    match /api_keys/{keyId} {
+      allow read, write: if false;
+    }
+
+    match /api_usage/{keyId}/{document=**} {
+      allow read, write: if false;
+    }
+
+    match /vulnerability_database/{scanId} {
+      allow read, write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

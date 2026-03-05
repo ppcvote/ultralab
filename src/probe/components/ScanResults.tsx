@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { ArrowRight, ExternalLink, Sparkles, Shield } from 'lucide-react'
-import type { ScanResult, ChatbotDetection, AIIntegrationPotential } from '../lib/probe-types'
+import type { SecurityScanResult, ChatbotDetection, AIIntegrationPotential } from '../lib/probe-types'
 import RiskGrade from './RiskGrade'
 import VulnerabilityList from './VulnerabilityList'
 import EmailGate from './EmailGate'
 
 interface Props {
-  result: ScanResult
+  result: SecurityScanResult
 }
 
 const FREE_VULN_LIMIT = 3

@@ -5,11 +5,12 @@ import { useInView } from '../hooks/useInView'
 
 const SERVICE_OPTIONS = [
   'IG Reel 全自動發布系統',
-  'Threads 多帳號自動化系統',
-  '短影音自動產製系統',
+  'MindThread — Threads 自動化 SaaS',
   'SaaS 全端建置方案',
   'AI 串接應用服務',
   '品牌官網全套方案',
+  'AI 資安防護服務',
+  'Ultra KB 知識中樞建置',
   '技術諮詢（一對一）',
   '還不確定，想先聊聊',
 ]
@@ -57,10 +58,22 @@ export default function Contact() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+
+    // Client-side validation
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      setSubmitState('error')
+      return
+    }
+    if (form.phone && !/^[\d\-+() ]{7,20}$/.test(form.phone)) {
+      setSubmitState('error')
+      return
+    }
+
     setSubmitState('submitting')
     try {
-      const { db } = await import('../lib/firebase')
+      const { getDb } = await import('../lib/firebase')
       const { collection, addDoc, serverTimestamp } = await import('firebase/firestore')
+      const db = getDb()
       await addDoc(collection(db, 'inquiries'), {
         ...form,
         createdAt: serverTimestamp(),
@@ -103,22 +116,14 @@ export default function Contact() {
 
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`text-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <span
-            className="inline-block px-3 py-1 text-xs font-medium tracking-wider uppercase rounded-full border border-[rgba(138,92,255,0.3)] text-[#CE4DFF] mb-6"
-            style={{
-              background: 'rgba(138, 92, 255, 0.08)',
-              fontFamily: "'JetBrains Mono', monospace",
-            }}
-          >
-            Contact
-          </span>
+          <span className="terminal-tag mb-6">ssh contact@ultralab.tw</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            準備好把你的想法
+            準備好用 AI
             <br />
-            <span className="text-gradient-purple">變成產品了嗎？</span>
+            <span className="text-gradient-purple">驅動你的業務了嗎？</span>
           </h2>
           <p className="text-lg text-slate-400 mb-10 max-w-xl mx-auto">
-            填寫表單，我們會在 24 小時內回覆你
+            填寫表單，我們會在 24 小時內回覆 — 從 AI 諮詢到系統上線，全程支援
           </p>
         </div>
 
@@ -149,47 +154,47 @@ export default function Contact() {
             {/* Row 1: Name + Company */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                  姓名 *
+                <label htmlFor="f-name" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  姓名 <span className="text-[#CE4DFF]">*</span>
                 </label>
-                <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="你的姓名" className={inputClass} />
+                <input id="f-name" type="text" name="name" required value={form.name} onChange={handleChange} placeholder="你的姓名" className={inputClass} />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                <label htmlFor="f-company" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   公司 / 品牌
                 </label>
-                <input type="text" name="company" value={form.company} onChange={handleChange} placeholder="選填" className={inputClass} />
+                <input id="f-company" type="text" name="company" value={form.company} onChange={handleChange} placeholder="選填" className={inputClass} />
               </div>
             </div>
 
             {/* Row 2: Contact info */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                <label htmlFor="f-lineId" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   LINE ID
                 </label>
-                <input type="text" name="lineId" value={form.lineId} onChange={handleChange} placeholder="你的 LINE ID" className={inputClass} />
+                <input id="f-lineId" type="text" name="lineId" value={form.lineId} onChange={handleChange} placeholder="你的 LINE ID" className={inputClass} />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                  Email *
+                <label htmlFor="f-email" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  Email <span className="text-[#CE4DFF]">*</span>
                 </label>
-                <input type="email" name="email" required value={form.email} onChange={handleChange} placeholder="you@example.com" className={inputClass} />
+                <input id="f-email" type="email" name="email" required value={form.email} onChange={handleChange} placeholder="you@example.com" className={inputClass} />
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                <label htmlFor="f-phone" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   電話
                 </label>
-                <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="09xx-xxx-xxx" className={inputClass} />
+                <input id="f-phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="09xx-xxx-xxx" className={inputClass} />
               </div>
             </div>
 
             {/* Row 3: Preferred contact method */}
             <div>
               <label className="block text-xs text-slate-400 mb-2 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                偏好的聯繫方式 *
+                偏好的聯繫方式 <span className="text-[#CE4DFF]">*</span>
               </label>
-              <div className="flex gap-3">
+              <div className="flex flex-wrap gap-3">
                 {CONTACT_METHODS.map((m) => (
                   <label
                     key={m.value}
@@ -217,10 +222,10 @@ export default function Contact() {
             {/* Row 4: Service + Budget */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-                  感興趣的服務 *
+                <label htmlFor="f-service" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                  感興趣的服務 <span className="text-[#CE4DFF]">*</span>
                 </label>
-                <select name="service" required value={form.service} onChange={handleChange} className={`${inputClass} ${!form.service ? 'text-slate-500' : ''}`}>
+                <select id="f-service" name="service" required value={form.service} onChange={handleChange} className={`${inputClass} ${!form.service ? 'text-slate-500' : ''}`}>
                   <option value="" disabled>選擇服務項目</option>
                   {SERVICE_OPTIONS.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
@@ -228,15 +233,15 @@ export default function Contact() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                <label htmlFor="f-budget" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                   預算範圍
                 </label>
-                <select name="budget" value={form.budget} onChange={handleChange} className={`${inputClass} ${!form.budget ? 'text-slate-500' : ''}`}>
+                <select id="f-budget" name="budget" value={form.budget} onChange={handleChange} className={`${inputClass} ${!form.budget ? 'text-slate-500' : ''}`}>
                   <option value="" disabled>選填</option>
-                  <option value="under-3k">NT$3,000 以下 / 月</option>
-                  <option value="3k-10k">NT$3,000 - 10,000 / 月</option>
-                  <option value="10k-30k">NT$10,000 - 30,000</option>
-                  <option value="30k-80k">NT$30,000 - 80,000</option>
+                  <option value="under-3k">NT$3,000 以下</option>
+                  <option value="3k-10k">NT$3,000 – 10,000</option>
+                  <option value="10k-30k">NT$10,000 – 30,000</option>
+                  <option value="30k-80k">NT$30,000 – 80,000</option>
                   <option value="80k+">NT$80,000 以上</option>
                   <option value="discuss">需要討論</option>
                 </select>
@@ -245,10 +250,11 @@ export default function Contact() {
 
             {/* Row 5: Message */}
             <div>
-              <label className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              <label htmlFor="f-message" className="block text-xs text-slate-400 mb-1.5 uppercase tracking-wider" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
                 需求描述
               </label>
               <textarea
+                id="f-message"
                 name="message"
                 rows={3}
                 value={form.message}
@@ -262,7 +268,7 @@ export default function Contact() {
             {submitState === 'error' && (
               <div className="flex items-center gap-2 text-sm text-[#FF6A6A]">
                 <AlertCircle size={16} />
-                送出失敗，請稍後再試或直接 Email 至 contact@ultracreation.tw
+                送出失敗，請稍後再試或直接 Email 至 contact@ultralab.tw
               </div>
             )}
 
@@ -344,7 +350,7 @@ export default function Contact() {
 
             {/* Email link */}
             <a
-              href="mailto:contact@ultracreation.tw"
+              href="mailto:contact@ultralab.tw"
               onClick={() => trackCTAClick('Email聯繫')}
               className="inline-flex items-center justify-center gap-3 px-8 py-4 text-base font-semibold text-slate-300 rounded-xl border border-[rgba(138,92,255,0.3)] hover:border-[#8A5CFF] hover:text-white transition-all duration-300 hover:-translate-y-0.5"
               style={{ background: 'rgba(138, 92, 255, 0.05)' }}

@@ -35,7 +35,31 @@
       <div class="container">
         <div class="nav-content">
           <a href="/" class="logo">
-            <span class="logo-icon">📚</span>
+            <svg class="logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="kb-book" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#8B7355"/>
+                  <stop offset="100%" stop-color="#6B5B45"/>
+                </linearGradient>
+                <linearGradient id="kb-node" x1="0" y1="0" x2="0" y2="36" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#059669"/>
+                  <stop offset="100%" stop-color="#34D399"/>
+                </linearGradient>
+              </defs>
+              <!-- Left page -->
+              <path d="M4 7 C8 6 14 5.5 18 6 L18 28 C14 27 8 27.5 4 28.5 Z" fill="#F5EFE0" stroke="url(#kb-book)" stroke-width="1.4" stroke-linejoin="round"/>
+              <!-- Right page -->
+              <path d="M32 7 C28 6 22 5.5 18 6 L18 28 C22 27 28 27.5 32 28.5 Z" fill="#F5EFE0" stroke="url(#kb-book)" stroke-width="1.4" stroke-linejoin="round"/>
+              <!-- Connection lines -->
+              <line x1="11" y1="13" x2="25" y2="13" stroke="#059669" stroke-width="1.2" opacity="0.3"/>
+              <line x1="11" y1="13" x2="18" y2="22" stroke="#059669" stroke-width="1.2" opacity="0.3"/>
+              <line x1="25" y1="13" x2="18" y2="22" stroke="#34D399" stroke-width="1.2" opacity="0.3"/>
+              <!-- Knowledge nodes -->
+              <circle cx="11" cy="13" r="2.5" fill="#059669"/>
+              <circle cx="25" cy="13" r="2.5" fill="#059669"/>
+              <circle cx="18" cy="22" r="3" fill="url(#kb-node)"/>
+              <circle cx="18" cy="22" r="5" fill="#34D399" opacity="0.12"/>
+            </svg>
             <span class="logo-text" data-i18n="nav.title">Ultra KB</span>
           </a>
           <div class="nav-links">
@@ -869,7 +893,7 @@
           </p>
 
           <div class="contact-buttons">
-            <a href="mailto:contact@ultracreation.tw" class="btn btn-primary">
+            <a href="mailto:contact@ultralab.tw" class="btn btn-primary">
               <span data-i18n="contact.cta.email">📧 Email 聯絡</span>
             </a>
             <a href="https://ultralab.tw/#contact" class="btn btn-secondary">
@@ -914,7 +938,16 @@
         <div class="footer-content">
           <div class="footer-left">
             <div class="footer-logo">
-              <span class="logo-icon">📚</span>
+              <svg class="logo-icon" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+                <path d="M4 7 C8 6 14 5.5 18 6 L18 28 C14 27 8 27.5 4 28.5 Z" fill="#F5EFE0" stroke="#8B7355" stroke-width="1.4" stroke-linejoin="round"/>
+                <path d="M32 7 C28 6 22 5.5 18 6 L18 28 C22 27 28 27.5 32 28.5 Z" fill="#F5EFE0" stroke="#8B7355" stroke-width="1.4" stroke-linejoin="round"/>
+                <line x1="11" y1="13" x2="25" y2="13" stroke="#059669" stroke-width="1.2" opacity="0.3"/>
+                <line x1="11" y1="13" x2="18" y2="22" stroke="#059669" stroke-width="1.2" opacity="0.3"/>
+                <line x1="25" y1="13" x2="18" y2="22" stroke="#34D399" stroke-width="1.2" opacity="0.3"/>
+                <circle cx="11" cy="13" r="2.5" fill="#059669"/>
+                <circle cx="25" cy="13" r="2.5" fill="#059669"/>
+                <circle cx="18" cy="22" r="3" fill="#34D399"/>
+              </svg>
               <span class="logo-text">Ultra KB</span>
             </div>
             <p class="footer-tagline" data-i18n="footer.tagline">
