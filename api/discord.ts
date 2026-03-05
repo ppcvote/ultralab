@@ -1,5 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import crypto from 'crypto'
+import fs from 'fs'
+import path from 'path'
 
 // Discord Interaction types
 const PING = 1
@@ -7,7 +9,54 @@ const APPLICATION_COMMAND = 2
 const PONG = 1
 const CHANNEL_MESSAGE_WITH_SOURCE = 4
 const PURPLE = 0x8A5CFF
-const BLOG_URL = 'https://ultralab.tw/blog/posts.json'
+
+// Read posts directly from content/blog/*.md — no HTTP round-trip, no deps
+function parseFrontmatter(raw: string): Record<string, any> {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!match) return {}
+  const data: Record<string, any> = {}
+  let currentKey = ''
+  for (const line of match[1].split(/\r?\n/)) {
+    const listItem = line.match(/^\s+-\s+(.+)/)
+    if (listItem) {
+      if (!Array.isArray(data[currentKey])) data[currentKey] = []
+      data[currentKey].push(listItem[1].trim())
+      continue
+    }
+    const kv = line.match(/^(\w+):\s*(.*)/)
+    if (!kv) continue
+    currentKey = kv[1]
+    const val = kv[2].replace(/^["']|["']$/g, '')
+    data[currentKey] = val || null
+  }
+  return data
+}
+
+function readingTime(text: string): number {
+  return Math.max(1, Math.ceil(text.length / 400))
+}
+
+function loadPosts(): any[] {
+  const dir = path.join(process.cwd(), 'content', 'blog')
+  if (!fs.existsSync(dir)) return []
+  return fs.readdirSync(dir)
+    .filter(f => f.endsWith('.md'))
+    .map(f => {
+      const raw = fs.readFileSync(path.join(dir, f), 'utf8')
+      const fm = parseFrontmatter(raw)
+      const slug = f.replace(/\.md$/, '')
+      return {
+        slug,
+        title: fm.title ?? slug,
+        description: fm.description ?? '',
+        date: fm.date ?? '',
+        tags: Array.isArray(fm.tags) ? fm.tags : [],
+        readingTime: readingTime(raw),
+        url: `https://ultralab.tw/blog/${slug}`,
+      }
+    })
+    .sort((a, b) => (b.date > a.date ? 1 : -1))
+}
 
 // Required: disable body parsing to verify Ed25519 signature on raw bytes
 export const config = { api: { bodyParser: false } }
@@ -34,10 +83,6 @@ function getRawBody(req: VercelRequest): Promise<string> {
   })
 }
 
-async function fetchPosts(): Promise<any[]> {
-  const res = await fetch(BLOG_URL)
-  return res.json()
-}
 
 function blogEmbed(title: string, posts: any[], footer?: string) {
   return {
@@ -77,7 +122,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     let posts: any[]
     try {
-      posts = await fetchPosts()
+      posts = loadPosts()
     } catch {
       return res.status(200).json({
         type: CHANNEL_MESSAGE_WITH_SOURCE,
