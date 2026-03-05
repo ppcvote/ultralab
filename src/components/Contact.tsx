@@ -35,8 +35,18 @@ interface FormData {
 
 type SubmitState = 'idle' | 'submitting' | 'success' | 'error'
 
+function getRefCode(): string | null {
+  const param = new URLSearchParams(window.location.search).get('ref')
+  if (param) {
+    sessionStorage.setItem('ultralab_ref', param)
+    return param
+  }
+  return sessionStorage.getItem('ultralab_ref')
+}
+
 export default function Contact() {
   const { ref, isInView } = useInView({ threshold: 0.1 })
+  const refCode = getRefCode()
   const [form, setForm] = useState<FormData>({
     name: '',
     email: '',
@@ -78,13 +88,14 @@ export default function Contact() {
         ...form,
         createdAt: serverTimestamp(),
         source: 'landing-page',
+        ...(refCode ? { refCode } : {}),
       })
       trackFormSubmit(form.service)
       // Send email notification (fire-and-forget, don't block UI)
       fetch('/api/notify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, source: 'landing-page', ...(refCode ? { refCode } : {}) }),
       }).catch(() => {})
       setSubmitState('success')
       setForm({ name: '', email: '', phone: '', lineId: '', contactMethod: 'line', company: '', service: '', budget: '', message: '' })
