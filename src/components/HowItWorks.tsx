@@ -18,30 +18,30 @@ const phases: Phase[] = [
     color: '#F59E0B',
     glowColor: 'rgba(245, 158, 11, 0.3)',
     phase: 'Step 1',
-    title: '免費諮詢',
-    subtitle: '聊一聊你的需求',
-    description: '填寫表單或直接私訊，我們會在 24 小時內回覆',
-    detail: '零壓力 · 免費 · 快速回應',
+    title: 'AI 架構審計',
+    subtitle: '不是問你要什麼，是看你缺什麼',
+    description: '分析你現有的技術棧、數據流和業務邏輯。找出 AI 自動化切入點、評估 LLM 模型選型（Gemini / Claude / GPT），設計 Prompt 架構和容錯策略。',
+    detail: '免費 · LLM 選型 · Prompt 工程評估 · 24hr 回覆',
   },
   {
     icon: <Settings2 size={32} />,
     color: '#4DA3FF',
     glowColor: 'rgba(77, 163, 255, 0.3)',
     phase: 'Step 2',
-    title: '量身打造',
-    subtitle: '選方案或客製化',
-    description: '訂閱自動化工具，或由我們為你客製開發',
-    detail: '彈性方案 · 透明報價',
+    title: 'Pipeline 建置',
+    subtitle: '不是接一個 API，是建一條產線',
+    description: '串接 Multi-LLM API、建立輸入驗證層 + Zod 結構化輸出解析、部署 Vercel Edge Functions。用跟我們自己 6 個產品相同的架構。',
+    detail: 'Multi-LLM 路由 · Zod 驗證 · Edge 部署 · 即時監控',
   },
   {
     icon: <Rocket size={32} />,
     color: '#8A5CFF',
     glowColor: 'rgba(138, 92, 255, 0.3)',
     phase: 'Step 3',
-    title: '上線運營',
-    subtitle: '你專注業務，系統幫你跑',
-    description: '自動化系統 24/7 運作，持續優化、定期回報',
-    detail: '全自動 · 持續迭代',
+    title: '自動運營 + 防禦',
+    subtitle: '上線不是結束，是開始',
+    description: '系統上線即全自動 — Cron 排程驅動、異常自動重試、UltraProbe 安全掃描。我們自己的系統每天自動產出 35+ 篇內容，同一套架構交付給你。',
+    detail: '35+篇/天驗證 · UltraProbe 安全 · 自動重試 · 持續優化',
   },
 ]
 
@@ -49,7 +49,7 @@ export default function HowItWorks() {
   const { ref, isInView } = useInView({ threshold: 0.1 })
 
   return (
-    <section className="relative py-24 lg:py-32 overflow-hidden" ref={ref}>
+    <section id="how-it-works" className="relative py-24 lg:py-32 overflow-hidden bg-lab" ref={ref} aria-label="三步驟啟動 AI 自動化">
       {/* Subtle background gradient */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -61,20 +61,12 @@ export default function HowItWorks() {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <span
-            className="inline-block px-3 py-1 text-xs font-medium tracking-wider uppercase rounded-full border border-[rgba(138,92,255,0.3)] text-[#CE4DFF] mb-4"
-            style={{
-              background: 'rgba(138, 92, 255, 0.08)',
-              fontFamily: "'JetBrains Mono', monospace",
-            }}
-          >
-            How It Works
-          </span>
+          <span className="terminal-tag mb-4">cat ai-pipeline.md</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            三步驟，<span className="text-gradient-purple">開始自動化</span>
+            三步驟，<span className="text-gradient-purple">啟動 AI 自動化</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            從諮詢到上線，快速又簡單
+            從需求分析到 AI 系統上線，快速部署你的自動化引擎
           </p>
         </div>
 
@@ -95,17 +87,7 @@ export default function HowItWorks() {
               className={`relative z-10 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
               style={{ animationDelay: `${(index + 1) * 0.15}s` }}
             >
-              <div
-                className="flex flex-col items-center h-full overflow-hidden"
-                style={{
-                  background: 'rgba(15, 10, 30, 0.8)',
-                  backdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(138, 92, 255, 0.15)',
-                  borderRadius: '16px',
-                  padding: '32px 24px',
-                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
+              <div className="card-lab flex flex-col items-center h-full p-8">
                 {/* Phase Label */}
                 <span
                   className="text-xs font-bold tracking-widest uppercase"

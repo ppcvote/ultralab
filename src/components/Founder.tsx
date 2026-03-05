@@ -137,6 +137,39 @@ export default function Founder() {
                 ))}
               </div>
 
+              {/* Build Log */}
+              <div className="mb-6">
+                <p
+                  className="text-[10px] uppercase tracking-widest text-slate-600 mb-3"
+                  style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                >
+                  Build Log
+                </p>
+                <div className="relative pl-4 border-l border-[rgba(138,92,255,0.2)] space-y-2.5">
+                  {[
+                    { date: '2025.09', event: 'Ultra Creation Co., Ltd. 成立' },
+                    { date: '2025.11', event: 'Mind Threads SaaS 上線 — 台灣零競品' },
+                    { date: '2026.01', event: 'risk.clock.tw 24hr 破 1,300 追蹤' },
+                    { date: '2026.02', event: 'UltraProbe AI 安全掃描器上線' },
+                    { date: '2026.03', event: '13 篇技術文章 · 35,000+ AI 自動發文' },
+                  ].map((item) => (
+                    <div key={item.date} className="relative flex items-baseline gap-3">
+                      <div
+                        className="absolute -left-[19px] top-[6px] w-2 h-2 rounded-full"
+                        style={{ background: '#8A5CFF', boxShadow: '0 0 6px rgba(138,92,255,0.4)' }}
+                      />
+                      <span
+                        className="text-[11px] text-slate-600 shrink-0"
+                        style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                      >
+                        {item.date}
+                      </span>
+                      <span className="text-[12px] text-slate-400">{item.event}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Social Links */}
               <div className="flex items-center gap-3 justify-center lg:justify-start">
                 {links.map((link) => (
