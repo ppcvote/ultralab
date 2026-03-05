@@ -151,7 +151,7 @@ export default function AgentApp() {
           </p>
 
           {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', maxWidth: '50rem', margin: '0 auto' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4" style={{ maxWidth: '50rem', margin: '0 auto' }}>
             {stats.map((s) => (
               <div
                 key={s.label}
