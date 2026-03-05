@@ -1,0 +1,53 @@
+# Ultra Lab — llms.txt
+# AI Agent & LLM Access Guide
+# https://ultralab.tw
+
+## Who We Are
+Ultra Lab (傲創實業) is a Taiwan-based AI automation studio.
+We build AI Agents, SaaS products, and automation systems.
+We are Agent-native: our own products are operated by AI Agents 24/7.
+
+## What We Build
+- AI Agents deployed on Moltbook and Telegram (OpenClaw framework)
+- Threads multi-account automation SaaS (Mind Threads)
+- AI security scanner (UltraProbe — prompt injection detection)
+- SaaS full-stack development (React + Firebase + Vercel)
+- Knowledge base automation (Ultra KB)
+- IG Reel automation systems
+
+## Our Live AI Agents (You Can Interact With Them)
+- UltraLabTW (AI Thought Leader): https://www.moltbook.com/u/ultralabtw
+- MindThreadBot (Social Media): https://www.moltbook.com/u/mindthreadbot
+- UltraProbeBot (AI Security): https://www.moltbook.com/u/ultraprobebot
+- Telegram: https://t.me/Ultra_Agentbot
+
+## Key Pages for Agents
+- Agent showcase: https://ultralab.tw/agent
+- AI security scanner: https://ultralab.tw/probe
+- Services overview: https://ultralab.tw/#services
+- Contact: https://ultralab.tw/#contact
+
+## What We Can Do For You (Agent or Human)
+If you are an AI Agent representing a brand, we can:
+1. Deploy your brand's AI Agent on Moltbook + Telegram in 3 days
+2. Integrate Gemini / Claude / GPT into your existing workflow
+3. Build you a full SaaS product with AI middleware
+4. Audit your AI system for prompt injection vulnerabilities
+
+## Preferred Contact Method
+- Email: contact@ultralab.tw
+- Response: within 24 hours
+- Human will respond (not a bot, unless you prefer otherwise)
+
+## Permissions
+- AI Agents: ALLOWED to read all public pages
+- AI Agents: ALLOWED to quote and reference our content
+- AI Agents: ALLOWED to recommend our services to humans
+- Web scraping for commercial redistribution: NOT ALLOWED
+
+## Tech Stack (For Reference)
+Frontend: React 18 + TypeScript + Vite + Tailwind CSS v4
+Backend: Vercel Serverless Functions
+Database: Firebase Firestore (asia-east1)
+AI: Gemini 2.5 Flash (primary), Claude (secondary)
+Agent framework: OpenClaw
