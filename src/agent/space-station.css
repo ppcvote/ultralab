@@ -50,7 +50,7 @@
   .ss-layout {
     display: grid;
     grid-template-columns: 1fr 260px;
-    min-height: 520px;
+    min-height: 580px;
     position: relative;
     z-index: 1;
   }
@@ -207,7 +207,7 @@
   /* ── Module card (agent) ── */
   .ss-module {
     position: absolute;
-    width: 175px;
+    width: 195px;
     padding: 12px;
     border-radius: 8px;
     border: 1.5px solid;
@@ -468,6 +468,155 @@
     overflow: hidden;
   }
 
+  /* ═══════════════════════════════════
+     Station Equipment Animations
+     ═══════════════════════════════════ */
+
+  /* Equipment screen glow */
+  .ss-equip-screen {
+    animation: ss-screen-glow 2.5s ease-in-out infinite;
+  }
+
+  /* Equipment LED blink */
+  .ss-equip-led {
+    animation: ss-led-blink 1.2s ease-in-out infinite;
+  }
+
+  /* Holographic ring rotation */
+  .ss-holo-ring {
+    animation: ss-holo-rotate 4s linear infinite;
+  }
+
+  /* Signal wave emission */
+  .ss-signal-wave {
+    animation: ss-wave-emit 2s ease-out infinite;
+  }
+
+  /* Mini radar sweep */
+  .ss-radar-mini-sweep {
+    animation: ss-mini-sweep 2s linear infinite;
+  }
+
+  /* Alert light pulse */
+  .ss-alert-light {
+    animation: ss-alert-pulse 1.5s ease-in-out infinite;
+  }
+
+  /* Scan bar sweep */
+  .ss-scan-bar {
+    animation: ss-scan-sweep 2.5s ease-in-out infinite;
+  }
+
+  /* Chart bar grow */
+  .ss-chart-bar {
+    animation: ss-chart-grow 2s ease-in-out infinite alternate;
+  }
+
+  /* ── Equipment viewport ── */
+  .ss-equipment-viewport {
+    position: relative;
+    height: 42px;
+    margin: 4px 0;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+  }
+
+  /* ── Module compartment frame (corner brackets) ── */
+  .ss-module-bracket::before,
+  .ss-module-bracket::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: currentColor;
+    border-style: solid;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.5;
+  }
+  .ss-module-bracket::before {
+    top: -1px;
+    left: -1px;
+    border-width: 2px 0 0 2px;
+  }
+  .ss-module-bracket::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 2px 2px 0;
+  }
+
+  /* Second set of corners via inner element */
+  .ss-module-bracket-inner::before,
+  .ss-module-bracket-inner::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: currentColor;
+    border-style: solid;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.5;
+  }
+  .ss-module-bracket-inner::before {
+    top: -1px;
+    right: -1px;
+    border-width: 2px 2px 0 0;
+  }
+  .ss-module-bracket-inner::after {
+    bottom: -1px;
+    left: -1px;
+    border-width: 0 0 2px 2px;
+  }
+
+  /* ── Station infrastructure ── */
+
+  /* Solar panel */
+  .ss-solar-panel {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ss-solar-cell {
+    fill: rgba(0, 212, 255, 0.08);
+    stroke: rgba(0, 212, 255, 0.15);
+    stroke-width: 0.5;
+  }
+
+  /* Antenna dish */
+  .ss-antenna {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ss-antenna-signal {
+    animation: ss-antenna-ping 2.5s ease-out infinite;
+  }
+
+  /* Docking port */
+  .ss-dock {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+  }
+  .ss-dock-light {
+    animation: ss-dock-blink 3s ease-in-out infinite;
+  }
+
+  /* Connecting corridor tube */
+  .ss-corridor-tube {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Running lights along corridor */
+  .ss-running-light {
+    animation: ss-running 2s linear infinite;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 768px) {
     .ss-layout {
@@ -663,4 +812,74 @@
 @keyframes ss-typing-bounce {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
   30%           { transform: translateY(-3px); opacity: 1; }
+}
+
+/* ── Equipment keyframes ── */
+
+/* Screen glow breathing */
+@keyframes ss-screen-glow {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+/* LED blink pattern */
+@keyframes ss-led-blink {
+  0%, 40%, 100% { opacity: 1; }
+  50%, 60%      { opacity: 0.2; }
+}
+
+/* Holographic ring rotation */
+@keyframes ss-holo-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Signal wave emission (expanding) */
+@keyframes ss-wave-emit {
+  0%   { transform: scale(1); opacity: 0.4; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Mini radar sweep */
+@keyframes ss-mini-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Alert light pulse */
+@keyframes ss-alert-pulse {
+  0%, 100% { opacity: 0.4; box-shadow: 0 0 4px currentColor; }
+  50%      { opacity: 1; box-shadow: 0 0 12px currentColor; }
+}
+
+/* Scan bar horizontal sweep */
+@keyframes ss-scan-sweep {
+  0%, 100% { transform: translateX(-100%); }
+  50%      { transform: translateX(300%); }
+}
+
+/* Chart bar subtle grow */
+@keyframes ss-chart-grow {
+  0%   { transform: scaleY(0.85); }
+  100% { transform: scaleY(1); }
+}
+
+/* Antenna signal ping */
+@keyframes ss-antenna-ping {
+  0%   { r: 3; opacity: 0.5; }
+  100% { r: 12; opacity: 0; }
+}
+
+/* Docking port light blink */
+@keyframes ss-dock-blink {
+  0%, 30%, 100% { opacity: 0.3; }
+  15%           { opacity: 1; }
+}
+
+/* Running light along corridor */
+@keyframes ss-running {
+  0%   { offset-distance: 0%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
 }

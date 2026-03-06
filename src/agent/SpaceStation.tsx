@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { ExternalLink, Send, X } from 'lucide-react'
 import { AGENTS_META, AGENTS_VISUAL } from './agent-data'
 import { useAgentActivity } from '../hooks/useAgentActivity'
+import StationFurniture from './StationFurniture'
 import './space-station.css'
 
 /* ── Constants ── */
@@ -12,10 +13,10 @@ const AGENT_COLORS: Record<string, string> = {
 
 /* Module positions: top-left offset % from schematic center */
 const MODULE_POS: Record<string, { top: string; left: string }> = {
-  main:  { top: '6%',  left: '5%' },
-  mind:  { top: '6%',  left: 'calc(100% - 187px - 5%)' },
-  probe: { top: 'calc(100% - 140px - 6%)', left: '5%' },
-  adv:   { top: 'calc(100% - 140px - 6%)', left: 'calc(100% - 187px - 5%)' },
+  main:  { top: '4%',  left: '4%' },
+  mind:  { top: '4%',  left: 'calc(100% - 207px - 4%)' },
+  probe: { top: 'calc(100% - 46% - 4%)', left: '4%' },
+  adv:   { top: 'calc(100% - 46% - 4%)', left: 'calc(100% - 207px - 4%)' },
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -394,6 +395,18 @@ function ModuleCard({ agentId, activity, taskIndex, terminalLines, onClick }: {
         e.currentTarget.style.borderColor = h2a(color, 0.3)
       }}
     >
+      {/* Corner bracket frame */}
+      <div className="ss-module-bracket" style={{ position: 'absolute', inset: 0, color, pointerEvents: 'none' }}>
+        <div className="ss-module-bracket-inner" style={{ position: 'absolute', inset: 0, color }} />
+      </div>
+
+      {/* Inner grid pattern */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
+        backgroundImage: `linear-gradient(${h2a(color, 0.02)} 1px, transparent 1px), linear-gradient(90deg, ${h2a(color, 0.02)} 1px, transparent 1px)`,
+        backgroundSize: '10px 10px', borderRadius: 7,
+      }} />
+
       {/* Scan line effect */}
       <div className="ss-module-scan" style={{ color }} />
 
@@ -427,6 +440,11 @@ function ModuleCard({ agentId, activity, taskIndex, terminalLines, onClick }: {
       <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, marginBottom: 4, position: 'relative', zIndex: 2 }}>
         <span className={`ss-status-dot ${STATUS_CLASS[status] || 'online'}`} />
         <span style={{ color, fontWeight: 600 }}>{STATUS_LABEL[status] || 'ONLINE'}</span>
+      </div>
+
+      {/* Equipment viewport — unique visual per module */}
+      <div className="ss-equipment-viewport" style={{ position: 'relative', zIndex: 2 }}>
+        <StationFurniture moduleId={agentId} color={color} />
       </div>
 
       {/* Current task with typing indicator */}
@@ -626,6 +644,62 @@ export default function SpaceStation() {
                 <div className="ss-core-ring ss-core-ring-3" />
                 <div className="ss-core-center">CORE</div>
               </div>
+
+              {/* ── Station Infrastructure ── */}
+
+              {/* Solar panels (left & right) */}
+              <svg className="ss-solar-panel" style={{ top: '44%', left: '1%', width: 40, height: 60 }} viewBox="0 0 40 60">
+                {[0, 1, 2, 3, 4, 5].map(i => (
+                  <rect key={i} className="ss-solar-cell" x={2} y={i * 10} width={36} height={8} rx={1} />
+                ))}
+                <line x1="20" y1="0" x2="20" y2="60" stroke="rgba(0,212,255,0.15)" strokeWidth="1" />
+              </svg>
+              <svg className="ss-solar-panel" style={{ top: '44%', right: '1%', width: 40, height: 60 }} viewBox="0 0 40 60">
+                {[0, 1, 2, 3, 4, 5].map(i => (
+                  <rect key={i} className="ss-solar-cell" x={2} y={i * 10} width={36} height={8} rx={1} />
+                ))}
+                <line x1="20" y1="0" x2="20" y2="60" stroke="rgba(0,212,255,0.15)" strokeWidth="1" />
+              </svg>
+
+              {/* Antenna (top center) */}
+              <svg className="ss-antenna" style={{ top: '2%', left: '50%', transform: 'translateX(-50%)', width: 30, height: 30 }} viewBox="0 0 30 30">
+                <line x1="15" y1="30" x2="15" y2="12" stroke="rgba(0,212,255,0.3)" strokeWidth="1.5" />
+                <circle cx="15" cy="10" r="3" fill="none" stroke="rgba(0,212,255,0.4)" strokeWidth="1" />
+                <circle cx="15" cy="10" r="1.5" fill="rgba(0,212,255,0.3)" />
+                {/* Signal rings */}
+                <circle className="ss-antenna-signal" cx="15" cy="10" r="5" fill="none" stroke="rgba(0,212,255,0.2)" strokeWidth="0.5" />
+                <circle className="ss-antenna-signal" cx="15" cy="10" r="5" fill="none" stroke="rgba(0,212,255,0.15)" strokeWidth="0.5" style={{ animationDelay: '0.8s' }} />
+              </svg>
+
+              {/* Docking port (bottom center) */}
+              <div className="ss-dock" style={{ bottom: '3%', left: '50%', transform: 'translateX(-50%)' }}>
+                <div style={{
+                  width: 36, height: 16, borderRadius: 3,
+                  border: '1.5px solid rgba(0, 212, 255, 0.2)',
+                  background: 'rgba(0, 212, 255, 0.03)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                }}>
+                  <div className="ss-dock-light" style={{ width: 4, height: 4, borderRadius: '50%', background: '#10B981' }} />
+                  <span style={{ fontSize: 6, color: 'rgba(0,212,255,0.3)', letterSpacing: 1 }}>DOCK</span>
+                  <div className="ss-dock-light" style={{ width: 4, height: 4, borderRadius: '50%', background: '#10B981', animationDelay: '1.5s' }} />
+                </div>
+              </div>
+
+              {/* Connecting corridor tubes (SVG overlay) */}
+              <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2 }}>
+                {/* Tube from main to core */}
+                <line x1="22%" y1="32%" x2="46%" y2="46%" stroke="rgba(138,92,255,0.08)" strokeWidth="4" strokeLinecap="round" />
+                <line x1="22%" y1="32%" x2="46%" y2="46%" stroke="rgba(138,92,255,0.15)" strokeWidth="1" strokeDasharray="3 5" />
+                {/* Tube from mind to core */}
+                <line x1="78%" y1="32%" x2="54%" y2="46%" stroke="rgba(20,184,166,0.08)" strokeWidth="4" strokeLinecap="round" />
+                <line x1="78%" y1="32%" x2="54%" y2="46%" stroke="rgba(20,184,166,0.15)" strokeWidth="1" strokeDasharray="3 5" />
+                {/* Tube from probe to core */}
+                <line x1="22%" y1="68%" x2="46%" y2="54%" stroke="rgba(239,68,68,0.08)" strokeWidth="4" strokeLinecap="round" />
+                <line x1="22%" y1="68%" x2="46%" y2="54%" stroke="rgba(239,68,68,0.15)" strokeWidth="1" strokeDasharray="3 5" />
+                {/* Tube from adv to core */}
+                <line x1="78%" y1="68%" x2="54%" y2="54%" stroke="rgba(245,158,11,0.08)" strokeWidth="4" strokeLinecap="round" />
+                <line x1="78%" y1="68%" x2="54%" y2="54%" stroke="rgba(245,158,11,0.15)" strokeWidth="1" strokeDasharray="3 5" />
+              </svg>
 
               {/* Module cards */}
               {AGENT_IDS.map(id => {
