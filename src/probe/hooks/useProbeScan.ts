@@ -29,11 +29,11 @@ export function useProbeScan(mode: ScanMode): UseProbeScanReturn {
     let body: Record<string, string>
 
     if (mode === 'prompt') {
-      endpoint = '/api/probe-scan-prompt'
-      body = { prompt: input }
+      endpoint = '/api/probe-scan'
+      body = { type: 'prompt', prompt: input }
     } else if (mode === 'url') {
-      endpoint = '/api/probe-scan-url'
-      body = { url: input }
+      endpoint = '/api/probe-scan'
+      body = { type: 'url', url: input }
     } else {
       endpoint = '/api/probe-rival'
       body = manualContent

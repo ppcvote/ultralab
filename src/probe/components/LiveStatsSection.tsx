@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Activity, TrendingUp, Shield, Users } from 'lucide-react'
+import { Activity, TrendingUp, Shield, Code2 } from 'lucide-react'
 
 interface Stats {
   totalScans: number
@@ -8,12 +8,12 @@ interface Stats {
   activeUsers: number
 }
 
-// Simulated stats (replace with real Firestore data later)
+// Conservative stats (replace with Firestore later)
 const MOCK_STATS: Stats = {
-  totalScans: 1247,
-  totalVulnerabilities: 8934,
+  totalScans: 327,
+  totalVulnerabilities: 2419,
   avgGrade: 'D',
-  activeUsers: 423,
+  activeUsers: 48,
 }
 
 export default function LiveStatsSection() {
@@ -37,7 +37,7 @@ export default function LiveStatsSection() {
       value: stats.totalScans.toLocaleString(),
       suffix: '個',
       color: '#3B82F6',
-      trend: '+12% 本週',
+      trend: '持續累積',
     },
     {
       icon: Shield,
@@ -56,12 +56,12 @@ export default function LiveStatsSection() {
       trend: '需要改進',
     },
     {
-      icon: Users,
-      label: '活躍使用者',
+      icon: Code2,
+      label: 'API 開發者',
       value: stats.activeUsers.toLocaleString(),
       suffix: '人',
       color: '#10B981',
-      trend: '+23% 本月',
+      trend: '持續成長',
     },
   ]
 

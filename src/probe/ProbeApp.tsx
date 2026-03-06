@@ -11,6 +11,8 @@ import ScanTimeline from './components/ScanTimeline'
 import ScanResults from './components/ScanResults'
 import RivalResults from './components/RivalResults'
 import ExpertiseSection from './components/ExpertiseSection'
+import ApiPricingSection from './components/ApiPricingSection'
+import DeveloperSection from './components/DeveloperSection'
 import LiveStatsSection from './components/LiveStatsSection'
 import EnterpriseCTA from './components/EnterpriseCTA'
 import ProbeFooter from './components/ProbeFooter'
@@ -101,6 +103,10 @@ export default function ProbeApp() {
         )}
 
         {(showLandingPage || showResults) && <ExpertiseSection />}
+
+        {(showLandingPage || showResults) && <ApiPricingSection />}
+
+        {showLandingPage && <DeveloperSection />}
 
         {showLandingPage && <LiveStatsSection />}
 
