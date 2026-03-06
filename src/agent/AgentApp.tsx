@@ -1,6 +1,14 @@
+import { useState } from 'react'
 import { Bot, MessageSquare, Zap, Shield, DollarSign, ExternalLink, Send, Wrench } from 'lucide-react'
 import NerveCenter from './NerveCenter'
+import SpaceStation from './SpaceStation'
 import { AGENTS_META } from './agent-data'
+
+const THEMES = [
+  { id: 'colony', label: 'Colony View', icon: '🏢' },
+  { id: 'orbital', label: 'Orbital Command', icon: '🛰️' },
+] as const
+type ThemeId = typeof THEMES[number]['id']
 
 const agents = AGENTS_META
 
@@ -12,6 +20,8 @@ const stats = [
 ]
 
 export default function AgentApp() {
+  const [theme, setTheme] = useState<ThemeId>('colony')
+
   return (
     <div
       className="min-h-screen text-slate-50"
@@ -134,8 +144,31 @@ export default function AgentApp() {
         </div>
       </section>
 
-      {/* Nerve Center Dashboard */}
-      <NerveCenter />
+      {/* Theme Switcher */}
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+        {THEMES.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTheme(t.id)}
+            style={{
+              padding: '0.4rem 1rem',
+              borderRadius: '6px',
+              border: `1px solid ${theme === t.id ? 'rgba(138, 92, 255, 0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
+              background: theme === t.id ? 'rgba(138, 92, 255, 0.12)' : 'rgba(255, 255, 255, 0.03)',
+              color: theme === t.id ? '#a78bfa' : '#64748b',
+              fontSize: '0.75rem',
+              fontFamily: "'JetBrains Mono', monospace",
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+          >
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Dashboard (theme-switchable) */}
+      {theme === 'colony' ? <NerveCenter /> : <SpaceStation />}
 
       {/* Agent Cards */}
       <section style={{ paddingBottom: '5rem' }}>
