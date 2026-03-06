@@ -22,6 +22,25 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- Plausible Analytics (privacy-first, no cookies) -->
+    <script defer data-domain="ultralab.tw" src="https://plausible.io/js/script.js"></script>
+
+    <!-- Google Analytics 4 -->
+    <script>
+      (function() {
+        var gaId = 'G-XXXXXXXXXX'; // Replace with actual GA4 ID
+        if (!gaId || gaId.indexOf('XXXXXXXXXX') !== -1) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function() { dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', gaId);
+      })();
+    </script>
   </head>
   <body>
     <!-- Language Toggle (Fixed Top-Right) -->

@@ -18,6 +18,16 @@ const DIST_DIR = path.join(ROOT, 'dist')
 const BLOG_DIST = path.join(DIST_DIR, 'blog')
 const SITE_URL = 'https://ultralab.tw'
 
+// Analytics: Plausible + GA4 (injected into every blog page at build time)
+const GA_ID = process.env.VITE_GA_MEASUREMENT_ID || ''
+function analyticsSnippet() {
+  let snippet = `\n  <!-- Plausible Analytics (privacy-first, no cookies) -->\n  <script defer data-domain="ultralab.tw" src="https://plausible.io/js/script.js"></script>`
+  if (GA_ID && !GA_ID.includes('VITE_') && GA_ID !== 'G-XXXXXXXXXX') {
+    snippet += `\n  <!-- Google Analytics 4 -->\n  <script async src="https://www.googletagmanager.com/gtag/js?id=${GA_ID}"></script>\n  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');</script>`
+  }
+  return snippet
+}
+
 // Configure marked for good typography
 marked.setOptions({
   gfm: true,
@@ -152,6 +162,7 @@ function generateBlogPostHtml(post, htmlContent, slug) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/blog.css" />
+  ${analyticsSnippet()}
 </head>
 <body>
   <nav class="blog-nav">
@@ -292,6 +303,7 @@ function generateBlogIndexHtml(posts) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/blog.css" />
+  ${analyticsSnippet()}
 </head>
 <body>
   <nav class="blog-nav">
