@@ -1,5 +1,5 @@
-/* Nerve Center — RimWorld Colony Floor View */
-/* Scoped under .nerve-center to avoid polluting other pages */
+/* Nerve Center — Pixel Art Virtual Office */
+/* Scoped under .nerve-center */
 
 @layer components {
   .nerve-center {
@@ -36,14 +36,13 @@
   .nc-main-layout {
     display: grid;
     grid-template-columns: 1fr 210px;
-    min-height: 400px;
+    min-height: 420px;
   }
 
   /* Floor plan with tile background */
   .nc-floor-tiles {
-    padding: 16px;
+    padding: 20px;
     border-right: 1px solid rgba(138, 92, 255, 0.07);
-    /* RimWorld tile grid */
     background-image:
       linear-gradient(rgba(138, 92, 255, 0.035) 1px, transparent 1px),
       linear-gradient(90deg, rgba(138, 92, 255, 0.035) 1px, transparent 1px);
@@ -55,10 +54,10 @@
   .nc-agent-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
   }
 
-  /* Workstation card base */
+  /* Workstation card */
   .nc-workstation {
     transition: box-shadow 0.3s ease;
   }
@@ -71,7 +70,167 @@
     overflow: hidden;
   }
 
-  /* Mobile: stack vertically */
+  /* ── Pixel Character ── */
+  .nc-pixel-char {
+    width: 48px;
+    height: 56px;
+    position: relative;
+    margin: 0 auto;
+    image-rendering: pixelated;
+  }
+
+  /* Pixel head (8x8 grid feel) */
+  .nc-px-head {
+    width: 20px;
+    height: 18px;
+    margin: 0 auto;
+    border-radius: 3px 3px 2px 2px;
+    position: relative;
+  }
+
+  /* Eyes: two pixel dots */
+  .nc-px-head::before,
+  .nc-px-head::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    top: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 1px;
+  }
+  .nc-px-head::before { left: 4px; }
+  .nc-px-head::after  { right: 4px; }
+
+  /* Body / torso */
+  .nc-px-body {
+    width: 24px;
+    height: 18px;
+    margin: 1px auto 0;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  /* Legs / seat area */
+  .nc-px-legs {
+    width: 20px;
+    height: 8px;
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+  .nc-px-legs span {
+    width: 7px;
+    height: 8px;
+    border-radius: 0 0 2px 2px;
+    display: block;
+  }
+
+  /* Desk in front of character */
+  .nc-px-desk {
+    width: 40px;
+    height: 6px;
+    margin: 2px auto 0;
+    border-radius: 2px;
+    position: relative;
+  }
+
+  /* Monitor on desk */
+  .nc-px-monitor {
+    width: 18px;
+    height: 12px;
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Monitor screen glow */
+  .nc-px-monitor::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 1px;
+    animation: nc-screen-flicker 3s ease-in-out infinite;
+  }
+
+  /* ── Character Accessories ── */
+
+  /* Commander headset (main) */
+  .nc-accessory-headset::before {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 10px;
+    top: -2px;
+    left: -2px;
+    border: 2px solid rgba(138, 92, 255, 0.6);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+  }
+
+  /* Hoodie (mindthread) */
+  .nc-accessory-hoodie {
+    border-radius: 5px 5px 2px 2px !important;
+  }
+  .nc-accessory-hoodie::before {
+    top: 6px !important;
+  }
+  .nc-accessory-hoodie::after {
+    top: 6px !important;
+  }
+
+  /* Goggles (probe) */
+  .nc-accessory-goggles::before {
+    width: 6px !important;
+    height: 4px !important;
+    top: 7px !important;
+    left: 2px !important;
+    border: 1px solid rgba(239, 68, 68, 0.8);
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-radius: 2px !important;
+  }
+  .nc-accessory-goggles::after {
+    width: 6px !important;
+    height: 4px !important;
+    top: 7px !important;
+    right: 2px !important;
+    border: 1px solid rgba(239, 68, 68, 0.8);
+    background: rgba(239, 68, 68, 0.2) !important;
+    border-radius: 2px !important;
+  }
+
+  /* Suit collar (advisor) */
+  .nc-accessory-suit {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 55% 100%, 50% 85%, 45% 100%, 0 100%);
+  }
+
+  /* ── Typing hands animation ── */
+  .nc-px-hands {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+  .nc-px-hands span {
+    width: 4px;
+    height: 3px;
+    border-radius: 1px;
+    display: block;
+  }
+  .nc-typing .nc-px-hands span:first-child {
+    animation: nc-type-left 0.6s ease infinite;
+  }
+  .nc-typing .nc-px-hands span:last-child {
+    animation: nc-type-right 0.6s ease 0.15s infinite;
+  }
+
+  /* ── Mobile ── */
   @media (max-width: 640px) {
     .nc-main-layout {
       grid-template-columns: 1fr;
@@ -117,37 +276,59 @@
   50% { opacity: 0.3; }
 }
 
-/* Status dot pulse with color glow */
 @keyframes nc-pulse {
   0%, 100% { box-shadow: 0 0 4px var(--dot-color); opacity: 1; }
   50% { box-shadow: 0 0 12px var(--dot-color); opacity: 0.7; }
 }
 
-/* Blinking text cursor */
 @keyframes nc-cursor {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
-/* Feed items slide in */
 @keyframes nc-feed-in {
   from { opacity: 0; transform: translateX(-6px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Active agent bounce — like RimWorld colonist moving */
+/* Active: character bounces like typing */
 @keyframes nc-agent-bounce {
-  0%, 100% { transform: translateY(0) rotate(0deg);  }
-  20%       { transform: translateY(-4px) rotate(-3deg); }
-  40%       { transform: translateY(0) rotate(0deg); }
-  60%       { transform: translateY(-2px) rotate(2deg); }
-  80%       { transform: translateY(0) rotate(0deg); }
+  0%, 100% { transform: translateY(0); }
+  25%      { transform: translateY(-2px); }
+  50%      { transform: translateY(0); }
+  75%      { transform: translateY(-1px); }
 }
 
-/* Idle agent gentle sway */
+/* Idle: gentle breathing */
 @keyframes nc-agent-idle {
-  0%, 100% { transform: rotate(-4deg); }
-  50%       { transform: rotate(4deg); }
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.02); }
+}
+
+/* Scanning: head looking side to side */
+@keyframes nc-agent-scan {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-2px); }
+  75%      { transform: translateX(2px); }
+}
+
+/* Typing hands */
+@keyframes nc-type-left {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+@keyframes nc-type-right {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2px); }
+}
+
+/* Monitor screen flicker */
+@keyframes nc-screen-flicker {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+  85%      { opacity: 0.8; }
+  87%      { opacity: 0.3; }
+  89%      { opacity: 0.9; }
 }
 
 /* Security scan sweep line */
@@ -168,8 +349,24 @@
   100% { top: 100%; opacity: 0; }
 }
 
-/* Blinking cursor next to task text */
+/* Blinking cursor */
 .nc-blink-cursor {
   animation: nc-cursor 1s step-end infinite;
   margin-left: 2px;
+}
+
+/* Pending ghost effect */
+@keyframes nc-ghost-pulse {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.4; }
+}
+
+/* Chair (pixel box under character) */
+.nc-px-chair {
+  width: 22px;
+  height: 5px;
+  margin: 0 auto;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
