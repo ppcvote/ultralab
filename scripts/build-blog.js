@@ -206,13 +206,23 @@ function generateBlogPostHtml(post, htmlContent, slug) {
       </div>
     </article>
 
+    <!-- Subscribe CTA -->
+    <section class="blog-subscribe">
+      <h2>每週 AI 自動化實戰筆記</h2>
+      <p>不廢話，只有能直接用的東西。Prompt 模板、自動化 SOP、技術拆解。</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="your@email.com" required />
+        <button type="submit">免費訂閱</button>
+      </form>
+      <p class="subscribe-status" style="display:none"></p>
+    </section>
+
     <!-- CTA -->
     <section class="blog-cta">
       <h2>需要技術協助？</h2>
-      <p>Ultra Lab 提供從社群自動化到 SaaS 建置的完整技術服務。免費諮詢，24 小時內回覆。</p>
+      <p>免費諮詢，24 小時內回覆。</p>
       <div class="blog-cta-buttons">
         <a href="/#contact" class="blog-cta-btn">免費諮詢</a>
-        <a href="https://discord.gg/ewS4rWXvWk" target="_blank" rel="noopener noreferrer" class="blog-cta-btn blog-cta-btn-discord">加入 Discord 社群</a>
       </div>
     </section>
   </main>
@@ -220,6 +230,9 @@ function generateBlogPostHtml(post, htmlContent, slug) {
   <footer class="blog-footer">
     <p>&copy; 2026 Ultra Lab &middot; 傲創實業股份有限公司</p>
   </footer>
+  <script>
+  async function handleSubscribe(e){e.preventDefault();var f=e.target,em=f.querySelector('input').value,btn=f.querySelector('button'),st=f.parentElement.querySelector('.subscribe-status');btn.disabled=true;btn.textContent='訂閱中...';try{var r=await fetch('/api/probe-collect-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,scanType:'newsletter'})});var d=await r.json();st.style.display='block';if(d.ok){st.textContent=d.message;st.className='subscribe-status success';f.style.display='none';}else{st.textContent=d.error||'訂閱失敗';st.className='subscribe-status error';}}catch(x){st.style.display='block';st.textContent='網路錯誤，請稍後再試。';st.className='subscribe-status error';}btn.disabled=false;btn.textContent='免費訂閱';}
+  </script>
 </body>
 </html>`
 }
@@ -338,19 +351,24 @@ function generateBlogIndexHtml(posts) {
       ${postCards}
     </div>
 
-    <!-- Discord CTA -->
-    <section class="blog-cta" style="margin-top: 48px;">
-      <h2>加入 AI 技術社群</h2>
-      <p>4 個 AI Agent 即時服務 — 資安掃描、Threads 自動化、理財規劃，每日自動更新內容。</p>
-      <div class="blog-cta-buttons">
-        <a href="https://discord.gg/ewS4rWXvWk" target="_blank" rel="noopener noreferrer" class="blog-cta-btn">加入 Discord</a>
-      </div>
+    <!-- Subscribe CTA -->
+    <section class="blog-subscribe" style="margin-top: 48px;">
+      <h2>每週 AI 自動化實戰筆記</h2>
+      <p>不廢話，只有能直接用的東西。Prompt 模板、自動化 SOP、技術拆解。</p>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="your@email.com" required />
+        <button type="submit">免費訂閱</button>
+      </form>
+      <p class="subscribe-status" style="display:none"></p>
     </section>
   </main>
 
   <footer class="blog-footer">
     <p>&copy; 2026 Ultra Lab &middot; 傲創實業股份有限公司</p>
   </footer>
+  <script>
+  async function handleSubscribe(e){e.preventDefault();var f=e.target,em=f.querySelector('input').value,btn=f.querySelector('button'),st=f.parentElement.querySelector('.subscribe-status');btn.disabled=true;btn.textContent='訂閱中...';try{var r=await fetch('/api/probe-collect-email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:em,scanType:'newsletter'})});var d=await r.json();st.style.display='block';if(d.ok){st.textContent=d.message;st.className='subscribe-status success';f.style.display='none';}else{st.textContent=d.error||'訂閱失敗';st.className='subscribe-status error';}}catch(x){st.style.display='block';st.textContent='網路錯誤，請稍後再試。';st.className='subscribe-status error';}btn.disabled=false;btn.textContent='免費訂閱';}
+  </script>
 </body>
 </html>`
 }

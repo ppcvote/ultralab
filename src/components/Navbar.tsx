@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 import { trackCTAClick } from '../lib/analytics'
 
-const navLinks: { label: string; href: string; highlight?: boolean }[] = [
+const navLinks: { label: string; href: string; highlight?: boolean; external?: boolean }[] = [
   { label: '服務項目', href: '#services' },
   { label: '作品展示', href: '#portfolio' },
   { label: '報價', href: '#pricing' },
   { label: '常見問題', href: '#faq' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Discord', href: 'https://discord.gg/ewS4rWXvWk' },
+  { label: 'Discord', href: 'https://discord.gg/ewS4rWXvWk', external: true },
   { label: 'AI Agents', href: '/agent', highlight: true },
 ]
 
@@ -69,6 +69,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
+                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 ${
                   link.highlight
                     ? 'text-emerald-400 hover:text-emerald-300 hover:bg-[rgba(16,185,129,0.08)] font-medium'
@@ -119,6 +120,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={handleNavClick}
+                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 className={`block py-3 px-3 rounded-lg transition-all ${
                   link.highlight
                     ? 'text-emerald-400 hover:text-emerald-300 hover:bg-[rgba(16,185,129,0.08)] font-medium'

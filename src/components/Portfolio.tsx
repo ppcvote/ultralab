@@ -159,9 +159,7 @@ interface PortfolioItem {
   linkExternal?: boolean
 }
 
-/* Layout: 3-col grid, each row = wide(2) + regular(1) = 3 cols */
 const portfolioItems: PortfolioItem[] = [
-  /* Row 1: wide + regular */
   {
     tag: 'AI 社群自動化',
     tagColor: '#CE4DFF',
@@ -171,25 +169,8 @@ const portfolioItems: PortfolioItem[] = [
       '全新 Threads 帳號，Gemini API 即時生成台灣風險數據內容，搭配 AI 自動回覆系統。',
     techStack: ['Gemini API', 'Python', 'AI 自動回覆', 'Cron 排程'],
     result: '24hr 破 1,300 追蹤 · 100% AI 生成',
-    span: 'wide',
     visual: 'chart',
-    link: 'https://www.threads.net/@risk.clock.tw',
-    linkExternal: true,
   },
-  {
-    tag: 'AI SaaS',
-    tagColor: '#2E6BFF',
-    accentColor: '#2E6BFF',
-    title: 'Ultra Advisor — AI 財務數據視覺化 SaaS',
-    description:
-      '18+ 種 AI 輔助的財務數據視覺化工具，Gemini API 驅動資產分析引擎。完整 SaaS 架構。',
-    techStack: ['React', 'Gemini API', 'Firebase', 'LINE LIFF'],
-    result: '18+ AI 工具 · 完整 SaaS',
-    visual: 'saas',
-    link: 'https://www.ultra-advisor.tw',
-    linkExternal: true,
-  },
-  /* Row 2: regular + wide */
   {
     tag: 'AI SaaS',
     tagColor: '#4DA3FF',
@@ -199,36 +180,7 @@ const portfolioItems: PortfolioItem[] = [
       '內部工具產品化。串接 Meta 官方 Threads API + Gemini AI 文案引擎，多帳號管理+排程發布。',
     techStack: ['React', 'Meta Threads API', 'Gemini API', 'Firebase'],
     result: '台灣零競品 · 已上線',
-    link: 'https://mindthread.tw',
-    linkExternal: true,
-  },
-  {
-    tag: 'AI 社群自動化',
-    tagColor: '#14B8A6',
-    accentColor: '#14B8A6',
-    title: '@ginrollbt — 半年 0→6,500 粉絲 · 已變現',
-    description:
-      '行銷教練帳號，AI 輔助文案 + 全自動發布系統。半年內從零成長到 6,500+ 追蹤，成功轉化付費客戶。',
-    techStack: ['Node.js', 'Gemini API', 'AI Content Gen'],
-    result: '6,500+ 追蹤 · 已實現 ROI',
-    span: 'wide',
     visual: 'accounts',
-    link: 'https://www.threads.net/@ginrollbt',
-    linkExternal: true,
-  },
-  /* Row 3: wide + regular */
-  {
-    tag: 'AI 影音自動化',
-    tagColor: '#10B981',
-    accentColor: '#10B981',
-    title: 'IG Reel AI 全自動產製線',
-    description:
-      'AI 腳本 → Playwright 渲染 → FFmpeg GPU 編碼 → 自動發布 IG Reels + Story。端到端全自動。',
-    techStack: ['Gemini API', 'Playwright', 'FFmpeg', 'GPU Encoding'],
-    result: '每日 AI 產出 · 端到端自動化',
-    span: 'wide',
-    visual: 'pipeline',
-    link: '/blog/ig-reel-automation-2026',
   },
   {
     tag: 'AI 安全',
@@ -376,14 +328,12 @@ export default function Portfolio() {
           </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {portfolioItems.map((item, index) => (
             <div
               key={item.title}
-              className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'} ${
-                item.span === 'wide' ? 'md:col-span-2' : ''
-              }`}
+              className={isInView ? 'animate-fade-in-up' : 'opacity-0'}
               style={{ animationDelay: `${(index + 1) * 0.1}s` }}
             >
               <BentoCard item={item} index={index} />

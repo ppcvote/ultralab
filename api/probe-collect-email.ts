@@ -6,7 +6,7 @@ import { isValidEmail as validateEmail } from './_validation.js'
 
 interface CollectEmailRequest {
   email: string
-  scanType: 'prompt' | 'url'
+  scanType: 'prompt' | 'url' | 'newsletter'
   metadata?: {
     grade?: string
     score?: number
@@ -76,11 +76,45 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Validate scanType
-  if (!scanType || !['prompt', 'url'].includes(scanType)) {
-    return res.status(400).json({ error: 'scanType 必須是 "prompt" 或 "url"。' })
+  if (!scanType || !['prompt', 'url', 'newsletter'].includes(scanType)) {
+    return res.status(400).json({ error: 'scanType 必須是 "prompt"、"url" 或 "newsletter"。' })
   }
 
   try {
+    // Newsletter subscription — separate flow
+    if (scanType === 'newsletter') {
+      const db = getAdminDb()
+      const normalizedEmail = email.trim().toLowerCase()
+      const existing = await db.collection('subscribers').where('email', '==', normalizedEmail).limit(1).get()
+      if (!existing.empty) {
+        return res.status(200).json({ ok: true, message: '你已經訂閱了！', returning: true })
+      }
+      const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 'unknown'
+      await db.collection('subscribers').add({
+        email: normalizedEmail,
+        source: 'blog',
+        createdAt: new Date(),
+        ip,
+        userAgent: req.headers['user-agent'] || 'unknown',
+        status: 'active',
+      })
+      // TG notification for new subscriber
+      const token = process.env.TELEGRAM_BOT_TOKEN
+      const chatId = process.env.TELEGRAM_CHAT_ID
+      if (token && chatId) {
+        fetch(`${TG_API}${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: `📧 <b>新電子報訂閱！</b>\n\n<b>Email:</b> <code>${normalizedEmail}</code>`,
+            parse_mode: 'HTML',
+          }),
+        }).catch(() => {})
+      }
+      return res.status(200).json({ ok: true, message: '訂閱成功！每週會收到 AI 自動化實戰筆記。', new: true })
+    }
+
     const db = getAdminDb()
     const normalizedEmail = email.trim().toLowerCase()
 

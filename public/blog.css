@@ -343,6 +343,99 @@ body {
   box-shadow: 0 0 30px rgba(138, 92, 255, 0.3);
 }
 
+/* Subscribe Form */
+.blog-subscribe {
+  text-align: center;
+  padding: 48px 32px;
+  margin: 48px 0 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(138, 92, 255, 0.08), rgba(206, 77, 255, 0.05));
+  border: 1px solid rgba(138, 92, 255, 0.2);
+}
+
+.blog-subscribe h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #F8FAFC;
+  margin-bottom: 8px;
+}
+
+.blog-subscribe > p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.subscribe-form {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.subscribe-form input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(138, 92, 255, 0.25);
+  background: rgba(10, 5, 21, 0.8);
+  color: #F8FAFC;
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.subscribe-form input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 20px rgba(138, 92, 255, 0.15);
+}
+
+.subscribe-form input::placeholder {
+  color: #475569;
+}
+
+.subscribe-form button {
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #8A5CFF, #CE4DFF);
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.3s;
+}
+
+.subscribe-form button:hover {
+  box-shadow: 0 0 30px rgba(138, 92, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.subscribe-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.subscribe-status {
+  margin-top: 12px;
+  font-size: 0.85rem;
+}
+
+.subscribe-status.success { color: #10B981; }
+.subscribe-status.error { color: #F87171; }
+
+@media (max-width: 480px) {
+  .subscribe-form {
+    flex-direction: column;
+  }
+  .subscribe-form button {
+    width: 100%;
+  }
+}
+
 /* ===== Footer ===== */
 .blog-footer {
   max-width: 800px;

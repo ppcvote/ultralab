@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ArrowRight, ChevronDown } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { trackCTAClick } from '../lib/analytics'
 import { useInView } from '../hooks/useInView'
 import { useCountUp } from '../hooks/useCountUp'
@@ -231,13 +231,15 @@ export default function Hero() {
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </a>
           <a
-            href="#services"
-            onClick={() => trackCTAClick('查看服務項目')}
-            className="inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-base font-semibold text-slate-300 rounded-xl border border-[rgba(138,92,255,0.25)] hover:border-[rgba(138,92,255,0.5)] hover:text-white transition-all duration-300 hover:-translate-y-1 hover:bg-[rgba(138,92,255,0.08)]"
-            style={{ background: 'rgba(138,92,255,0.03)', backdropFilter: 'blur(8px)' }}
+            href="/agent"
+            onClick={() => trackCTAClick('看 AI Agents')}
+            className="inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-base font-semibold text-white rounded-xl border border-[rgba(255,107,53,0.4)] hover:border-[rgba(255,107,53,0.7)] transition-all duration-300 hover:-translate-y-1"
+            style={{ background: 'rgba(255,107,53,0.1)', backdropFilter: 'blur(8px)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 30px rgba(255,107,53,0.3)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none' }}
           >
-            查看服務項目
-            <ChevronDown size={18} />
+            <span>⚡</span> 看 AI Agents
+            <ArrowRight size={18} />
           </a>
         </div>
 
@@ -258,17 +260,14 @@ export default function Hero() {
           <p className="text-xs text-slate-600 uppercase tracking-widest mb-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Live Products</p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-3xl mx-auto">
             {[
-              { label: 'Mind Threads', desc: 'Threads 自動化 SaaS', href: 'https://mindthread.tw', color: '#14B8A6', external: true },
-              { label: 'Ultra Advisor', desc: 'AI 財務顧問 SaaS', href: 'https://ultraadvisor.tw', color: '#2E6BFF', external: true },
               { label: 'UltraProbe', desc: 'AI 安全掃描器', href: '/probe', color: '#F59E0B' },
-              { label: 'Ultra KB', desc: '知識中樞建置', href: '/kb', color: '#06B6D4' },
               { label: 'AI Agents', desc: 'AI 品牌推廣 Agents', href: '/agent', color: '#FF6B35' },
+              { label: 'Blog', desc: '技術部落格', href: '/blog', color: '#06B6D4' },
             ].map((p) => (
               <a
                 key={p.label}
                 href={p.href}
-                {...(p.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 w-[calc(50%-4px)] sm:w-auto"
+                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 w-[calc(33%-4px)] sm:w-auto"
                 style={{
                   background: 'rgba(15, 10, 30, 0.6)',
                   borderColor: `${p.color}25`,

@@ -3,13 +3,10 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import TrustLogos from './components/TrustLogos'
 import Services from './components/Services'
-import HowItWorks from './components/HowItWorks'
 import ProductShowcase from './components/ProductShowcase'
 import Portfolio from './components/Portfolio'
-import BlogHighlights from './components/BlogHighlights'
 import Pricing from './components/Pricing'
 import FAQ from './components/FAQ'
-import Founder from './components/Founder'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 
@@ -55,19 +52,13 @@ function LandingPage() {
         <SectionDivider />
         <Services />
         <SectionDivider />
-        <HowItWorks />
-        <SectionDivider />
         <ProductShowcase />
         <SectionDivider />
         <Portfolio />
         <SectionDivider />
-        <BlogHighlights />
-        <SectionDivider />
         <Pricing />
         <SectionDivider />
         <FAQ />
-        <SectionDivider />
-        <Founder />
         <SectionDivider />
         <Contact />
       </main>

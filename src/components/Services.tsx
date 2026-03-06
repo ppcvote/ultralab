@@ -1,4 +1,4 @@
-import { Video, MessageSquare, Code2, Sparkles, Globe, Shield, BookOpen, Bot, ArrowRight } from 'lucide-react'
+import { MessageSquare, Code2, Shield, Bot, ArrowRight } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 
 interface Service {
@@ -16,7 +16,19 @@ interface Service {
 }
 
 const services: Service[] = [
-  // — 有獨立頁面的產品，放最上面 —
+  {
+    icon: <Bot size={28} />,
+    color: '#FF6B35',
+    glowColor: 'rgba(255, 107, 53, 0.4)',
+    title: 'AI Agent 品牌部署服務',
+    tagline: '讓 AI 幫你的品牌 24 小時發聲',
+    description:
+      '基於 OpenClaw + Gemini 2.5 Flash，幫品牌在 Moltbook、Discord、Telegram 部署可自主發文、互動、導流的 AI Agent。三天內上線。Ultra Lab 自己的四個 Agent 就是活案例。',
+    tags: ['OpenClaw', 'Gemini AI', '多平台同步', '三天上線'],
+    aiReady: '品牌聲音克隆 · 自主互動策略 · 跨平台協作',
+    link: '/agent',
+    linkLabel: '看我們的 Agents',
+  },
   {
     icon: <MessageSquare size={28} />,
     color: '#14B8A6',
@@ -45,81 +57,15 @@ const services: Service[] = [
     linkLabel: '免費掃描',
   },
   {
-    icon: <BookOpen size={28} />,
-    color: '#06B6D4',
-    glowColor: 'rgba(6, 182, 212, 0.4)',
-    title: 'Ultra KB 知識中樞建置',
-    tagline: '30 分鐘 onboard 人類，0 秒 onboard AI',
-    description:
-      'Notion 知識庫全自動建置：產品資料庫、技術棧、API 文件、品牌規範、決策紀錄。70% 自動化匯入，Agent-Ready 架構。',
-    tags: ['Notion', 'Agent-Ready', '70%自動化', 'Knowledge Base'],
-    aiReady: 'MCP 讀寫接口 · RAG 語意搜尋 · AI Agent 可直接呼叫',
-    link: '/kb',
-    linkLabel: '查看方案',
-  },
-  {
-    icon: <Bot size={28} />,
-    color: '#FF6B35',
-    glowColor: 'rgba(255, 107, 53, 0.4)',
-    title: 'AI Agent 品牌部署服務',
-    tagline: '讓 AI 幫你的品牌 24 小時發聲',
-    description:
-      '基於 OpenClaw + Gemini 2.5 Flash，幫品牌在 Moltbook、Telegram 部署可自主發文、互動、導流的 AI Agent。運營成本 $0/月，三天內上線。Ultra Lab 自己的四個 Agent 就是活案例。',
-    tags: ['OpenClaw', 'Moltbook', 'Gemini AI', '$0/月運營'],
-    aiReady: '品牌聲音克隆 · 多平台同步 · 自主互動策略',
-    link: '/agent',
-    linkLabel: '看我們的 Agents',
-  },
-  // — 其他服務 —
-  {
-    icon: <Video size={28} />,
-    color: '#10B981',
-    glowColor: 'rgba(16, 185, 129, 0.4)',
-    title: 'IG Reel 全自動發布系統',
-    tagline: '從素材到發布，全自動',
-    description:
-      'Gemini AI 生成文案 → FFmpeg 自動合成影片 → 排程 → 自動發布。端到端全自動的 IG Reel 運營系統，零人工介入。',
-    tags: ['Gemini AI', 'FFmpeg', '排程發布', '零人工'],
-    aiReady: 'AI 圖片生成 · AI 配音 · A/B 效果預測',
-    link: '#portfolio',
-    linkLabel: '看實際成果',
-  },
-  {
     icon: <Code2 size={28} />,
     color: '#2E6BFF',
     glowColor: 'rgba(46, 107, 255, 0.4)',
     title: 'SaaS 全端建置方案',
     tagline: '你的 SaaS，兩週上線',
     description:
-      'React + TypeScript + Firebase + Vercel。已驗證的認證系統、訂閱管理、點數經濟、管理後台。內建 AI middleware 接口。',
+      'React + TypeScript + Firebase + Vercel。已驗證的認證系統、訂閱管理、點數經濟、管理後台。從 Ultra Advisor 到 MindThread，全部同套架構。',
     tags: ['全端', 'Firebase', '訂閱制', 'AI-Ready'],
     aiReady: 'AI Copilot 模組 · 智能儀表板 · 預測分析引擎',
-    link: '#portfolio',
-    linkLabel: '看 Ultra Advisor 案例',
-  },
-  {
-    icon: <Sparkles size={28} />,
-    color: '#8A5CFF',
-    glowColor: 'rgba(138, 92, 255, 0.4)',
-    title: 'AI 串接應用服務',
-    tagline: '不只串 API，更懂你的業務',
-    description:
-      'Gemini / Claude / GPT 多模型路由 + Prompt Registry + RAG + 結構化輸出驗證。從保單 OCR 到 AI 安全掃描器的實戰架構。',
-    tags: ['Multi-LLM', 'Prompt工程', 'RAG', 'MCP Server'],
-    aiReady: 'Model Router · BYOK 架構 · AI Observability',
-    link: '#contact',
-    linkLabel: '免費諮詢',
-  },
-  {
-    icon: <Globe size={28} />,
-    color: '#4DA3FF',
-    glowColor: 'rgba(77, 163, 255, 0.4)',
-    title: '品牌官網全套方案',
-    tagline: '不只是網站，是客戶獲取系統',
-    description:
-      '品牌官網 + 客戶表單 + 即時通知 + SEO 優化 + 數據追蹤 + 部署上線。一站搞定你的線上門面，預留 AI 擴展接口。',
-    tags: ['RWD', 'SEO', '表單系統', 'AI-Ready'],
-    aiReady: 'AI 客服 Chatbot · 智能表單 · 個人化內容',
     link: '#contact',
     linkLabel: '免費諮詢',
   },
@@ -225,15 +171,15 @@ export default function Services() {
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <span className="terminal-tag mb-4">ls --ai-services</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            八大 <span className="text-gradient-purple">AI 產品線</span>
+            四大 <span className="text-gradient-purple">AI 產品線</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             每一條產品線都由 AI 驅動 — 從 LLM 內容生成、Agent 部署到 AI 安全防護
           </p>
         </div>
 
-        {/* Service Cards — 3x2 grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {/* Service Cards — 2x2 grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {services.map((service, index) => (
             <div
               key={service.title}
