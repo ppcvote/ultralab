@@ -193,7 +193,9 @@ section {
 }
 
 .logo-icon {
-  font-size: 1.75rem;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
 }
 
 .nav-links {

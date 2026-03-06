@@ -1,4 +1,5 @@
-/* Nerve Center — RimWorld Colony Floor View */
+/* Nerve Center — RimWorld Colony Floor View
+   All custom CSS in @layer components for Tailwind v4 compat */
 
 @layer components {
   .nerve-center {
@@ -7,7 +8,7 @@
 
   /* ── Outer colony box ── */
   .rim-colony {
-    border: 2px solid rgba(138, 92, 255, 0.15);
+    border: 2px solid rgba(138, 92, 255, 0.25);
     border-radius: 10px;
     overflow: hidden;
     background: #070312;
@@ -15,86 +16,310 @@
 
   /* ── Header bar ── */
   .nc-header {
-    padding: 8px 18px;
+    padding: 10px 20px;
     background: #0A0515;
-    border-bottom: 2px solid rgba(138, 92, 255, 0.1);
+    border-bottom: 2px solid rgba(138, 92, 255, 0.12);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
   .nc-title {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 3px;
     color: #8A5CFF;
     animation: nc-glitch 6s infinite;
   }
 
+  .nc-tag {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    background: rgba(138, 92, 255, 0.1);
+    border: 1px solid rgba(138, 92, 255, 0.2);
+    color: #8A5CFF;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .nc-section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: rgba(255, 255, 255, 0.35);
+    margin-bottom: 8px;
+  }
+
+  .nc-blink-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    background: #8A5CFF;
+    animation: nc-cursor 1s step-end infinite;
+  }
+
+  .nc-stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    font-size: 12px;
+  }
+
   /* ── Main layout: floorplan + sidebar ── */
   .rim-layout {
     display: grid;
-    grid-template-columns: 1fr 190px;
-    min-height: 360px;
+    grid-template-columns: 1fr 260px;
+    min-height: 500px;
   }
 
   /* ── Floor plan ── */
   .rim-floorplan {
     position: relative;
-    /* Aspect ratio trick: padding-bottom creates height relative to width */
-    /* Used as the "stage" for absolutely positioned rooms and agents */
-    height: 360px;
-    border-right: 2px solid rgba(138, 92, 255, 0.08);
+    height: 500px;
+    border-right: 2px solid rgba(138, 92, 255, 0.1);
     /* RimWorld tile grid background */
     background-color: #060210;
     background-image:
-      linear-gradient(rgba(138, 92, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(138, 92, 255, 0.04) 1px, transparent 1px);
-    background-size: 24px 24px;
+      linear-gradient(rgba(138, 92, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(138, 92, 255, 0.07) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 
-  /* ── Agent pixel character parts ── */
-  .rim-head {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    position: relative;
-    z-index: 2;
+  /* ── Room hover ── */
+  .nc-room {
+    cursor: default;
   }
 
-  .rim-eye {
+  /* ── Corridor label + decorations ── */
+  .nc-corridor-label {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 50%;
-    top: 3px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(138, 92, 255, 0.25);
+    z-index: 1;
+    pointer-events: none;
   }
-  .rim-eye-l { left: 2px; }
-  .rim-eye-r { right: 2px; }
 
-  .rim-body {
+  /* Water cooler (left corridor) */
+  .nc-watercooler {
+    position: absolute;
+    top: 46%;
+    left: 40%;
+    width: 14px;
+    height: 20px;
+    background: rgba(77, 163, 255, 0.3);
+    border: 1px solid rgba(77, 163, 255, 0.35);
+    border-radius: 2px;
+    z-index: 1;
+  }
+  .nc-watercooler::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 1px;
     width: 12px;
-    height: 7px;
-    border-radius: 1px;
-    margin-top: -1px;
+    height: 10px;
+    background: rgba(77, 163, 255, 0.4);
+    border-radius: 50% 50% 0 0;
+  }
+
+  /* Plant (right corridor) */
+  .nc-plant {
+    position: absolute;
+    top: 46%;
+    left: 58%;
+    width: 16px;
+    height: 8px;
+    background: rgba(92, 64, 40, 0.7);
+    border-radius: 2px;
+    z-index: 1;
+  }
+  .nc-plant::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: -2px;
+    width: 20px;
+    height: 16px;
+    background: rgba(34, 197, 94, 0.5);
+    border-radius: 50%;
+  }
+
+  /* Wobble during walking (sinusoidal Y-offset like Star-Office) */
+  .nc-wobble {
+    animation: nc-wobble 0.5s ease-in-out infinite;
+  }
+
+  /* Typing dot pulse in task bubble */
+  .nc-typing-dot {
+    display: inline-block;
+    animation: nc-dot-pulse 1.2s ease-in-out infinite;
+    font-size: 7px;
+    vertical-align: middle;
+  }
+
+  /* ── Task bubble ── */
+  .nc-task-bubble {
+    background: rgba(6, 3, 14, 0.92);
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.55);
+    white-space: nowrap;
+    margin-bottom: 4px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
+  /* Typewriter reveal for event detail */
+  .nc-typewrite-detail {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: bottom;
+    max-width: 0;
   }
 
   /* ── Sidebar ── */
   .nc-sidebar {
-    background: rgba(5, 2, 12, 0.95);
+    background: rgba(8, 4, 18, 0.97);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  /* ── Responsive ── */
+  /* ═══════════════════════════════════
+     Furniture animations
+     ═══════════════════════════════════ */
+
+  /* Screen glow (breathing) */
+  .nc-screen {
+    animation: screen-glow 2.5s ease-in-out infinite;
+  }
+
+  /* LED blink */
+  .nc-led {
+    animation: led-blink 1.2s ease-in-out infinite;
+  }
+
+  /* Server hub pulse */
+  .nc-server-hub {
+    animation: server-pulse 2s ease-in-out infinite;
+  }
+
+  /* Ring light breathing (SOCIAL HUB) */
+  .nc-ring-light {
+    animation: ring-light 2.5s ease-in-out infinite;
+  }
+
+  /* Scanner pulse (SEC-LAB) */
+  .nc-scanner {
+    animation: pulse-scan 2s ease-in-out infinite;
+  }
+  .nc-scanner::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(239, 68, 68, 0.2);
+    animation: pulse-scan-ring 2s ease-in-out infinite;
+  }
+
+  /* Scan-line overlay */
+  .nc-scanline {
+    background: linear-gradient(
+      transparent 0%,
+      rgba(239, 68, 68, 0.15) 50%,
+      transparent 100%
+    );
+    animation: scanline-move 3s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Coffee steam */
+  .nc-steam {
+    animation: steam 2s ease-in-out infinite;
+  }
+  .nc-steam::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: steam 2s ease-in-out infinite 0.5s;
+  }
+
+  /* MDRT trophy glow */
+  .nc-trophy {
+    animation: trophy-glow 3s ease-in-out infinite;
+  }
+
+  /* ═══════════════════════════════════
+     Agent Popup
+     ═══════════════════════════════════ */
+  .nc-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 18px;
+    background: rgba(10, 5, 21, 0.96);
+    border: 1.5px solid;
+    border-radius: 10px;
+    z-index: 50;
+    backdrop-filter: blur(8px);
+    animation: nc-popup-in 0.25s ease-out;
+  }
+
+  .nc-popup-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+  .nc-popup-close:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .nc-popup-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+    font-size: 10px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .nc-popup-link:hover {
+    opacity: 0.8;
+  }
+
+  /* ═══════════════════════════════════
+     Responsive
+     ═══════════════════════════════════ */
   @media (max-width: 640px) {
     .rim-layout {
       grid-template-columns: 1fr;
     }
     .rim-floorplan {
-      height: 300px;
+      height: 380px;
       border-right: none;
       border-bottom: 2px solid rgba(138, 92, 255, 0.08);
     }
@@ -108,16 +333,34 @@
       border-bottom: none !important;
       border-right: 1px solid rgba(138, 92, 255, 0.06);
     }
+    .nc-popup {
+      position: fixed;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      transform: none;
+      width: 100%;
+      border-radius: 12px 12px 0 0;
+    }
   }
 
-  @media (max-width: 420px) {
+  @media (max-width: 480px) {
+    .rim-floorplan {
+      height: 320px;
+    }
+    .nc-task-bubble {
+      display: none;
+    }
     .nc-sidebar {
       flex-direction: column;
     }
   }
 }
 
-/* ── Animations ── */
+/* ═══════════════════════════════════
+   Keyframe Animations
+   ═══════════════════════════════════ */
 
 @keyframes nc-glitch {
   0%, 92%, 100% { text-shadow: none; }
@@ -137,8 +380,96 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Agent head bob when working */
+@keyframes nc-popup-in {
+  from { opacity: 0; transform: translate(-50%, -46%) scale(0.95); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Agent head bob when idle */
 @keyframes rim-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-2px); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Wobble: sinusoidal Y-offset during walking (Star-Office style) */
+@keyframes nc-wobble {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25%      { transform: translateY(-2px) rotate(-1deg); }
+  50%      { transform: translateY(0) rotate(0deg); }
+  75%      { transform: translateY(-2px) rotate(1deg); }
+}
+
+/* Typing animation: subtle rapid micro-bob when working at desk */
+@keyframes nc-typing {
+  0%, 100% { transform: translateY(0); }
+  20%      { transform: translateY(-1px); }
+  40%      { transform: translateY(0); }
+  60%      { transform: translateY(-1.5px); }
+  80%      { transform: translateY(0); }
+}
+
+/* Typing dot pulse */
+@keyframes nc-dot-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+/* ── Furniture animations ── */
+
+@keyframes screen-glow {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+@keyframes led-blink {
+  0%, 40%, 100% { opacity: 1; }
+  50%, 60%      { opacity: 0.2; }
+}
+
+@keyframes server-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(77, 163, 255, 0.25); }
+  50%      { box-shadow: 0 0 16px rgba(77, 163, 255, 0.5); }
+}
+
+@keyframes ring-light {
+  0%, 100% { box-shadow: 0 0 10px rgba(20, 184, 166, 0.2), inset 0 0 4px rgba(20, 184, 166, 0.1); }
+  50%      { box-shadow: 0 0 20px rgba(20, 184, 166, 0.45), inset 0 0 8px rgba(20, 184, 166, 0.2); }
+}
+
+@keyframes pulse-scan {
+  0%, 100% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.2); }
+  50%      { box-shadow: 0 0 18px rgba(239, 68, 68, 0.45); }
+}
+
+@keyframes pulse-scan-ring {
+  0%   { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes scanline-move {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+@keyframes steam {
+  0%   { opacity: 0; transform: translateY(0); }
+  50%  { opacity: 0.4; }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+@keyframes trophy-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.3); }
+  50%      { box-shadow: 0 0 16px rgba(245, 158, 11, 0.55); }
+}
+
+/* Room active glow pulse */
+@keyframes nc-room-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+/* Typewriter character reveal */
+@keyframes nc-type-reveal {
+  from { max-width: 0; }
+  to   { max-width: 25ch; }
 }

@@ -29,3 +29,10 @@ scripts/
 **/firebase-key.json
 **/service-account*.json
 deploy_package/
+
+.env*.local
+
+# Embedded repos and temp files
+.claude/worktrees/
+cUsersUserUltraThreads/
+nul

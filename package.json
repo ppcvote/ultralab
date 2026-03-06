@@ -12,6 +12,7 @@
     "@google/genai": "^1.43.0",
     "@google/generative-ai": "^0.24.1",
     "@notionhq/client": "^5.11.0",
+    "dotenv": "^17.3.1",
     "firebase": "^12.9.0",
     "firebase-admin": "^13.6.1",
     "lucide-react": "^0.468.0",
@@ -30,6 +31,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "gray-matter": "^4.0.3",
     "marked": "^17.0.1",
+    "puppeteer": "^24.37.5",
     "tailwindcss": "^4.1.18",
     "typescript": "~5.6.2",
     "vite": "^6.4.1"

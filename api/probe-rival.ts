@@ -104,6 +104,7 @@ ${content}
 - Hook/CTA 句型舉例必須是**具體句子**，非抽象描述
 - Prompt 建議必須是**可直接複製使用**的完整 prompt
 - 如果內容不足以分析某個面向，該欄位填「資料不足」而非瞎猜
+- 所有字串值盡量簡潔，避免過長導致截斷
 
 重要：僅回應有效的 JSON（無 markdown 圍欄），使用此結構：
 {
@@ -143,6 +144,37 @@ ${content}
   }
 }`
 
+function repairTruncatedJson(text: string): string {
+  // Try to fix JSON truncated mid-string or mid-object
+  let s = text.trim()
+
+  // Count unmatched braces/brackets
+  let braces = 0, brackets = 0, inString = false, escaped = false
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]
+    if (escaped) { escaped = false; continue }
+    if (c === '\\' && inString) { escaped = true; continue }
+    if (c === '"') { inString = !inString; continue }
+    if (inString) continue
+    if (c === '{') braces++
+    else if (c === '}') braces--
+    else if (c === '[') brackets++
+    else if (c === ']') brackets--
+  }
+
+  // If we ended inside a string, close it
+  if (inString) s += '"'
+
+  // Close unclosed brackets/braces
+  while (brackets > 0) { s += ']'; brackets-- }
+  while (braces > 0) { s += '}'; braces-- }
+
+  // Remove trailing commas before } or ]
+  s = s.replace(/,\s*([}\]])/g, '$1')
+
+  return s
+}
+
 function parseGeminiResponse(text: string) {
   let cleaned = text.trim()
   if (cleaned.startsWith('```json')) {
@@ -150,11 +182,21 @@ function parseGeminiResponse(text: string) {
   } else if (cleaned.startsWith('```')) {
     cleaned = cleaned.replace(/^```\s*/, '').replace(/\s*```$/, '')
   }
+  cleaned = cleaned.trim()
+
+  // First try direct parse
   try {
-    return JSON.parse(cleaned.trim())
-  } catch (parseError: any) {
-    console.error('JSON parse failed. Raw response:', cleaned.substring(0, 500))
-    throw new Error(`JSON parse failed: ${parseError.message}`)
+    return JSON.parse(cleaned)
+  } catch {
+    // Try repair
+    try {
+      const repaired = repairTruncatedJson(cleaned)
+      console.warn('JSON repaired from truncated response')
+      return JSON.parse(repaired)
+    } catch (parseError: any) {
+      console.error('JSON parse failed after repair. Raw:', cleaned.substring(0, 500))
+      throw new Error(`JSON parse failed: ${parseError.message}`)
+    }
   }
 }
 
@@ -235,7 +277,7 @@ async function analyzeWithGemini(url: string, content: string, res: VercelRespon
       contents: [{ role: 'user', parts: [{ text: RIVAL_ANALYSIS_PROMPT(url, content) }] }],
       generationConfig: {
         temperature: 0.4,
-        maxOutputTokens: 4096,
+        maxOutputTokens: 8192,
         responseMimeType: 'application/json',
       },
       safetySettings: [

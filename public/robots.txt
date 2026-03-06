@@ -1,0 +1,49 @@
+# Ultra Lab — ultralab.tw
+# 傲創實業 AI 技術品牌
+# https://ultralab.tw
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /minyi
+Disallow: /minyi/
+Disallow: /probe
+Disallow: /probe/
+Disallow: /api/
+
+# ─── AI Crawlers — explicitly allow landing page ───
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+Sitemap: https://ultralab.tw/sitemap.xml

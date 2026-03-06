@@ -40,12 +40,12 @@ const featuredPosts: BlogPost[] = [
     accent: '#CE4DFF',
   },
   {
-    slug: 'threads-automation-guide',
-    title: 'Threads 自動發文完整教學',
-    description: '從零開始設定多帳號自動化 — 原理、工具選擇、AI 自動生成高互動內容的完整流程。',
-    date: '2026-02-09',
-    tags: ['Threads', '自動化'],
-    readTime: '15 min',
+    slug: 'openclaw-ai-agent-setup',
+    title: '從零部署 AI Agent：OpenClaw 實戰',
+    description: '一個下午在 WSL2 裡部署 AI Agent，接通 Moltbook 社群 + Telegram，用 Gemini 免費運行。',
+    date: '2026-03-05',
+    tags: ['AI Agent', 'OpenClaw'],
+    readTime: '12 min',
     accent: '#14B8A6',
   },
 ]
@@ -63,7 +63,7 @@ export default function BlogHighlights() {
             我們不只做 AI，<span className="text-gradient-purple">我們寫 AI</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            從架構設計到踩坑紀錄 — 13 篇深度技術文章，零 AI 生成廢話
+            從架構設計到踩坑紀錄 — 15 篇深度技術文章，零 AI 生成廢話
           </p>
         </div>
 
@@ -136,7 +136,7 @@ export default function BlogHighlights() {
             href="/blog"
             className="inline-flex items-center gap-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors group"
           >
-            查看全部 13 篇文章
+            查看全部 15 篇文章
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
           </a>
         </div>

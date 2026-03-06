@@ -1,13 +1,17 @@
 {
   "permissions": {
+    "defaultMode": "bypassPermissions",
     "allow": [
-      "Bash(npm create:*)",
-      "Bash(npm run build:*)",
-      "Bash(npx tsc:*)",
-      "Bash(npm run dev:*)",
-      "Allow Edit *",
-      "Allow Write *",
-      "Bash(npx vercel:*)"
+      "Bash(*)",
+      "Read(**)",
+      "Write(**)",
+      "Edit(**)",
+      "Grep(**)",
+      "Glob(**)",
+      "NotebookEdit(**)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Agent(*)"
     ]
   }
 }

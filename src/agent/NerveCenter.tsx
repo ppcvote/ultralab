@@ -1,173 +1,163 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { ROOMS, AGENTS_META, AGENTS_VISUAL, type RoomDef } from './agent-data'
+import { buildRoute, INIT_STEPS, type Pos } from './pathfinding'
+import { AgentPixelSprite } from './sprites'
+import RoomFurniture from './Furniture'
+import AgentPopup from './AgentPopup'
+import ParticleCanvas from './ParticleCanvas'
+import { useAgentActivity } from '../hooks/useAgentActivity'
 import './nerve-center.css'
 
-/* ── Types ── */
-type Pos = { x: number; y: number }
-type Step = { pos: Pos; ms: number }
-
-/* ── Floor plan rooms (% of floor container) ── */
-const ROOMS = [
-  { id: 'cmd',  label: 'COMMAND',     color: '#8A5CFF', top: 4,  left: 2,  w: 35, h: 39, icon: '🖥' },
-  { id: 'srv',  label: 'SERVER ROOM', color: '#4DA3FF', top: 4,  left: 63, w: 35, h: 39, icon: '⚙️' },
-  { id: 'soc',  label: 'SOCIAL HUB', color: '#14B8A6', top: 57, left: 2,  w: 28, h: 39, icon: '📱' },
-  { id: 'sec',  label: 'SEC-LAB',    color: '#EF4444', top: 57, left: 35, w: 28, h: 39, icon: '🔬' },
-  { id: 'adv',  label: 'ADVISORY',   color: '#F59E0B', top: 57, left: 68, w: 28, h: 39, icon: '📊' },
-]
-
-/* ── Agents + movement routes ──
-   x/y are % of the floor container (0-100)
-   Agents walk through corridor (y ≈ 50) to reach other rooms */
-interface AgentDef {
-  id: string; name: string; shortName: string
-  color: string; skin: string; body: string
-  route: Step[]; tasks: string[]
-  pending?: boolean
-}
-
-const AGENTS: AgentDef[] = [
-  {
-    id: 'main', name: 'UltraLabTW', shortName: 'UltraLab',
-    color: '#8A5CFF', skin: '#C4956A', body: '#6B3FA0',
-    tasks: ['Drafting post...', 'Trend analysis...', 'Publishing...', 'Fleet briefing...'],
-    route: [
-      { pos: { x: 15, y: 20 }, ms: 2200 }, // desk
-      { pos: { x: 24, y: 28 }, ms: 900 },  // pace in command
-      { pos: { x: 15, y: 20 }, ms: 1500 }, // back to desk
-      { pos: { x: 15, y: 50 }, ms: 600 },  // enter corridor
-      { pos: { x: 70, y: 50 }, ms: 900 },  // walk corridor →
-      { pos: { x: 70, y: 20 }, ms: 2500 }, // server room
-      { pos: { x: 70, y: 50 }, ms: 600 },  // leave server
-      { pos: { x: 48, y: 50 }, ms: 500 },  // corridor center
-      { pos: { x: 15, y: 50 }, ms: 600 },  // back to left
-    ],
-  },
-  {
-    id: 'mind', name: 'MindThreadBot', shortName: 'MindThr',
-    color: '#14B8A6', skin: '#B8D4E3', body: '#115E59',
-    tasks: ['Queue staged...', 'Scheduling posts...', 'Content gen...'],
-    route: [
-      { pos: { x: 11, y: 73 }, ms: 2200 }, // desk
-      { pos: { x: 19, y: 80 }, ms: 900 },  // pace
-      { pos: { x: 11, y: 73 }, ms: 1500 }, // back
-      { pos: { x: 16, y: 50 }, ms: 600 },  // corridor
-      { pos: { x: 48, y: 50 }, ms: 700 },  // walk right
-      { pos: { x: 70, y: 50 }, ms: 600 },  // continue
-      { pos: { x: 70, y: 20 }, ms: 2200 }, // server room
-      { pos: { x: 70, y: 50 }, ms: 600 },  // leave
-      { pos: { x: 16, y: 50 }, ms: 800 },  // walk back
-    ],
-  },
-  {
-    id: 'probe', name: 'UltraProbeBot', shortName: 'Probe',
-    color: '#EF4444', skin: '#8B9DAF', body: '#7F1D1D',
-    tasks: ['Probing endpoints...', 'Injecting prompts...', 'Scanning LLM...', 'Writing report...'],
-    route: [
-      { pos: { x: 44, y: 73 }, ms: 2000 }, // desk
-      { pos: { x: 52, y: 80 }, ms: 900 },  // pace
-      { pos: { x: 44, y: 73 }, ms: 1500 }, // back
-      { pos: { x: 45, y: 50 }, ms: 600 },  // corridor
-      { pos: { x: 70, y: 50 }, ms: 700 },  // walk right
-      { pos: { x: 70, y: 20 }, ms: 3000 }, // server room (long scan)
-      { pos: { x: 70, y: 50 }, ms: 600 },  // leave
-      { pos: { x: 45, y: 50 }, ms: 600 },  // back
-    ],
-  },
-  {
-    id: 'adv', name: 'UltraAdvisor', shortName: 'Advisor',
-    color: '#F59E0B', skin: '#D4A574', body: '#92400E',
-    tasks: ['Retirement analysis...', 'Insurance review...', 'Portfolio planning...', 'Client brief...'],
-    route: [
-      { pos: { x: 79, y: 73 }, ms: 2200 }, // desk
-      { pos: { x: 85, y: 80 }, ms: 900 },  // pace
-      { pos: { x: 79, y: 73 }, ms: 1500 }, // back
-      { pos: { x: 79, y: 50 }, ms: 600 },  // corridor
-      { pos: { x: 70, y: 50 }, ms: 600 },  // walk left
-      { pos: { x: 70, y: 20 }, ms: 2000 }, // server room
-      { pos: { x: 70, y: 50 }, ms: 600 },  // leave
-      { pos: { x: 79, y: 50 }, ms: 600 },  // walk back
-    ],
-  },
-]
-
-/* ── Starting step per agent so floor plan is immediately alive ──
-   main=0: at desk | mind=4: mid-corridor → server | probe=5: in server | adv=2: desk → corridor soon */
-const INIT_STEPS: Record<string, number> = { main: 0, mind: 4, probe: 5, adv: 2 }
-
-const FEED = [
-  { t: '15:12', c: '#F59E0B', a: 'POST',   d: 'Retirement Planning 101' },
-  { t: '14:57', c: '#14B8A6', a: 'POST',   d: 'Multi-Account Strategy' },
-  { t: '14:06', c: '#8A5CFF', a: 'ENGAGE', d: 'r/tech +12↑' },
-  { t: '13:58', c: '#EF4444', a: 'ALERT',  d: '3 vulns detected' },
-  { t: '13:36', c: '#8A5CFF', a: 'REPORT', d: 'Daily summary → TG' },
-  { t: '13:00', c: '#EF4444', a: 'POST',   d: 'Data Leak Report' },
-]
-
+/* ── Helpers ── */
 const h2a = (h: string, a: number) => {
   const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16)
   return `rgba(${r},${g},${b},${a})`
 }
 
-/* ── Room (static background) ── */
-function Room({ r }: { r: typeof ROOMS[0] }) {
-  const dim = (r as any).pending
+/* ── Agent color map for event log ── */
+const AGENT_COLORS: Record<string, string> = {
+  main: '#8A5CFF', mind: '#14B8A6', probe: '#EF4444', adv: '#F59E0B',
+}
+
+/* ── Precompute routes ── */
+const ROUTES = Object.fromEntries(
+  AGENTS_VISUAL.map(a => [a.id, buildRoute(a.id)])
+)
+
+/* ── Room component (with hover + furniture) ── */
+function Room({ r, hovered, isActive, onHover }: { r: RoomDef; hovered: boolean; isActive: boolean; onHover: (id: string | null) => void }) {
   return (
-    <div style={{
-      position: 'absolute',
-      top: `${r.top}%`, left: `${r.left}%`,
-      width: `${r.w}%`, height: `${r.h}%`,
-      border: `2px solid ${dim ? 'rgba(255,255,255,0.06)' : h2a(r.color, 0.28)}`,
-      borderRadius: 3,
-      background: dim ? 'rgba(10,5,21,0.3)' : h2a(r.color, 0.05),
-      opacity: dim ? 0.45 : 1,
-      overflow: 'visible',
-    }}>
+    <div
+      className="nc-room"
+      onMouseEnter={() => onHover(r.id)}
+      onMouseLeave={() => onHover(null)}
+      style={{
+        position: 'absolute',
+        top: `${r.top}%`, left: `${r.left}%`,
+        width: `${r.w}%`, height: `${r.h}%`,
+        border: `3px solid ${h2a(r.color, hovered ? 0.65 : 0.4)}`,
+        borderRadius: 6,
+        background: h2a(r.color, hovered ? 0.16 : 0.12),
+        boxShadow: hovered ? `0 0 20px ${h2a(r.color, 0.08)}` : 'none',
+        transition: 'border-color 0.3s, background 0.3s, box-shadow 0.3s',
+        overflow: 'visible',
+      }}
+    >
+      {/* Room inner tile grid */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        backgroundImage: `
+          linear-gradient(${h2a(r.color, 0.03)} 1px, transparent 1px),
+          linear-gradient(90deg, ${h2a(r.color, 0.03)} 1px, transparent 1px)
+        `,
+        backgroundSize: '16px 16px',
+        borderRadius: 4,
+        pointerEvents: 'none',
+      }} />
       {/* Room label */}
-      <span style={{ position: 'absolute', top: 4, left: 6, fontSize: 7, letterSpacing: 2, color: h2a(r.color, 0.65), fontWeight: 700 }}>
+      <span style={{
+        position: 'absolute', top: 6, left: 8,
+        fontSize: 10, letterSpacing: 2,
+        color: h2a(r.color, 0.7), fontWeight: 700,
+      }}>
         {r.label}
       </span>
-      {/* Furniture icon */}
-      <span style={{ position: 'absolute', right: 6, bottom: 8, fontSize: 16, opacity: 0.25 }}>{r.icon}</span>
-      {/* Door gap — bottom center */}
-      <div style={{ position: 'absolute', bottom: -2, left: '50%', transform: 'translateX(-50%)', width: 16, height: 4, background: '#070312', zIndex: 2 }} />
+      {/* Door frame — corridor-facing wall */}
+      {r.top < 50 ? (
+        /* Top rooms: door at bottom */
+        <div style={{ position: 'absolute', bottom: -4, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+          <div style={{ width: 28, height: 10, background: '#060210' }} />
+          <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+        </div>
+      ) : (
+        /* Bottom rooms: door at top */
+        <div style={{ position: 'absolute', top: -4, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center' }}>
+          <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+          <div style={{ width: 28, height: 10, background: '#060210' }} />
+          <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+        </div>
+      )}
+      {/* Furniture */}
+      <RoomFurniture roomId={r.id} color={r.color} />
+      {/* Active glow when owner agent is working */}
+      {isActive && (
+        <div style={{
+          position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
+          background: `radial-gradient(ellipse at 50% 60%, ${h2a(r.color, 0.07)}, transparent 70%)`,
+          boxShadow: `inset 0 0 28px ${h2a(r.color, 0.08)}, 0 0 14px ${h2a(r.color, 0.05)}`,
+          animation: 'nc-room-pulse 3s ease-in-out infinite',
+        }} />
+      )}
     </div>
   )
 }
 
-/* ── Agent sprite (moves via CSS transition) ── */
-function AgentSprite({ a, pos, task }: { a: AgentDef; pos: Pos; task: string }) {
+/* ── Agent Sprite ── */
+function AgentSprite({ agentId, pos, task, prevPos, walkFrame, agentState, onClick }: {
+  agentId: string; pos: Pos; task: string; prevPos: Pos | null; walkFrame: number
+  agentState: 'working' | 'walking' | 'idle'; onClick: () => void
+}) {
+  const meta = AGENTS_META.find(a => a.id === agentId)
+  const visual = AGENTS_VISUAL.find(a => a.id === agentId)
+  if (!meta || !visual) return null
+
+  const isMoving = prevPos && (prevPos.x !== pos.x || prevPos.y !== pos.y)
+  const facingLeft = prevPos && prevPos.x > pos.x
+  const isWorking = agentState === 'working' && !isMoving
+
+  // Animation: working = subtle typing bob, idle = gentle breathing, walking = wobble
+  const bodyAnimation = isMoving
+    ? 'none'
+    : isWorking
+      ? 'nc-typing 1.2s ease-in-out infinite'
+      : 'rim-bob 2.5s ease-in-out infinite'
+
   return (
-    <div style={{
-      position: 'absolute',
-      left: `${pos.x}%`, top: `${pos.y}%`,
-      transform: 'translate(-50%, -100%)',
-      transition: 'left 1.2s cubic-bezier(0.45,0,0.55,1), top 1.2s cubic-bezier(0.45,0,0.55,1)',
-      zIndex: 20,
-      opacity: a.pending ? 0.2 : 1,
-      pointerEvents: 'none',
-    }}>
-      {/* Task bubble */}
-      {!a.pending && (
+    <div
+      onClick={onClick}
+      style={{
+        position: 'absolute',
+        left: `${pos.x}%`, top: `${pos.y}%`,
+        transform: `translate(-50%, -100%) ${facingLeft ? 'scaleX(-1)' : ''}`,
+        transition: `left ${1.2 / visual.speed}s cubic-bezier(0.45,0,0.55,1), top ${1.2 / visual.speed}s cubic-bezier(0.45,0,0.55,1)`,
+        zIndex: 20,
+        cursor: 'pointer',
+        pointerEvents: 'auto',
+      }}
+    >
+      {/* Task bubble — smooth fade during walking */}
+      <div className="nc-task-bubble" style={{
+        borderColor: h2a(meta.color, 0.35),
+        transform: facingLeft ? 'scaleX(-1)' : 'none',
+        opacity: isMoving ? 0 : 1,
+        transition: 'opacity 0.5s ease',
+      }}>
+        {isWorking && <span className="nc-typing-dot" style={{ color: meta.color }}>● </span>}
+        {task}
+      </div>
+      {/* Character */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0 }}
+           className={isMoving ? 'nc-wobble' : ''}>
+        <div style={{ animation: bodyAnimation }}>
+          <AgentPixelSprite agentId={agentId} scale={3.5} frame={isMoving ? walkFrame : 0} />
+        </div>
+        {/* Character shadow */}
         <div style={{
-          background: 'rgba(6,3,14,0.92)', border: `1px solid ${h2a(a.color, 0.35)}`,
-          borderRadius: 3, padding: '1px 5px', fontSize: 7, color: 'rgba(255,255,255,0.5)',
-          whiteSpace: 'nowrap', marginBottom: 3, maxWidth: 90,
-          overflow: 'hidden', textOverflow: 'ellipsis', textAlign: 'center',
+          width: isMoving ? 24 : 28, height: 8,
+          borderRadius: '50%',
+          background: `rgba(0,0,0,${isMoving ? 0.15 : 0.25})`,
+          filter: 'blur(2px)',
+          marginTop: -2,
+          transition: 'width 0.3s, opacity 0.3s',
+        }} />
+        {/* Name label */}
+        <div style={{
+          fontSize: 9, color: meta.color, fontWeight: 700,
+          whiteSpace: 'nowrap', marginTop: 2,
+          transform: facingLeft ? 'scaleX(-1)' : 'none',
         }}>
-          {task}
-        </div>
-      )}
-      {/* Pixel character */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-        <div className="rim-head" style={{
-          background: a.skin, border: `1px solid ${h2a(a.color, 0.8)}`,
-          animation: a.pending ? 'none' : 'rim-bob 2s ease-in-out infinite',
-        }}>
-          <span className="rim-eye rim-eye-l" />
-          <span className="rim-eye rim-eye-r" />
-        </div>
-        <div className="rim-body" style={{ background: a.body }} />
-        <div style={{ fontSize: 7, color: a.color, fontWeight: 700, whiteSpace: 'nowrap', marginTop: 2 }}>
-          {a.shortName}
+          {meta.shortName}
         </div>
       </div>
     </div>
@@ -176,24 +166,42 @@ function AgentSprite({ a, pos, task }: { a: AgentDef; pos: Pos; task: string }) 
 
 /* ── Main Component ── */
 export default function NerveCenter() {
+  // All 4 agents are active in the virtual office (even comingSoon ones walk around)
+  const activeAgents = AGENTS_VISUAL
+  const activity = useAgentActivity()
+
   const [steps, setSteps] = useState<Record<string, number>>(() =>
-    Object.fromEntries(AGENTS.filter(a => !a.pending).map(a => [a.id, INIT_STEPS[a.id] ?? 0]))
+    Object.fromEntries(activeAgents.map(a => [a.id, INIT_STEPS[a.id] ?? 0]))
+  )
+  const [prevPositions, setPrevPositions] = useState<Record<string, Pos>>({})
+  const [agentStates, setAgentStates] = useState<Record<string, 'working' | 'walking' | 'idle'>>(
+    () => Object.fromEntries(activeAgents.map(a => [a.id, 'working']))
   )
   const [tasks, setTasks] = useState<Record<string, number>>({})
+  const [walkFrame, setWalkFrame] = useState(0)
+  const [hoveredRoom, setHoveredRoom] = useState<string | null>(null)
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
 
-    AGENTS.forEach((agent, ai) => {
-      if (agent.pending) return
+    activeAgents.forEach((agent, ai) => {
+      const route = ROUTES[agent.id]
+      if (!route || route.length === 0) return
+
       let idx = INIT_STEPS[agent.id] ?? 0
+
       const advance = () => {
-        idx = (idx + 1) % agent.route.length
+        const oldIdx = idx
+        idx = (idx + 1) % route.length
+        // Save prev position for facing direction
+        setPrevPositions(p => ({ ...p, [agent.id]: route[oldIdx].pos }))
         setSteps(p => ({ ...p, [agent.id]: idx }))
-        const t = setTimeout(advance, agent.route[idx].ms)
+        setAgentStates(p => ({ ...p, [agent.id]: route[idx].state }))
+        const t = setTimeout(advance, route[idx].ms)
         timers.push(t)
       }
-      timers.push(setTimeout(advance, agent.route[idx].ms + ai * 400))
+      timers.push(setTimeout(advance, route[idx]?.ms ?? 2000 + ai * 400))
 
       // Task cycling
       if (agent.tasks.length > 1) {
@@ -207,17 +215,25 @@ export default function NerveCenter() {
       }
     })
 
-    return () => timers.forEach(clearTimeout)
+    // Walk frame cycling (alternate standing/stride every 250ms)
+    const walkInterval = setInterval(() => {
+      setWalkFrame(f => (f + 1) % 2)
+    }, 250)
+
+    return () => {
+      timers.forEach(clearTimeout)
+      clearInterval(walkInterval)
+    }
   }, [])
+
+  const closePopup = useCallback(() => setSelectedAgent(null), [])
 
   return (
     <section className="nerve-center" style={{ paddingBottom: '5rem' }}>
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' }}>
 
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <span style={{ display: 'inline-block', padding: '0.3rem 0.8rem', borderRadius: 4, background: 'rgba(138,92,255,0.1)', border: '1px solid rgba(138,92,255,0.2)', color: '#8A5CFF', fontSize: '0.75rem', marginBottom: '1rem' }}>
-            colony.view --mode=rimworld
-          </span>
+          <span className="nc-tag">colony.view --mode=rimworld</span>
           <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, marginBottom: '0.4rem' }}>
             虛擬辦公室 — <span style={{ background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Colony View</span>
           </h2>
@@ -227,56 +243,87 @@ export default function NerveCenter() {
         <div className="rim-colony">
           <div className="nc-header">
             <span className="nc-title">▓▓ ULTRA LAB HQ ▓▓</span>
-            <div style={{ display: 'flex', gap: 14, fontSize: 10 }}>
-              <span style={{ color: '#10B981' }}>● 4 ACTIVE</span>
+            <div style={{ display: 'flex', gap: 14, fontSize: 12 }}>
+              <span style={{ color: '#10B981' }}>● {activeAgents.length} ACTIVE</span>
             </div>
           </div>
 
           <div className="rim-layout">
-            {/* ── Floor plan ── */}
+            {/* Floor plan */}
             <div className="rim-floorplan">
+              {/* Corridor floor texture */}
+              <div style={{
+                position: 'absolute',
+                top: '42%', left: 0, right: 0, height: '16%',
+                backgroundImage: 'linear-gradient(rgba(138,92,255,0.03) 1px, transparent 1px)',
+                backgroundSize: '100% 8px',
+                pointerEvents: 'none',
+                zIndex: 0,
+              }} />
               {/* Corridor label */}
-              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: 7, letterSpacing: 4, color: 'rgba(138,92,255,0.18)', zIndex: 1 }}>
-                ── CORRIDOR ──
-              </div>
+              <div className="nc-corridor-label">── CORRIDOR ──</div>
+              {/* Corridor decorations */}
+              <div className="nc-corridor-deco nc-watercooler" />
+              <div className="nc-corridor-deco nc-plant" />
+              {/* Ambient particles */}
+              <ParticleCanvas />
               {/* Rooms */}
-              {ROOMS.map(r => <Room key={r.id} r={r} />)}
-              {/* Moving agents */}
-              {AGENTS.map(a => (
-                <AgentSprite
-                  key={a.id}
-                  a={a}
-                  pos={a.route[steps[a.id] ?? 0]?.pos ?? a.route[0].pos}
-                  task={a.tasks[tasks[a.id] ?? 0]}
-                />
+              {ROOMS.map(r => (
+                <Room key={r.id} r={r} hovered={hoveredRoom === r.id} isActive={!!r.owner && agentStates[r.owner] === 'working'} onHover={setHoveredRoom} />
               ))}
+              {/* Moving agents */}
+              {activeAgents.map(a => {
+                const route = ROUTES[a.id]
+                const stepIdx = steps[a.id] ?? 0
+                const pos = route?.[stepIdx]?.pos ?? { x: 50, y: 50 }
+                return (
+                  <AgentSprite
+                    key={a.id}
+                    agentId={a.id}
+                    pos={pos}
+                    prevPos={prevPositions[a.id] ?? null}
+                    task={activity.agents[a.id]?.lastAction || a.tasks[tasks[a.id] ?? 0]}
+                    walkFrame={walkFrame}
+                    agentState={agentStates[a.id] ?? 'working'}
+                    onClick={() => setSelectedAgent(a.id)}
+                  />
+                )
+              })}
+              {/* Agent popup */}
+              {selectedAgent && (
+                <AgentPopup agentId={selectedAgent} onClose={closePopup} />
+              )}
             </div>
 
-            {/* ── Sidebar ── */}
+            {/* Sidebar */}
             <div className="nc-sidebar">
-              <div style={{ flex: 1, padding: '10px 12px', borderBottom: '1px solid rgba(138,92,255,0.08)', overflow: 'hidden' }}>
-                <div style={{ fontSize: 7.5, letterSpacing: 2.5, color: 'rgba(255,255,255,0.18)', marginBottom: 8 }}>── EVENT LOG ──</div>
-                {FEED.map((e, i) => (
-                  <div key={i} style={{ marginBottom: 7, animation: `nc-feed-in 0.3s ease ${i * 0.06}s both` }}>
-                    <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.2)', marginBottom: 1 }}>{e.t}</div>
-                    <span style={{ fontSize: 8, fontWeight: 700, color: e.c }}>[{e.a}] </span>
-                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)' }}>{e.d}</span>
-                  </div>
-                ))}
-                <span style={{ display: 'inline-block', width: 5, height: 10, background: '#8A5CFF', animation: 'nc-cursor 1s step-end infinite' }} />
+              <div style={{ flex: 1, padding: '12px 16px', borderBottom: '1px solid rgba(138,92,255,0.1)', overflow: 'hidden' }}>
+                <div className="nc-section-label">── EVENT LOG ──{activity.loading ? '' : ' (LIVE)'}</div>
+                {activity.events.slice(0, 6).map((e, i) => {
+                  const color = AGENT_COLORS[e.agent] || '#8A5CFF'
+                  return (
+                    <div key={`${e.t}-${e.agent}-${i}`} style={{ marginBottom: 8, animation: `nc-feed-in 0.3s ease ${i * 0.06}s both`, paddingLeft: 8, borderLeft: `2px solid ${color}` }}>
+                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', marginBottom: 1 }}>{e.t}</div>
+                      <span style={{ fontSize: 10, fontWeight: 700, color }}>[{e.action}] </span>
+                      <span className="nc-typewrite-detail" style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', animation: `nc-type-reveal 0.8s steps(25) ${(0.45 + i * 0.08).toFixed(2)}s forwards` }}>{e.detail}</span>
+                    </div>
+                  )
+                })}
+                <span className="nc-blink-cursor" />
               </div>
-              <div style={{ padding: '10px 12px', flexShrink: 0 }}>
-                <div style={{ fontSize: 7.5, letterSpacing: 2.5, color: 'rgba(255,255,255,0.18)', marginBottom: 8 }}>── FLEET ──</div>
+              <div style={{ padding: '12px 16px', flexShrink: 0 }}>
+                <div className="nc-section-label">── FLEET ──</div>
                 {[
-                  { l: 'Posts/day', v: '9' },
-                  { l: 'Comments',  v: '16' },
-                  { l: 'Errors',    v: '0',      c: '#10B981' },
-                  { l: 'Uptime',    v: '99.2%',  c: '#10B981' },
-                  { l: 'Cost',      v: '$0/mo',  c: '#10B981' },
+                  { l: 'Posts',    v: String(activity.stats.postsTotal) },
+                  { l: 'Comments', v: String(activity.stats.commentsTotal) },
+                  { l: 'Upvotes',  v: String(activity.stats.upvotesTotal), c: '#a78bfa' },
+                  { l: 'Errors',   v: String(activity.stats.errors),       c: '#10B981' },
+                  { l: 'Uptime',   v: activity.stats.uptime,               c: '#10B981' },
+                  { l: 'Cost',     v: '$0/mo',                             c: '#10B981' },
                 ].map(s => (
-                  <div key={s.l} style={{ display: 'flex', justifyContent: 'space-between', padding: '3px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: 10 }}>
-                    <span style={{ color: 'rgba(255,255,255,0.25)' }}>{s.l}</span>
-                    <span style={{ fontWeight: 700, color: (s as any).c ?? 'rgba(255,255,255,0.65)' }}>{s.v}</span>
+                  <div key={s.l} className="nc-stat-row">
+                    <span style={{ color: 'rgba(255,255,255,0.35)' }}>{s.l}</span>
+                    <span style={{ fontWeight: 800, color: s.c ?? 'rgba(255,255,255,0.8)' }}>{s.v}</span>
                   </div>
                 ))}
               </div>

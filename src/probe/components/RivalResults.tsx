@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { User, BarChart3, MessageCircle, Share2, Crosshair, Sparkles, Check, Copy } from 'lucide-react'
+import { User, BarChart3, MessageCircle, Share2, Crosshair, Sparkles, Check, Copy, ExternalLink } from 'lucide-react'
 import type { RivalAnalysis } from '../lib/probe-types'
 
 interface Props {
@@ -301,6 +301,33 @@ export default function RivalResults({ analysis }: Props) {
           <CopyBlock label="Hook 開頭 Prompt" content={promptSuggestions.hookPrompt} />
           <CopyBlock label="互動引導 Prompt" content={promptSuggestions.engagementPrompt} />
         </div>
+      </div>
+
+      {/* Discord Community CTA */}
+      <div className="mt-6 text-center">
+        <a
+          href="https://discord.gg/ewS4rWXvWk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 hover:-translate-y-0.5"
+          style={{
+            color: '#8A5CFF',
+            border: '1px solid rgba(138,92,255,0.3)',
+            background: 'rgba(138,92,255,0.05)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(138,92,255,0.15)'
+            e.currentTarget.style.borderColor = '#8A5CFF'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(138,92,255,0.05)'
+            e.currentTarget.style.borderColor = 'rgba(138,92,255,0.3)'
+          }}
+        >
+          <MessageCircle size={14} />
+          加入 Discord 社群 — 更多對手分析與 AI 技巧
+          <ExternalLink size={10} />
+        </a>
       </div>
     </section>
   )

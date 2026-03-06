@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowRight, ExternalLink, Sparkles, Shield } from 'lucide-react'
+import { ArrowRight, ExternalLink, Sparkles, Shield, MessageCircle } from 'lucide-react'
 import type { SecurityScanResult, ChatbotDetection, AIIntegrationPotential } from '../lib/probe-types'
 import RiskGrade from './RiskGrade'
 import VulnerabilityList from './VulnerabilityList'
@@ -344,6 +344,33 @@ export default function ScanResults({ result }: Props) {
             了解更多服務 <ExternalLink size={10} />
           </a>
         </div>
+      </div>
+
+      {/* Discord Community CTA */}
+      <div className="mt-6 text-center">
+        <a
+          href="https://discord.gg/ewS4rWXvWk"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-lg transition-all duration-300 hover:-translate-y-0.5"
+          style={{
+            color: '#8A5CFF',
+            border: '1px solid rgba(138,92,255,0.3)',
+            background: 'rgba(138,92,255,0.05)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(138,92,255,0.15)'
+            e.currentTarget.style.borderColor = '#8A5CFF'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(138,92,255,0.05)'
+            e.currentTarget.style.borderColor = 'rgba(138,92,255,0.3)'
+          }}
+        >
+          <MessageCircle size={14} />
+          加入 Discord 社群 — 更多即時安全報告
+          <ExternalLink size={10} />
+        </a>
       </div>
     </section>
   )

@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 import { trackCTAClick } from '../lib/analytics'
 
-const navLinks = [
+const navLinks: { label: string; href: string; highlight?: boolean }[] = [
   { label: '服務項目', href: '#services' },
   { label: '作品展示', href: '#portfolio' },
   { label: '報價', href: '#pricing' },
   { label: '常見問題', href: '#faq' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Discord', href: 'https://discord.gg/ewS4rWXvWk' },
+  { label: 'AI Agents', href: '/agent', highlight: true },
 ]
 
 export default function Navbar() {
@@ -17,7 +20,7 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -27,17 +30,17 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-[#0A0515]/80 backdrop-blur-xl border-b border-[rgba(138,92,255,0.1)]'
+          ? 'bg-[#0A0515]/70 backdrop-blur-2xl border-b border-[rgba(138,92,255,0.08)]'
           : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5">
-            <svg viewBox="0 0 320 420" className="w-6 h-8 lg:w-7 lg:h-9">
+          <a href="#" className="flex items-center gap-2.5 group">
+            <svg viewBox="0 0 320 420" className="w-6 h-8 lg:w-7 lg:h-9 transition-transform duration-300 group-hover:scale-105">
               <defs>
                 <linearGradient id="nav-gp" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="#CE4DFF" />
@@ -61,20 +64,25 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-slate-400 hover:text-white transition-colors duration-300"
+                className={`px-4 py-2 text-sm rounded-lg transition-all duration-300 ${
+                  link.highlight
+                    ? 'text-emerald-400 hover:text-emerald-300 hover:bg-[rgba(16,185,129,0.08)] font-medium'
+                    : 'text-slate-400 hover:text-white hover:bg-[rgba(138,92,255,0.06)]'
+                }`}
               >
+                {link.highlight && <span className="mr-1">⚡</span>}
                 {link.label}
               </a>
             ))}
             <a
               href="#contact"
               onClick={() => trackCTAClick('立即諮詢-navbar')}
-              className="px-5 py-2 text-sm font-semibold text-white rounded-lg transition-all duration-300 hover:-translate-y-0.5"
+              className="ml-4 px-5 py-2 text-sm font-semibold text-white rounded-lg transition-all duration-300 hover:-translate-y-0.5"
               style={{
                 background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)',
                 boxShadow: '0 0 20px rgba(138, 92, 255, 0.3)',
@@ -93,38 +101,44 @@ export default function Navbar() {
           {/* Mobile Hamburger */}
           <button
             onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className="md:hidden text-slate-400 hover:text-white transition-colors"
+            className="md:hidden w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white rounded-lg hover:bg-[rgba(138,92,255,0.08)] transition-all"
             aria-label="Toggle menu"
+            aria-expanded={isMobileOpen}
           >
-            {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMobileOpen && (
-        <div className="md:hidden bg-[#0A0515]/95 backdrop-blur-xl border-b border-[rgba(138,92,255,0.1)] animate-fade-in">
-          <div className="px-4 py-4 space-y-3">
+        <div className="md:hidden bg-[#0A0515]/95 backdrop-blur-2xl border-b border-[rgba(138,92,255,0.08)] animate-fade-in">
+          <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={handleNavClick}
-                className="block py-2 text-slate-400 hover:text-white transition-colors"
+                className={`block py-3 px-3 rounded-lg transition-all ${
+                  link.highlight
+                    ? 'text-emerald-400 hover:text-emerald-300 hover:bg-[rgba(16,185,129,0.08)] font-medium'
+                    : 'text-slate-400 hover:text-white hover:bg-[rgba(138,92,255,0.06)]'
+                }`}
               >
+                {link.highlight && <span className="mr-1">⚡</span>}
                 {link.label}
               </a>
             ))}
-            <a
-              href="#contact"
-              onClick={() => { handleNavClick(); trackCTAClick('立即諮詢-mobile') }}
-              className="block text-center px-5 py-3 text-sm font-semibold text-white rounded-lg"
-              style={{
-                background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)',
-              }}
-            >
-              立即諮詢
-            </a>
+            <div className="pt-2">
+              <a
+                href="#contact"
+                onClick={() => { handleNavClick(); trackCTAClick('立即諮詢-mobile') }}
+                className="block text-center px-5 py-3 text-sm font-semibold text-white rounded-lg"
+                style={{ background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)' }}
+              >
+                立即諮詢
+              </a>
+            </div>
           </div>
         </div>
       )}

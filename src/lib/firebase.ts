@@ -1,11 +1,7 @@
-import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import { initializeApp, type FirebaseApp } from 'firebase/app'
+import { getFirestore, type Firestore } from 'firebase/firestore'
+import { getAuth, type Auth } from 'firebase/auth'
 
-// TODO: 替換為你的 Firebase 專案設定
-// 1. 到 https://console.firebase.google.com 建立專案
-// 2. 新增 Web App，取得 firebaseConfig
-// 3. 啟用 Firestore Database（production mode）
-// 4. 設定 Firestore 規則允許寫入 'inquiries' collection
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || '',
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '',
@@ -15,5 +11,27 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID || '',
 }
 
-const app = initializeApp(firebaseConfig)
-export const db = getFirestore(app)
+let _app: FirebaseApp | null = null
+let _db: Firestore | null = null
+let _auth: Auth | null = null
+
+function getApp() {
+  if (!_app) {
+    _app = initializeApp(firebaseConfig)
+  }
+  return _app
+}
+
+export function getDb() {
+  if (!_db) {
+    _db = getFirestore(getApp())
+  }
+  return _db
+}
+
+export function getFirebaseAuth() {
+  if (!_auth) {
+    _auth = getAuth(getApp())
+  }
+  return _auth
+}

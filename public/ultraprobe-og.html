@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200, initial-scale=1.0">
+  <title>UltraProbe OG Image</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 1200px;
+      height: 630px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0A0515 0%, #1a0b2e 50%, #16213e 100%);
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Corner Decorations */
+    .corner {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border: 3px solid;
+      border-image: linear-gradient(135deg, #FF6A6A, #3B82F6, #00F0FF) 1;
+    }
+
+    .corner.top-left {
+      top: 40px;
+      left: 40px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .corner.top-right {
+      top: 40px;
+      right: 40px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .corner.bottom-left {
+      bottom: 40px;
+      left: 40px;
+      border-right: none;
+      border-top: none;
+    }
+
+    .corner.bottom-right {
+      bottom: 40px;
+      right: 40px;
+      border-left: none;
+      border-top: none;
+    }
+
+    /* Grid Background */
+    .grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        linear-gradient(rgba(255, 106, 106, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      opacity: 0.4;
+    }
+
+    /* Content Container */
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    /* Logo Container */
+    .logo-container {
+      width: 200px;
+      height: 260px;
+      position: relative;
+      filter: drop-shadow(0 0 30px rgba(255, 106, 106, 0.3)) drop-shadow(0 0 50px rgba(59, 130, 246, 0.3));
+    }
+
+    /* Title */
+    .title {
+      font-size: 96px;
+      font-weight: 800;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, #FF6A6A 0%, #3B82F6 50%, #00F0FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+      filter: drop-shadow(0 0 20px rgba(255, 106, 106, 0.5));
+    }
+
+    /* Subtitle */
+    .subtitle {
+      font-size: 32px;
+      font-weight: 300;
+      color: #E2E8F0;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    /* Description */
+    .description {
+      font-size: 24px;
+      color: #94A3B8;
+      font-weight: 400;
+      letter-spacing: 2px;
+      margin-top: 10px;
+    }
+
+    /* Scan Line Animation */
+    @keyframes scan {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0, 240, 255, 0.8) 50%,
+        transparent 100%);
+      animation: scan 2s ease-in-out infinite;
+      filter: blur(1px);
+    }
+
+    .scan-line:nth-child(1) { top: 30%; }
+    .scan-line:nth-child(2) { top: 50%; animation-delay: 0.7s; }
+    .scan-line:nth-child(3) { top: 70%; animation-delay: 1.3s; }
+  </style>
+</head>
+<body>
+  <!-- Grid Background -->
+  <div class="grid"></div>
+
+  <!-- Scan Lines -->
+  <div class="scan-line"></div>
+  <div class="scan-line"></div>
+  <div class="scan-line"></div>
+
+  <!-- Corner Decorations -->
+  <div class="corner top-left"></div>
+  <div class="corner top-right"></div>
+  <div class="corner bottom-left"></div>
+  <div class="corner bottom-right"></div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <!-- Logo -->
+    <div class="logo-container">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 420" width="200" height="260">
+        <defs>
+          <!-- Red Gradient -->
+          <linearGradient id="gradRed" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#FF6A6A" />
+            <stop offset="100%" style="stop-color:#FF3A3A" />
+          </linearGradient>
+
+          <!-- Blue Gradient -->
+          <linearGradient id="gradBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#3B82F6" />
+            <stop offset="100%" style="stop-color:#2E6BFF" />
+          </linearGradient>
+
+          <!-- Cyan Gradient -->
+          <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#00F0FF; stop-opacity: 0" />
+            <stop offset="50%" style="stop-color:#00F0FF; stop-opacity: 1" />
+            <stop offset="100%" style="stop-color:#00F0FF; stop-opacity: 0" />
+          </linearGradient>
+
+          <!-- Glow Filters -->
+          <filter id="glow-red">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="glow-blue">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="glow-scan">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4 1" result="blur" />
+            <feColorMatrix in="blur" type="matrix" values="
+              0 0 0 0 0
+              0 0 0 0 0.94
+              0 0 0 0 1
+              0 0 0 0.9 0" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Shield - Left (Red) -->
+        <path fill="none" stroke="url(#gradRed)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#glow-red)"
+              d="M 160,40 L 70,110 L 70,240 C 70,310 100,360 160,400" />
+
+        <!-- Shield - Right (Blue) -->
+        <path fill="none" stroke="url(#gradBlue)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#glow-blue)"
+              d="M 160,40 L 250,110 L 250,240 C 250,310 220,360 160,400" />
+
+        <!-- Scan Lines -->
+        <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+              filter="url(#glow-scan)"
+              d="M 85,135 L 235,135">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+        </path>
+
+        <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+              filter="url(#glow-scan)"
+              d="M 80,210 L 240,210">
+          <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" begin="0.7s" />
+        </path>
+
+        <path fill="none" stroke="url(#gradCyan)" stroke-width="2" stroke-linecap="round"
+              filter="url(#glow-scan)"
+              d="M 95,285 L 225,285">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite" begin="1.3s" />
+        </path>
+
+        <!-- Crosshair -->
+        <path fill="none" stroke="#00F0FF" stroke-width="3" stroke-linecap="round" opacity="0.6"
+              d="M 160,180 L 160,260 M 120,220 L 200,220" />
+
+        <!-- Vulnerability Markers -->
+        <circle cx="130" cy="165" r="4" fill="#FF3A3A" opacity="0.8">
+          <animate attributeName="opacity" values="0.4;1;0.4" dur="1.5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="190" cy="195" r="4" fill="#FF3A3A" opacity="0.8">
+          <animate attributeName="opacity" values="1;0.4;1" dur="1.5s" repeatCount="indefinite" begin="0.5s" />
+        </circle>
+        <circle cx="145" cy="245" r="4" fill="#FF3A3A" opacity="0.8">
+          <animate attributeName="opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite" begin="1s" />
+        </circle>
+      </svg>
+    </div>
+
+    <!-- Title -->
+    <h1 class="title">ULTRAPROBE</h1>
+
+    <!-- Subtitle -->
+    <p class="subtitle">Scan. Detect. Protect.</p>
+
+    <!-- Description -->
+    <p class="description">AI 安全掃描 × Prompt 防護 × 即時檢測</p>
+  </div>
+</body>
+</html>

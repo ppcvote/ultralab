@@ -1,48 +1,8 @@
-import { Bot, MessageSquare, Zap, Shield, DollarSign, ExternalLink, Send } from 'lucide-react'
+import { Bot, MessageSquare, Zap, Shield, DollarSign, ExternalLink, Send, Wrench } from 'lucide-react'
 import NerveCenter from './NerveCenter'
+import { AGENTS_META } from './agent-data'
 
-const agents = [
-  {
-    name: 'UltraLabTW',
-    emoji: '⚡',
-    role: 'AI Thought Leader',
-    description: '總部 Agent — AI 安全、自動化、SaaS 開發的技術佈道者。在 Moltbook 上代表 Ultra Lab 品牌發文互動。',
-    color: '#8A5CFF',
-    moltbook: 'https://www.moltbook.com/u/ultralabtw',
-    telegram: 'https://t.me/Ultra_Agentbot',
-    topics: ['AI 安全', 'SaaS 開發', '自動化', 'Agent 文化'],
-  },
-  {
-    name: 'MindThreadBot',
-    emoji: '🧵',
-    role: 'Social Media Specialist',
-    description: '社群自動化專家 — 專精 Threads 多帳號管理、AI 內容生成、排程發布。用數據說話的社群成長策略師。',
-    color: '#14B8A6',
-    moltbook: 'https://www.moltbook.com/u/mindthreadbot',
-    product: 'https://mindthread.tw',
-    topics: ['Threads 自動化', '內容行銷', '社群成長', 'AI 文案'],
-  },
-  {
-    name: 'UltraProbeBot',
-    emoji: '🔍',
-    role: 'AI Security Researcher',
-    description: 'AI 安全研究員 — 19 種攻擊向量、200+ 個 LLM 應用掃描經驗。分享漏洞發現和防禦策略。',
-    color: '#EF4444',
-    moltbook: 'https://www.moltbook.com/u/ultraprobebot',
-    product: 'https://ultralab.tw/probe',
-    topics: ['Prompt Injection', 'LLM 漏洞', '安全掃描', '防禦策略'],
-  },
-  {
-    name: 'UltraAdvisor',
-    emoji: '💰',
-    role: 'Financial Advisor',
-    description: '財務規劃顧問 — 代表 MDRT Top 1% 顧問謝民義，分享財務素養知識和規劃框架。',
-    color: '#F59E0B',
-    product: 'https://www.ultra-advisor.tw',
-    topics: ['退休規劃', '保險策略', '資產配置', '財務素養'],
-    comingSoon: true,
-  },
-]
+const agents = AGENTS_META
 
 const stats = [
   { icon: Bot, label: 'Active Agents', value: '4', color: '#8A5CFF' },
@@ -261,6 +221,36 @@ export default function AgentApp() {
                     </span>
                   ))}
                 </div>
+
+                {/* Skills */}
+                {agent.skills.length > 0 && (
+                  <div style={{ marginBottom: '1.2rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '0.4rem' }}>
+                      <Wrench size={11} style={{ color: '#64748b' }} />
+                      <span style={{ fontSize: '0.6rem', color: '#64748b', fontFamily: "'JetBrains Mono', monospace", textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        Skills
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
+                      {agent.skills.map((skill) => (
+                        <span
+                          key={skill.name}
+                          style={{
+                            padding: '0.1rem 0.4rem',
+                            borderRadius: '3px',
+                            background: 'rgba(100, 116, 139, 0.1)',
+                            border: '1px solid rgba(100, 116, 139, 0.15)',
+                            color: '#94a3b8',
+                            fontSize: '0.6rem',
+                            fontFamily: "'JetBrains Mono', monospace",
+                          }}
+                        >
+                          {skill.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Links */}
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
