@@ -11,7 +11,7 @@ const ROOMS = [
   { id: 'srv',  label: 'SERVER ROOM', color: '#4DA3FF', top: 4,  left: 63, w: 35, h: 39, icon: '⚙️' },
   { id: 'soc',  label: 'SOCIAL HUB', color: '#14B8A6', top: 57, left: 2,  w: 28, h: 39, icon: '📱' },
   { id: 'sec',  label: 'SEC-LAB',    color: '#EF4444', top: 57, left: 35, w: 28, h: 39, icon: '🔬' },
-  { id: 'adv',  label: 'ADVISORY',   color: '#F59E0B', top: 57, left: 68, w: 28, h: 39, icon: '📊', pending: true },
+  { id: 'adv',  label: 'ADVISORY',   color: '#F59E0B', top: 57, left: 68, w: 28, h: 39, icon: '📊' },
 ]
 
 /* ── Agents + movement routes ──
@@ -30,12 +30,12 @@ const AGENTS: AgentDef[] = [
     color: '#8A5CFF', skin: '#C4956A', body: '#6B3FA0',
     tasks: ['Drafting post...', 'Trend analysis...', 'Publishing...', 'Fleet briefing...'],
     route: [
-      { pos: { x: 15, y: 20 }, ms: 6000 }, // desk
-      { pos: { x: 24, y: 28 }, ms: 1800 }, // pace in command
-      { pos: { x: 15, y: 20 }, ms: 3000 }, // back to desk
+      { pos: { x: 15, y: 20 }, ms: 2200 }, // desk
+      { pos: { x: 24, y: 28 }, ms: 900 },  // pace in command
+      { pos: { x: 15, y: 20 }, ms: 1500 }, // back to desk
       { pos: { x: 15, y: 50 }, ms: 600 },  // enter corridor
       { pos: { x: 70, y: 50 }, ms: 900 },  // walk corridor →
-      { pos: { x: 70, y: 20 }, ms: 5000 }, // server room
+      { pos: { x: 70, y: 20 }, ms: 2500 }, // server room
       { pos: { x: 70, y: 50 }, ms: 600 },  // leave server
       { pos: { x: 48, y: 50 }, ms: 500 },  // corridor center
       { pos: { x: 15, y: 50 }, ms: 600 },  // back to left
@@ -46,13 +46,13 @@ const AGENTS: AgentDef[] = [
     color: '#14B8A6', skin: '#B8D4E3', body: '#115E59',
     tasks: ['Queue staged...', 'Scheduling posts...', 'Content gen...'],
     route: [
-      { pos: { x: 11, y: 73 }, ms: 8000 }, // desk
-      { pos: { x: 19, y: 80 }, ms: 1500 }, // pace
-      { pos: { x: 11, y: 73 }, ms: 2000 }, // back
+      { pos: { x: 11, y: 73 }, ms: 2200 }, // desk
+      { pos: { x: 19, y: 80 }, ms: 900 },  // pace
+      { pos: { x: 11, y: 73 }, ms: 1500 }, // back
       { pos: { x: 16, y: 50 }, ms: 600 },  // corridor
       { pos: { x: 48, y: 50 }, ms: 700 },  // walk right
       { pos: { x: 70, y: 50 }, ms: 600 },  // continue
-      { pos: { x: 70, y: 20 }, ms: 4000 }, // server room
+      { pos: { x: 70, y: 20 }, ms: 2200 }, // server room
       { pos: { x: 70, y: 50 }, ms: 600 },  // leave
       { pos: { x: 16, y: 50 }, ms: 800 },  // walk back
     ],
@@ -62,12 +62,12 @@ const AGENTS: AgentDef[] = [
     color: '#EF4444', skin: '#8B9DAF', body: '#7F1D1D',
     tasks: ['Probing endpoints...', 'Injecting prompts...', 'Scanning LLM...', 'Writing report...'],
     route: [
-      { pos: { x: 44, y: 73 }, ms: 5000 }, // desk
-      { pos: { x: 52, y: 80 }, ms: 1200 }, // pace
-      { pos: { x: 44, y: 73 }, ms: 2000 }, // back
+      { pos: { x: 44, y: 73 }, ms: 2000 }, // desk
+      { pos: { x: 52, y: 80 }, ms: 900 },  // pace
+      { pos: { x: 44, y: 73 }, ms: 1500 }, // back
       { pos: { x: 45, y: 50 }, ms: 600 },  // corridor
       { pos: { x: 70, y: 50 }, ms: 700 },  // walk right
-      { pos: { x: 70, y: 20 }, ms: 6000 }, // server room (long scan)
+      { pos: { x: 70, y: 20 }, ms: 3000 }, // server room (long scan)
       { pos: { x: 70, y: 50 }, ms: 600 },  // leave
       { pos: { x: 45, y: 50 }, ms: 600 },  // back
     ],
@@ -75,13 +75,26 @@ const AGENTS: AgentDef[] = [
   {
     id: 'adv', name: 'UltraAdvisor', shortName: 'Advisor',
     color: '#F59E0B', skin: '#D4A574', body: '#92400E',
-    tasks: ['Awaiting deployment...'],
-    route: [{ pos: { x: 79, y: 73 }, ms: 99999 }],
-    pending: true,
+    tasks: ['Retirement analysis...', 'Insurance review...', 'Portfolio planning...', 'Client brief...'],
+    route: [
+      { pos: { x: 79, y: 73 }, ms: 2200 }, // desk
+      { pos: { x: 85, y: 80 }, ms: 900 },  // pace
+      { pos: { x: 79, y: 73 }, ms: 1500 }, // back
+      { pos: { x: 79, y: 50 }, ms: 600 },  // corridor
+      { pos: { x: 70, y: 50 }, ms: 600 },  // walk left
+      { pos: { x: 70, y: 20 }, ms: 2000 }, // server room
+      { pos: { x: 70, y: 50 }, ms: 600 },  // leave
+      { pos: { x: 79, y: 50 }, ms: 600 },  // walk back
+    ],
   },
 ]
 
+/* ── Starting step per agent so floor plan is immediately alive ──
+   main=0: at desk | mind=4: mid-corridor → server | probe=5: in server | adv=2: desk → corridor soon */
+const INIT_STEPS: Record<string, number> = { main: 0, mind: 4, probe: 5, adv: 2 }
+
 const FEED = [
+  { t: '15:12', c: '#F59E0B', a: 'POST',   d: 'Retirement Planning 101' },
   { t: '14:57', c: '#14B8A6', a: 'POST',   d: 'Multi-Account Strategy' },
   { t: '14:06', c: '#8A5CFF', a: 'ENGAGE', d: 'r/tech +12↑' },
   { t: '13:58', c: '#EF4444', a: 'ALERT',  d: '3 vulns detected' },
@@ -163,7 +176,9 @@ function AgentSprite({ a, pos, task }: { a: AgentDef; pos: Pos; task: string }) 
 
 /* ── Main Component ── */
 export default function NerveCenter() {
-  const [steps, setSteps] = useState<Record<string, number>>({})
+  const [steps, setSteps] = useState<Record<string, number>>(() =>
+    Object.fromEntries(AGENTS.filter(a => !a.pending).map(a => [a.id, INIT_STEPS[a.id] ?? 0]))
+  )
   const [tasks, setTasks] = useState<Record<string, number>>({})
 
   useEffect(() => {
@@ -171,14 +186,14 @@ export default function NerveCenter() {
 
     AGENTS.forEach((agent, ai) => {
       if (agent.pending) return
-      let idx = 0
+      let idx = INIT_STEPS[agent.id] ?? 0
       const advance = () => {
         idx = (idx + 1) % agent.route.length
         setSteps(p => ({ ...p, [agent.id]: idx }))
         const t = setTimeout(advance, agent.route[idx].ms)
         timers.push(t)
       }
-      timers.push(setTimeout(advance, agent.route[0].ms + ai * 2200))
+      timers.push(setTimeout(advance, agent.route[idx].ms + ai * 400))
 
       // Task cycling
       if (agent.tasks.length > 1) {
@@ -213,8 +228,7 @@ export default function NerveCenter() {
           <div className="nc-header">
             <span className="nc-title">▓▓ ULTRA LAB HQ ▓▓</span>
             <div style={{ display: 'flex', gap: 14, fontSize: 10 }}>
-              <span style={{ color: '#10B981' }}>● 3 ACTIVE</span>
-              <span style={{ color: '#555' }}>○ 1 PENDING</span>
+              <span style={{ color: '#10B981' }}>● 4 ACTIVE</span>
             </div>
           </div>
 
