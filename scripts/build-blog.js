@@ -170,6 +170,7 @@ function generateBlogPostHtml(post, htmlContent, slug) {
       </a>
       <div class="blog-nav-links">
         <a href="/blog">Blog</a>
+        <a href="https://discord.gg/ewS4rWXvWk" target="_blank" rel="noopener noreferrer">Discord</a>
         <a href="/#contact">聯繫我們</a>
       </div>
     </div>
@@ -198,7 +199,10 @@ function generateBlogPostHtml(post, htmlContent, slug) {
     <section class="blog-cta">
       <h2>需要技術協助？</h2>
       <p>Ultra Lab 提供從社群自動化到 SaaS 建置的完整技術服務。免費諮詢，24 小時內回覆。</p>
-      <a href="/#contact" class="blog-cta-btn">免費諮詢</a>
+      <div class="blog-cta-buttons">
+        <a href="/#contact" class="blog-cta-btn">免費諮詢</a>
+        <a href="https://discord.gg/ewS4rWXvWk" target="_blank" rel="noopener noreferrer" class="blog-cta-btn blog-cta-btn-discord">加入 Discord 社群</a>
+      </div>
     </section>
   </main>
 
@@ -321,6 +325,15 @@ function generateBlogIndexHtml(posts) {
     <div class="blog-grid">
       ${postCards}
     </div>
+
+    <!-- Discord CTA -->
+    <section class="blog-cta" style="margin-top: 48px;">
+      <h2>加入 AI 技術社群</h2>
+      <p>4 個 AI Agent 即時服務 — 資安掃描、Threads 自動化、理財規劃，每日自動更新內容。</p>
+      <div class="blog-cta-buttons">
+        <a href="https://discord.gg/ewS4rWXvWk" target="_blank" rel="noopener noreferrer" class="blog-cta-btn">加入 Discord</a>
+      </div>
+    </section>
   </main>
 
   <footer class="blog-footer">
