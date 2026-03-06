@@ -1,22 +1,23 @@
-/* Nerve Center — RimWorld Colony Style */
+/* Nerve Center — RimWorld Colony Floor View */
 
 @layer components {
   .nerve-center {
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* ═══ Colony container ═══ */
+  /* ── Outer colony box ── */
   .rim-colony {
-    border: 3px solid rgba(138, 92, 255, 0.2);
-    border-radius: 8px;
+    border: 2px solid rgba(138, 92, 255, 0.15);
+    border-radius: 10px;
     overflow: hidden;
     background: #070312;
   }
 
+  /* ── Header bar ── */
   .nc-header {
-    padding: 8px 16px;
+    padding: 8px 18px;
     background: #0A0515;
-    border-bottom: 2px solid rgba(138, 92, 255, 0.15);
+    border-bottom: 2px solid rgba(138, 92, 255, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,147 +31,29 @@
     animation: nc-glitch 6s infinite;
   }
 
-  /* ═══ Layout: floorplan + sidebar ═══ */
+  /* ── Main layout: floorplan + sidebar ── */
   .rim-layout {
     display: grid;
-    grid-template-columns: 1fr 180px;
-    min-height: 400px;
+    grid-template-columns: 1fr 190px;
+    min-height: 360px;
   }
 
-  /* ═══ Floor plan area ═══ */
+  /* ── Floor plan ── */
   .rim-floorplan {
-    border-right: 3px solid rgba(138, 92, 255, 0.12);
-    padding: 16px;
-    /* Tile grid — like RimWorld stone floor */
-    background-color: #080415;
+    position: relative;
+    /* Aspect ratio trick: padding-bottom creates height relative to width */
+    /* Used as the "stage" for absolutely positioned rooms and agents */
+    height: 360px;
+    border-right: 2px solid rgba(138, 92, 255, 0.08);
+    /* RimWorld tile grid background */
+    background-color: #060210;
     background-image:
       linear-gradient(rgba(138, 92, 255, 0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(138, 92, 255, 0.04) 1px, transparent 1px);
     background-size: 24px 24px;
-    position: relative;
   }
 
-  .rim-corridor-label {
-    text-align: center;
-    font-size: 7px;
-    letter-spacing: 4px;
-    color: rgba(138, 92, 255, 0.2);
-    margin-bottom: 12px;
-  }
-
-  /* ═══ 2x2 Rooms grid ═══ */
-  .rim-rooms {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px; /* corridor between rooms */
-  }
-
-  /* ═══ Individual Room ═══ */
-  .rim-room {
-    position: relative;
-    /* Thick walls = thick border */
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .rim-room:hover {
-    border-color: rgba(255, 255, 255, 0.18);
-  }
-
-  /* Floor inside room */
-  .rim-floor {
-    padding: 10px 8px 8px;
-    min-height: 160px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-
-  /* Room label (top-left, like RimWorld room name overlay) */
-  .rim-room-label {
-    position: absolute;
-    top: 4px;
-    left: 6px;
-    font-size: 7px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    opacity: 0.7;
-  }
-
-  /* Door: gap in bottom wall */
-  .rim-door {
-    position: absolute;
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 18px;
-    height: 3px;
-    background: #080415; /* same as corridor */
-    z-index: 2;
-  }
-
-  /* ═══ Furniture layout ═══ */
-  .rim-furniture {
-    margin-top: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-  }
-
-  /* Desk: wide rectangle (top-down) */
-  .rim-desk {
-    width: 42px;
-    height: 10px;
-    border: 1px solid;
-    border-radius: 1px;
-  }
-
-  /* Monitor: small rectangle on desk */
-  .rim-monitor {
-    width: 16px;
-    height: 10px;
-    border: 1px solid;
-    border-radius: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: -2px;
-    z-index: 1;
-  }
-  .rim-screen {
-    width: 10px;
-    height: 6px;
-    border-radius: 1px;
-  }
-
-  /* Chair: small square */
-  .rim-chair {
-    width: 14px;
-    height: 12px;
-    border: 1px solid;
-    border-radius: 2px 2px 0 0;
-  }
-
-  .rim-seat-area {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* ═══ Colonist (pixel character, top-down-ish) ═══ */
-  .rim-colonist {
-    position: absolute;
-    top: -6px;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
+  /* ── Agent pixel character parts ── */
   .rim-head {
     width: 10px;
     height: 10px;
@@ -183,119 +66,37 @@
     position: absolute;
     width: 2px;
     height: 2px;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.6);
     border-radius: 50%;
-    top: 4px;
+    top: 3px;
   }
   .rim-eye-l { left: 2px; }
   .rim-eye-r { right: 2px; }
 
   .rim-body {
     width: 12px;
-    height: 8px;
+    height: 7px;
     border-radius: 1px;
-    margin-top: -2px;
+    margin-top: -1px;
   }
 
-  /* Arms (extend to sides when typing) */
-  .rim-arms {
-    position: absolute;
-    top: 6px;
-    width: 24px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .rim-hand {
-    width: 3px;
-    height: 3px;
-    background: #C4956A;
-    border-radius: 1px;
-  }
-
-  /* Headset accessory */
-  .rim-headset {
-    position: absolute;
-    width: 14px;
-    height: 6px;
-    top: -1px;
-    left: -2px;
-    border: 1.5px solid;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-  }
-
-  /* Goggles accessory */
-  .rim-goggles {
-    position: absolute;
-    width: 12px;
-    height: 3px;
-    top: 3px;
-    left: -1px;
-    background: rgba(239, 68, 68, 0.3);
-    border: 1px solid rgba(239, 68, 68, 0.6);
-    border-radius: 2px;
-  }
-
-  /* Agent name under furniture */
-  .rim-name {
-    font-size: 8.5px;
-    font-weight: 700;
-    margin-top: 10px;
-    text-align: center;
-    letter-spacing: 0.5px;
-  }
-
-  /* Status + task */
-  .rim-status-line {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    margin-top: 4px;
-  }
-  .rim-dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  /* Mini stats */
-  .rim-stats {
-    display: flex;
-    gap: 8px;
-    font-size: 8px;
-    color: rgba(255, 255, 255, 0.2);
-    margin-top: 6px;
-  }
-
-  /* Scan sweep inside room */
-  .rim-scanline {
-    position: absolute;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.5), transparent);
-    animation: rim-sweep 2s linear infinite;
-    pointer-events: none;
-    z-index: 5;
-  }
-
-  /* ═══ Sidebar ═══ */
+  /* ── Sidebar ── */
   .nc-sidebar {
-    background: rgba(6, 3, 14, 0.95);
+    background: rgba(5, 2, 12, 0.95);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  /* ═══ Responsive ═══ */
+  /* ── Responsive ── */
   @media (max-width: 640px) {
     .rim-layout {
       grid-template-columns: 1fr;
     }
     .rim-floorplan {
+      height: 300px;
       border-right: none;
-      border-bottom: 3px solid rgba(138, 92, 255, 0.12);
+      border-bottom: 2px solid rgba(138, 92, 255, 0.08);
     }
     .nc-sidebar {
       flex-direction: row;
@@ -305,26 +106,18 @@
     }
     .nc-sidebar > div:first-child {
       border-bottom: none !important;
-      border-right: 1px solid rgba(138, 92, 255, 0.08);
+      border-right: 1px solid rgba(138, 92, 255, 0.06);
     }
   }
 
   @media (max-width: 420px) {
-    .rim-rooms {
-      grid-template-columns: 1fr;
-    }
     .nc-sidebar {
       flex-direction: column;
     }
   }
-
-  .nc-blink-cursor {
-    animation: nc-cursor 1s step-end infinite;
-    margin-left: 1px;
-  }
 }
 
-/* ═══ Animations ═══ */
+/* ── Animations ── */
 
 @keyframes nc-glitch {
   0%, 92%, 100% { text-shadow: none; }
@@ -344,41 +137,8 @@
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Colonist typing bob */
+/* Agent head bob when working */
 @keyframes rim-bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-1px); }
-}
-
-/* Colonist scanning — head looks around */
-@keyframes rim-look {
-  0%, 100% { transform: translateX(0); }
-  30%      { transform: translateX(-2px); }
-  70%      { transform: translateX(2px); }
-}
-
-/* Typing hands */
-@keyframes rim-type-l {
-  0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-2px); }
-}
-@keyframes rim-type-r {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-2px); }
-}
-
-/* Monitor screen flicker */
-@keyframes rim-flicker {
-  0%, 100% { opacity: 0.7; }
-  50%      { opacity: 1; }
-  87%      { opacity: 0.4; }
-  89%      { opacity: 0.95; }
-}
-
-/* Red scan line sweep inside security lab */
-@keyframes rim-sweep {
-  0%   { top: 0;    opacity: 0; }
-  10%  { opacity: 0.8; }
-  90%  { opacity: 0.8; }
-  100% { top: 100%; opacity: 0; }
 }
