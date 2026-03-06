@@ -1,295 +1,195 @@
 import { useState, useEffect } from 'react'
 import './nerve-center.css'
 
+/* ── Types ── */
 type AgentStatus = 'online' | 'idle' | 'scanning' | 'pending'
 
 interface AgentConfig {
   id: string
   name: string
-  handle: string
   room: string
   color: string
+  floorColor: string
   status: AgentStatus
   tasks: string[]
   postsToday: number
   commentsToday: number
-  nextScheduled: string
-  // Pixel character
-  headExtra: string       // CSS class for accessory
-  bodyStyle: string       // CSS class for body variant
-  skinColor: string
-  hairColor: string
-  shirtColor: string
-  pantsColor: string
-  monitorColor: string
-  deskColor: string
 }
 
+/* ── Data ── */
 const AGENTS: AgentConfig[] = [
   {
-    id: 'main', name: 'UltraLabTW', handle: '@ultralabtw', room: 'COMMAND CENTER', color: '#8A5CFF',
+    id: 'main', name: 'UltraLabTW', room: 'COMMAND', color: '#8A5CFF',
+    floorColor: 'rgba(138,92,255,0.08)',
     status: 'online',
-    tasks: ['Drafting strategy post...', 'Analyzing Moltbook trends...', 'Publishing article...', 'Reviewing fleet data...', 'Sending TG report...'],
-    postsToday: 4, commentsToday: 8, nextScheduled: '20:00',
-    headExtra: 'nc-accessory-headset', bodyStyle: '', skinColor: '#C4956A',
-    hairColor: '#2D1B4E', shirtColor: '#6B3FA0', pantsColor: '#2A1F3D',
-    monitorColor: 'rgba(138,92,255,0.35)', deskColor: 'rgba(138,92,255,0.15)',
+    tasks: ['Drafting post...', 'Reviewing trends...', 'Publishing...', 'Fleet report...'],
+    postsToday: 4, commentsToday: 8,
   },
   {
-    id: 'mindthread', name: 'MindThreadBot', handle: '@mindthreadbot', room: 'SOCIAL HUB', color: '#14B8A6',
+    id: 'mind', name: 'MindThreadBot', room: 'SOCIAL', color: '#14B8A6',
+    floorColor: 'rgba(20,184,166,0.08)',
     status: 'idle',
-    tasks: ['Queue ready — 3 posts staged', 'Awaiting schedule window...', 'Standby mode...'],
-    postsToday: 3, commentsToday: 5, nextScheduled: '21:00',
-    headExtra: 'nc-accessory-hoodie', bodyStyle: '', skinColor: '#B8D4E3',
-    hairColor: '#0E7490', shirtColor: '#115E59', pantsColor: '#1A3A3A',
-    monitorColor: 'rgba(20,184,166,0.35)', deskColor: 'rgba(20,184,166,0.15)',
+    tasks: ['Queue staged...', 'Standby...', 'Awaiting slot...'],
+    postsToday: 3, commentsToday: 5,
   },
   {
-    id: 'probe', name: 'UltraProbeBot', handle: '@ultraprobebot', room: 'SECURITY LAB', color: '#EF4444',
+    id: 'probe', name: 'UltraProbeBot', room: 'SEC-LAB', color: '#EF4444',
+    floorColor: 'rgba(239,68,68,0.07)',
     status: 'scanning',
-    tasks: ['Probing AI endpoints...', 'Injecting test prompts...', 'Scanning LLM responses...', 'Flagging vulnerabilities...', 'Writing security report...'],
-    postsToday: 2, commentsToday: 3, nextScheduled: '19:00',
-    headExtra: 'nc-accessory-goggles', bodyStyle: '', skinColor: '#8B9DAF',
-    hairColor: '#1E293B', shirtColor: '#7F1D1D', pantsColor: '#1C1917',
-    monitorColor: 'rgba(239,68,68,0.35)', deskColor: 'rgba(239,68,68,0.15)',
+    tasks: ['Probing endpoints...', 'Injecting prompts...', 'Scanning LLM...', 'Writing report...'],
+    postsToday: 2, commentsToday: 3,
   },
   {
-    id: 'advisor', name: 'UltraAdvisor', handle: '@ultraadvisor', room: 'ADVISORY SUITE', color: '#F59E0B',
+    id: 'advisor', name: 'UltraAdvisor', room: 'ADVISORY', color: '#F59E0B',
+    floorColor: 'rgba(245,158,11,0.05)',
     status: 'pending',
-    tasks: ['Awaiting deployment...'],
-    postsToday: 0, commentsToday: 0, nextScheduled: '—',
-    headExtra: '', bodyStyle: 'nc-accessory-suit', skinColor: '#D4A574',
-    hairColor: '#78350F', shirtColor: '#92400E', pantsColor: '#451A03',
-    monitorColor: 'rgba(245,158,11,0.2)', deskColor: 'rgba(245,158,11,0.1)',
+    tasks: ['Deploying...'],
+    postsToday: 0, commentsToday: 0,
   },
 ]
 
-const EVENTS = [
-  { time: '14:57', agentId: 'mindthread', color: '#14B8A6', action: 'POSTED', detail: 'Multi-Account Strategy' },
-  { time: '14:06', agentId: 'main', color: '#8A5CFF', action: 'ENGAGED', detail: 'r/tech → +12 upvotes' },
-  { time: '13:58', agentId: 'probe', color: '#EF4444', action: 'ALERT', detail: '3 vulns detected' },
-  { time: '13:36', agentId: 'main', color: '#8A5CFF', action: 'REPORT', detail: 'Daily summary → TG' },
-  { time: '13:00', agentId: 'probe', color: '#EF4444', action: 'POSTED', detail: 'Data Leak Report' },
-  { time: '12:30', agentId: 'mindthread', color: '#14B8A6', action: 'QUEUED', detail: '3 posts for next run' },
+const FEED = [
+  { t: '14:57', c: '#14B8A6', a: 'POST', d: 'Multi-Account Strategy' },
+  { t: '14:06', c: '#8A5CFF', a: 'ENGAGE', d: 'r/tech +12↑' },
+  { t: '13:58', c: '#EF4444', a: 'ALERT', d: '3 vulns found' },
+  { t: '13:36', c: '#8A5CFF', a: 'REPORT', d: 'Summary → TG' },
+  { t: '13:00', c: '#EF4444', a: 'POST', d: 'Data Leak Report' },
 ]
 
-const STATUS_META: Record<AgentStatus, { label: string; color: string; pulse: boolean }> = {
-  online:   { label: 'ONLINE',   color: '#10B981', pulse: true  },
-  idle:     { label: 'IDLE',     color: '#F59E0B', pulse: false },
-  scanning: { label: 'SCANNING', color: '#4DA3FF', pulse: true  },
-  pending:  { label: 'OFFLINE',  color: 'rgba(255,255,255,0.15)', pulse: false },
+const hex2a = (h: string, a: number) => {
+  const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16)
+  return `rgba(${r},${g},${b},${a})`
 }
 
-function hexToRgba(hex: string, alpha: number) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-/* ── Pixel Character Component ── */
-function PixelCharacter({ agent }: { agent: AgentConfig }) {
-  const isPending = agent.status === 'pending'
-  const isActive = agent.status === 'online' || agent.status === 'scanning'
-  const isScanning = agent.status === 'scanning'
-  const isIdle = agent.status === 'idle'
-
-  const charAnimation = isActive
-    ? 'nc-agent-bounce 1.8s ease-in-out infinite'
-    : isScanning
-    ? 'nc-agent-scan 2.5s ease-in-out infinite'
-    : isIdle
-    ? 'nc-agent-idle 3s ease-in-out infinite'
-    : 'nc-ghost-pulse 3s ease-in-out infinite'
-
-  const opacity = isPending ? 0.3 : 1
+/* ── Pixel Character (tiny, sits in chair) ── */
+function Colonist({ agent }: { agent: AgentConfig }) {
+  const p = agent.status === 'pending'
+  const active = agent.status === 'online' || agent.status === 'scanning'
+  const scan = agent.status === 'scanning'
+  const op = p ? 0.25 : 1
 
   return (
-    <div className="nc-pixel-char" style={{ opacity }}>
-      {/* Character body group */}
-      <div style={{ animation: charAnimation, transformOrigin: 'bottom center' }}>
-        {/* Hair/top */}
-        <div style={{
-          width: 22, height: 5, margin: '0 auto',
-          background: agent.hairColor, borderRadius: '4px 4px 0 0',
-          opacity: isPending ? 0.4 : 1,
-        }} />
-
-        {/* Head */}
-        <div
-          className={`nc-px-head ${agent.headExtra}`}
-          style={{ background: isPending ? 'rgba(255,255,255,0.08)' : agent.skinColor }}
-        />
-
-        {/* Body / torso */}
-        <div
-          className={`nc-px-body ${agent.bodyStyle}`}
-          style={{ background: isPending ? 'rgba(255,255,255,0.06)' : agent.shirtColor }}
-        >
-          {/* Typing hands (only when active) */}
-          {isActive && (
-            <div className="nc-px-hands nc-typing" style={{}}>
-              <span style={{ background: agent.skinColor }} />
-              <span style={{ background: agent.skinColor }} />
-            </div>
-          )}
-        </div>
-
-        {/* Chair */}
-        <div className="nc-px-chair" />
-
-        {/* Legs */}
-        <div className="nc-px-legs">
-          <span style={{ background: isPending ? 'rgba(255,255,255,0.05)' : agent.pantsColor }} />
-          <span style={{ background: isPending ? 'rgba(255,255,255,0.05)' : agent.pantsColor }} />
-        </div>
+    <div className="rim-colonist" style={{ opacity: op }}>
+      {/* head */}
+      <div className="rim-head" style={{
+        background: p ? '#333' : agent.id === 'main' ? '#C4956A' : agent.id === 'mind' ? '#B8D4E3' : agent.id === 'probe' ? '#8B9DAF' : '#D4A574',
+        animation: scan ? 'rim-look 2s ease-in-out infinite' : active ? 'rim-bob 2s ease-in-out infinite' : 'none',
+      }}>
+        {/* eyes */}
+        <span className="rim-eye rim-eye-l" />
+        <span className="rim-eye rim-eye-r" />
+        {/* accessory */}
+        {agent.id === 'main' && !p && <span className="rim-headset" style={{ borderColor: hex2a(agent.color, 0.7) }} />}
+        {agent.id === 'probe' && !p && <span className="rim-goggles" />}
       </div>
-
-      {/* Desk (static, doesn't bounce) */}
-      <div className="nc-px-desk" style={{ background: agent.deskColor, border: `1px solid ${hexToRgba(agent.color, 0.2)}` }}>
-        <div className="nc-px-monitor" style={{
-          background: isPending ? 'rgba(255,255,255,0.03)' : agent.monitorColor,
-        }}>
-          {!isPending && (
-            <div style={{
-              position: 'absolute', inset: 2, borderRadius: 1,
-              background: isActive
-                ? `linear-gradient(135deg, ${hexToRgba(agent.color, 0.6)}, ${hexToRgba(agent.color, 0.2)})`
-                : hexToRgba(agent.color, 0.15),
-              animation: isActive ? 'nc-screen-flicker 3s ease-in-out infinite' : 'none',
-            }} />
-          )}
+      {/* body */}
+      <div className="rim-body" style={{
+        background: p ? '#222' : agent.id === 'main' ? '#6B3FA0' : agent.id === 'mind' ? '#115E59' : agent.id === 'probe' ? '#7F1D1D' : '#92400E',
+      }} />
+      {/* arms/hands on desk */}
+      {active && (
+        <div className="rim-arms">
+          <span className="rim-hand rim-hand-l" style={{ animation: 'rim-type-l 0.5s ease infinite' }} />
+          <span className="rim-hand rim-hand-r" style={{ animation: 'rim-type-r 0.5s ease 0.12s infinite' }} />
         </div>
-      </div>
+      )}
     </div>
   )
 }
 
-/* ── Individual Agent Workstation ── */
-function Workstation({ agent }: { agent: AgentConfig }) {
+/* ── Furniture pieces (top-down blocks) ── */
+function Desk({ color }: { color: string }) {
+  return <div className="rim-desk" style={{ background: hex2a(color, 0.2), borderColor: hex2a(color, 0.35) }} />
+}
+function Monitor({ color, active }: { color: string; active: boolean }) {
+  return (
+    <div className="rim-monitor" style={{ borderColor: hex2a(color, 0.5) }}>
+      <div className="rim-screen" style={{
+        background: active ? hex2a(color, 0.5) : hex2a(color, 0.15),
+        animation: active ? 'rim-flicker 3s ease infinite' : 'none',
+        boxShadow: active ? `0 0 6px ${hex2a(color, 0.4)}` : 'none',
+      }} />
+    </div>
+  )
+}
+function Chair({ color }: { color: string }) {
+  return <div className="rim-chair" style={{ background: hex2a(color, 0.15), borderColor: hex2a(color, 0.25) }} />
+}
+
+/* ── Single Room ── */
+function Room({ agent }: { agent: AgentConfig }) {
   const [taskIdx, setTaskIdx] = useState(0)
-  const [progress, setProgress] = useState(Math.random() * 50 + 20)
-  const isPending = agent.status === 'pending'
-  const isIdle = agent.status === 'idle'
-  const isActive = agent.status === 'online' || agent.status === 'scanning'
-  const sm = STATUS_META[agent.status]
+  const active = agent.status === 'online' || agent.status === 'scanning'
+  const p = agent.status === 'pending'
 
   useEffect(() => {
-    if (!isActive) return
-    const t = setInterval(() => setTaskIdx(i => (i + 1) % agent.tasks.length), 3800)
+    if (!active) return
+    const t = setInterval(() => setTaskIdx(i => (i + 1) % agent.tasks.length), 3200)
     return () => clearInterval(t)
-  }, [isActive, agent.tasks.length])
-
-  useEffect(() => {
-    if (isPending) return
-    const speed = isActive ? 300 : 700
-    const step = isActive ? 1.5 : 0.3
-    const t = setInterval(() => setProgress(p => p >= 98 ? (isIdle ? 35 : 4) : p + step), speed)
-    return () => clearInterval(t)
-  }, [isActive, isIdle, isPending])
+  }, [active, agent.tasks.length])
 
   return (
-    <div
-      className="nc-workstation"
-      onMouseEnter={e => { if (!isPending) (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 24px ${hexToRgba(agent.color, 0.2)}` }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none' }}
-      style={{
-        background: isPending ? 'rgba(8, 4, 18, 0.5)' : 'rgba(12, 6, 24, 0.92)',
-        border: `1px solid ${isPending ? 'rgba(255,255,255,0.06)' : hexToRgba(agent.color, 0.25)}`,
-        borderRadius: 8,
-        overflow: 'hidden',
-        opacity: isPending ? 0.45 : 1,
-        backdropFilter: 'blur(10px)',
-        transition: 'box-shadow 0.3s ease, opacity 0.3s ease',
-        position: 'relative',
-      }}
-    >
-      {/* Room label strip */}
-      <div style={{
-        padding: '5px 10px',
-        background: isPending ? 'rgba(255,255,255,0.02)' : hexToRgba(agent.color, 0.1),
-        borderBottom: `1px solid ${hexToRgba(agent.color, 0.12)}`,
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      }}>
-        <span style={{ fontSize: 7.5, letterSpacing: 2.5, color: hexToRgba(agent.color, isPending ? 0.3 : 0.8), fontWeight: 700 }}>
+    <div className="rim-room" style={{ opacity: p ? 0.5 : 1 }}>
+      {/* Walls (the border IS the wall) */}
+      {/* Floor */}
+      <div className="rim-floor" style={{ background: agent.floorColor }}>
+        {/* Room label (painted on wall) */}
+        <div className="rim-room-label" style={{ color: hex2a(agent.color, 0.5) }}>
           {agent.room}
-        </span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <div style={{
-            width: 5, height: 5, borderRadius: '50%', background: sm.color, flexShrink: 0,
-            animation: sm.pulse ? 'nc-pulse 2s ease-in-out infinite' : 'none',
-            '--dot-color': sm.color,
-          } as React.CSSProperties} />
-          <span style={{ fontSize: 7, color: sm.color, letterSpacing: 1.5 }}>{sm.label}</span>
-        </div>
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: '12px 10px 10px' }}>
-        {/* Pixel Character */}
-        <PixelCharacter agent={agent} />
-
-        {/* Name + handle */}
-        <div style={{ textAlign: 'center', marginTop: 8, marginBottom: 4 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: agent.color, lineHeight: 1.2 }}>{agent.name}</div>
-          <div style={{ fontSize: 8, color: 'rgba(226,232,240,0.3)', letterSpacing: 0.5 }}>{agent.handle}</div>
         </div>
 
-        {!isPending ? (
-          <>
-            {/* Current task */}
-            <div style={{
-              textAlign: 'center', fontSize: 9, color: 'rgba(226,232,240,0.4)',
-              minHeight: 14, marginBottom: 6, fontStyle: 'italic', lineHeight: 1.4,
-            }}>
-              {agent.tasks[taskIdx]}
-              {isActive && <span className="nc-blink-cursor">_</span>}
-            </div>
+        {/* Furniture layout: desk at top, monitor on desk, chair below, colonist in chair */}
+        <div className="rim-furniture">
+          <Monitor color={agent.color} active={active} />
+          <Desk color={agent.color} />
+          <div className="rim-seat-area">
+            <Chair color={agent.color} />
+            <Colonist agent={agent} />
+          </div>
+        </div>
 
-            {/* Progress bar */}
-            <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden', marginBottom: 8 }}>
-              <div style={{
-                height: '100%', borderRadius: 2,
-                width: `${Math.round(progress)}%`,
-                background: isActive
-                  ? `linear-gradient(90deg, ${agent.color}, ${hexToRgba(agent.color, 0.6)})`
-                  : hexToRgba(agent.color, 0.3),
-                boxShadow: isActive ? `0 0 8px ${hexToRgba(agent.color, 0.6)}` : 'none',
-                transition: 'width 0.3s ease',
-              }} />
-            </div>
+        {/* Agent name */}
+        <div className="rim-name" style={{ color: agent.color }}>
+          {agent.name}
+        </div>
 
-            {/* Mini stats */}
-            <div style={{
-              display: 'flex', justifyContent: 'space-around',
-              fontSize: 8.5, color: 'rgba(226,232,240,0.3)',
-              borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 6,
-            }}>
-              <span>📝 {agent.postsToday}</span>
-              <span>💬 {agent.commentsToday}</span>
-              <span>⏰ {agent.nextScheduled}</span>
-            </div>
-          </>
-        ) : (
-          <div style={{ textAlign: 'center', fontSize: 8.5, color: 'rgba(245,158,11,0.45)', letterSpacing: 2, paddingTop: 4, paddingBottom: 6, animation: 'nc-blink 2.5s ease-in-out infinite' }}>
-            ◌ DEPLOYING SOON
+        {/* Status + task line */}
+        <div className="rim-status-line">
+          <span className="rim-dot" style={{
+            background: p ? '#555' : active ? '#10B981' : '#F59E0B',
+            boxShadow: active ? '0 0 4px #10B981' : 'none',
+          }} />
+          <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 8 }}>
+            {p ? 'PENDING' : agent.tasks[taskIdx]}
+            {active && <span className="nc-blink-cursor">_</span>}
+          </span>
+        </div>
+
+        {/* Mini stats bar at bottom */}
+        {!p && (
+          <div className="rim-stats">
+            <span>📝{agent.postsToday}</span>
+            <span>💬{agent.commentsToday}</span>
           </div>
         )}
       </div>
 
-      {/* Scanning sweep line */}
-      {agent.status === 'scanning' && <div className="nc-scan-line" />}
+      {/* Door opening (gap in bottom wall) */}
+      <div className="rim-door" />
+
+      {/* Scan sweep */}
+      {agent.status === 'scanning' && <div className="rim-scanline" />}
     </div>
   )
 }
 
-/* ── NerveCenter: Pixel Art Virtual Office ── */
+/* ── Main Component ── */
 export default function NerveCenter() {
   return (
     <section className="nerve-center" style={{ paddingBottom: '5rem' }}>
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' }}>
 
-        {/* Section label */}
+        {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <span style={{
             display: 'inline-block', padding: '0.3rem 0.8rem', borderRadius: 4,
@@ -297,89 +197,71 @@ export default function NerveCenter() {
             color: '#8A5CFF', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace",
             marginBottom: '1rem',
           }}>
-            virtual-office --view pixel
+            colony.view --mode=rimworld
           </span>
           <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, marginBottom: '0.4rem' }}>
-            虛擬辦公室 — <span style={{ background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>像素鳥瞰圖</span>
+            虛擬辦公室 — <span style={{ background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Colony View</span>
           </h2>
-          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>4 隻 AI 員工正在他們的崗位上工作</p>
+          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>4 隻 AI 員工的工作基地</p>
         </div>
 
         {/* Colony container */}
-        <div className="nc-colony-box">
-
-          {/* Header bar */}
+        <div className="rim-colony">
+          {/* Top bar */}
           <div className="nc-header">
-            <span className="nc-title">▓▓ ULTRA LAB — VIRTUAL OFFICE ▓▓</span>
-            <div style={{ display: 'flex', gap: 16, fontSize: 11 }}>
+            <span className="nc-title">▓▓ ULTRA LAB HQ ▓▓</span>
+            <div style={{ display: 'flex', gap: 14, fontSize: 10 }}>
               <span style={{ color: '#10B981' }}>● 3 ACTIVE</span>
-              <span style={{ color: 'rgba(226,232,240,0.25)' }}>○ 1 PENDING</span>
+              <span style={{ color: '#666' }}>○ 1 PENDING</span>
             </div>
           </div>
 
-          {/* Main: floor plan + right panel */}
-          <div className="nc-main-layout">
+          {/* Floor plan + sidebar */}
+          <div className="rim-layout">
 
             {/* Floor plan */}
-            <div className="nc-floor-tiles">
-              <div style={{ fontSize: 8, letterSpacing: 3, color: 'rgba(138,92,255,0.25)', marginBottom: 12, textAlign: 'center' }}>
-                ── WORKSTATIONS ──
-              </div>
-              <div className="nc-agent-grid">
-                {AGENTS.map(a => <Workstation key={a.id} agent={a} />)}
+            <div className="rim-floorplan">
+              {/* Corridor label */}
+              <div className="rim-corridor-label">── CORRIDOR ──</div>
+
+              {/* 2x2 rooms */}
+              <div className="rim-rooms">
+                {AGENTS.map(a => <Room key={a.id} agent={a} />)}
               </div>
             </div>
 
-            {/* Right sidebar */}
+            {/* Side panel */}
             <div className="nc-sidebar">
-
-              {/* Event log */}
-              <div style={{ flex: 1, padding: '12px 14px', borderBottom: '1px solid rgba(138, 92, 255, 0.08)', minHeight: 0, overflow: 'hidden' }}>
-                <div style={{ fontSize: 8, letterSpacing: 2.5, color: 'rgba(226,232,240,0.25)', marginBottom: 10 }}>
-                  ── EVENT LOG ──
-                </div>
-                {EVENTS.map((ev, i) => (
-                  <div key={i} style={{ marginBottom: 9, animation: `nc-feed-in 0.4s ease ${i * 0.07}s both` }}>
-                    <div style={{ fontSize: 8.5, color: 'rgba(226,232,240,0.25)', marginBottom: 1 }}>{ev.time}</div>
-                    <span style={{ fontSize: 8.5, fontWeight: 700, color: ev.color, marginRight: 4 }}>[{ev.action}]</span>
-                    <span style={{ fontSize: 9.5, color: 'rgba(226,232,240,0.55)' }}>{ev.detail}</span>
+              {/* Feed */}
+              <div style={{ flex: 1, padding: '10px 12px', borderBottom: '1px solid rgba(138,92,255,0.08)', overflow: 'hidden' }}>
+                <div style={{ fontSize: 7.5, letterSpacing: 2, color: 'rgba(255,255,255,0.2)', marginBottom: 8 }}>── LOG ──</div>
+                {FEED.map((e, i) => (
+                  <div key={i} style={{ marginBottom: 7, animation: `nc-feed-in 0.3s ease ${i * 0.06}s both` }}>
+                    <span style={{ fontSize: 8, color: 'rgba(255,255,255,0.2)' }}>{e.t} </span>
+                    <span style={{ fontSize: 8, fontWeight: 700, color: e.c }}>[{e.a}] </span>
+                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)' }}>{e.d}</span>
                   </div>
                 ))}
-                <span style={{ display: 'inline-block', width: 6, height: 12, background: '#8A5CFF', animation: 'nc-cursor 1s step-end infinite', verticalAlign: 'middle', marginTop: 2 }} />
+                <span style={{ display: 'inline-block', width: 5, height: 10, background: '#8A5CFF', animation: 'nc-cursor 1s step-end infinite' }} />
               </div>
-
-              {/* Fleet stats */}
-              <div style={{ padding: '12px 14px', flexShrink: 0 }}>
-                <div style={{ fontSize: 8, letterSpacing: 2.5, color: 'rgba(226,232,240,0.25)', marginBottom: 10 }}>
-                  ── FLEET STATS ──
-                </div>
+              {/* Stats */}
+              <div style={{ padding: '10px 12px', flexShrink: 0 }}>
+                <div style={{ fontSize: 7.5, letterSpacing: 2, color: 'rgba(255,255,255,0.2)', marginBottom: 8 }}>── FLEET ──</div>
                 {[
-                  { label: 'Posts / day', value: '9' },
-                  { label: 'Comments',    value: '16' },
-                  { label: 'Errors 24h',  value: '0',      color: '#10B981' },
-                  { label: 'Uptime',      value: '99.2%',  color: '#10B981' },
-                  { label: 'Ops cost',    value: '$0 / mo', color: '#10B981' },
+                  { l: 'Posts/day', v: '9' },
+                  { l: 'Comments', v: '16' },
+                  { l: 'Errors', v: '0', c: '#10B981' },
+                  { l: 'Uptime', v: '99.2%', c: '#10B981' },
+                  { l: 'Cost', v: '$0/mo', c: '#10B981' },
                 ].map(s => (
-                  <div key={s.label} style={{
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: 10.5,
-                  }}>
-                    <span style={{ color: 'rgba(226,232,240,0.3)' }}>{s.label}</span>
-                    <span style={{ fontWeight: 700, color: s.color ?? 'rgba(226,232,240,0.75)' }}>{s.value}</span>
+                  <div key={s.l} style={{ display: 'flex', justifyContent: 'space-between', padding: '3px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: 10 }}>
+                    <span style={{ color: 'rgba(255,255,255,0.25)' }}>{s.l}</span>
+                    <span style={{ fontWeight: 700, color: s.c ?? 'rgba(255,255,255,0.65)' }}>{s.v}</span>
                   </div>
                 ))}
-                <div style={{ marginTop: 10 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: 'rgba(226,232,240,0.25)', marginBottom: 3 }}>
-                    <span>API Usage (RPD)</span>
-                    <span>85 / 1,500</span>
-                  </div>
-                  <div style={{ height: 3, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: '5.7%', background: 'linear-gradient(90deg, #10B981, #F59E0B)', borderRadius: 2 }} />
-                  </div>
-                </div>
               </div>
-
             </div>
+
           </div>
         </div>
 

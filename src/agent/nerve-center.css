@@ -1,243 +1,301 @@
-/* Nerve Center — Pixel Art Virtual Office */
-/* Scoped under .nerve-center */
+/* Nerve Center — RimWorld Colony Style */
 
 @layer components {
   .nerve-center {
     font-family: 'JetBrains Mono', monospace;
   }
 
-  /* Colony outer box */
-  .nc-colony-box {
-    border: 1px solid rgba(138, 92, 255, 0.12);
-    border-radius: 12px;
+  /* ═══ Colony container ═══ */
+  .rim-colony {
+    border: 3px solid rgba(138, 92, 255, 0.2);
+    border-radius: 8px;
     overflow: hidden;
-    background: rgba(8, 4, 18, 0.95);
+    background: #070312;
   }
 
-  /* Top header bar */
   .nc-header {
-    padding: 10px 20px;
-    background: rgba(10, 5, 21, 0.98);
-    border-bottom: 1px solid rgba(138, 92, 255, 0.1);
+    padding: 8px 16px;
+    background: #0A0515;
+    border-bottom: 2px solid rgba(138, 92, 255, 0.15);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
   .nc-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 3px;
     color: #8A5CFF;
     animation: nc-glitch 6s infinite;
   }
 
-  /* Main layout: floor plan left, sidebar right */
-  .nc-main-layout {
+  /* ═══ Layout: floorplan + sidebar ═══ */
+  .rim-layout {
     display: grid;
-    grid-template-columns: 1fr 210px;
-    min-height: 420px;
+    grid-template-columns: 1fr 180px;
+    min-height: 400px;
   }
 
-  /* Floor plan with tile background */
-  .nc-floor-tiles {
-    padding: 20px;
-    border-right: 1px solid rgba(138, 92, 255, 0.07);
+  /* ═══ Floor plan area ═══ */
+  .rim-floorplan {
+    border-right: 3px solid rgba(138, 92, 255, 0.12);
+    padding: 16px;
+    /* Tile grid — like RimWorld stone floor */
+    background-color: #080415;
     background-image:
-      linear-gradient(rgba(138, 92, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(138, 92, 255, 0.035) 1px, transparent 1px);
-    background-size: 28px 28px;
-    background-color: rgba(6, 3, 14, 0.8);
+      linear-gradient(rgba(138, 92, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(138, 92, 255, 0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    position: relative;
   }
 
-  /* 2x2 agent workstation grid */
-  .nc-agent-grid {
+  .rim-corridor-label {
+    text-align: center;
+    font-size: 7px;
+    letter-spacing: 4px;
+    color: rgba(138, 92, 255, 0.2);
+    margin-bottom: 12px;
+  }
+
+  /* ═══ 2x2 Rooms grid ═══ */
+  .rim-rooms {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 6px; /* corridor between rooms */
   }
 
-  /* Workstation card */
-  .nc-workstation {
-    transition: box-shadow 0.3s ease;
+  /* ═══ Individual Room ═══ */
+  .rim-room {
+    position: relative;
+    /* Thick walls = thick border */
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
   }
 
-  /* Right sidebar */
+  .rim-room:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+  }
+
+  /* Floor inside room */
+  .rim-floor {
+    padding: 10px 8px 8px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Room label (top-left, like RimWorld room name overlay) */
+  .rim-room-label {
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+
+  /* Door: gap in bottom wall */
+  .rim-door {
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 3px;
+    background: #080415; /* same as corridor */
+    z-index: 2;
+  }
+
+  /* ═══ Furniture layout ═══ */
+  .rim-furniture {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  /* Desk: wide rectangle (top-down) */
+  .rim-desk {
+    width: 42px;
+    height: 10px;
+    border: 1px solid;
+    border-radius: 1px;
+  }
+
+  /* Monitor: small rectangle on desk */
+  .rim-monitor {
+    width: 16px;
+    height: 10px;
+    border: 1px solid;
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -2px;
+    z-index: 1;
+  }
+  .rim-screen {
+    width: 10px;
+    height: 6px;
+    border-radius: 1px;
+  }
+
+  /* Chair: small square */
+  .rim-chair {
+    width: 14px;
+    height: 12px;
+    border: 1px solid;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .rim-seat-area {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ═══ Colonist (pixel character, top-down-ish) ═══ */
+  .rim-colonist {
+    position: absolute;
+    top: -6px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .rim-head {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+  }
+
+  .rim-eye {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    top: 4px;
+  }
+  .rim-eye-l { left: 2px; }
+  .rim-eye-r { right: 2px; }
+
+  .rim-body {
+    width: 12px;
+    height: 8px;
+    border-radius: 1px;
+    margin-top: -2px;
+  }
+
+  /* Arms (extend to sides when typing) */
+  .rim-arms {
+    position: absolute;
+    top: 6px;
+    width: 24px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .rim-hand {
+    width: 3px;
+    height: 3px;
+    background: #C4956A;
+    border-radius: 1px;
+  }
+
+  /* Headset accessory */
+  .rim-headset {
+    position: absolute;
+    width: 14px;
+    height: 6px;
+    top: -1px;
+    left: -2px;
+    border: 1.5px solid;
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+  }
+
+  /* Goggles accessory */
+  .rim-goggles {
+    position: absolute;
+    width: 12px;
+    height: 3px;
+    top: 3px;
+    left: -1px;
+    background: rgba(239, 68, 68, 0.3);
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    border-radius: 2px;
+  }
+
+  /* Agent name under furniture */
+  .rim-name {
+    font-size: 8.5px;
+    font-weight: 700;
+    margin-top: 10px;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  /* Status + task */
+  .rim-status-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .rim-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Mini stats */
+  .rim-stats {
+    display: flex;
+    gap: 8px;
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.2);
+    margin-top: 6px;
+  }
+
+  /* Scan sweep inside room */
+  .rim-scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(239, 68, 68, 0.5), transparent);
+    animation: rim-sweep 2s linear infinite;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  /* ═══ Sidebar ═══ */
   .nc-sidebar {
-    background: rgba(6, 3, 14, 0.9);
+    background: rgba(6, 3, 14, 0.95);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
-  /* ── Pixel Character ── */
-  .nc-pixel-char {
-    width: 48px;
-    height: 56px;
-    position: relative;
-    margin: 0 auto;
-    image-rendering: pixelated;
-  }
-
-  /* Pixel head (8x8 grid feel) */
-  .nc-px-head {
-    width: 20px;
-    height: 18px;
-    margin: 0 auto;
-    border-radius: 3px 3px 2px 2px;
-    position: relative;
-  }
-
-  /* Eyes: two pixel dots */
-  .nc-px-head::before,
-  .nc-px-head::after {
-    content: '';
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    top: 8px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 1px;
-  }
-  .nc-px-head::before { left: 4px; }
-  .nc-px-head::after  { right: 4px; }
-
-  /* Body / torso */
-  .nc-px-body {
-    width: 24px;
-    height: 18px;
-    margin: 1px auto 0;
-    border-radius: 2px;
-    position: relative;
-  }
-
-  /* Legs / seat area */
-  .nc-px-legs {
-    width: 20px;
-    height: 8px;
-    margin: 0 auto;
-    display: flex;
-    gap: 4px;
-    justify-content: center;
-  }
-  .nc-px-legs span {
-    width: 7px;
-    height: 8px;
-    border-radius: 0 0 2px 2px;
-    display: block;
-  }
-
-  /* Desk in front of character */
-  .nc-px-desk {
-    width: 40px;
-    height: 6px;
-    margin: 2px auto 0;
-    border-radius: 2px;
-    position: relative;
-  }
-
-  /* Monitor on desk */
-  .nc-px-monitor {
-    width: 18px;
-    height: 12px;
-    position: absolute;
-    top: -13px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 2px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-
-  /* Monitor screen glow */
-  .nc-px-monitor::after {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    border-radius: 1px;
-    animation: nc-screen-flicker 3s ease-in-out infinite;
-  }
-
-  /* ── Character Accessories ── */
-
-  /* Commander headset (main) */
-  .nc-accessory-headset::before {
-    content: '';
-    position: absolute;
-    width: 24px;
-    height: 10px;
-    top: -2px;
-    left: -2px;
-    border: 2px solid rgba(138, 92, 255, 0.6);
-    border-bottom: none;
-    border-radius: 8px 8px 0 0;
-  }
-
-  /* Hoodie (mindthread) */
-  .nc-accessory-hoodie {
-    border-radius: 5px 5px 2px 2px !important;
-  }
-  .nc-accessory-hoodie::before {
-    top: 6px !important;
-  }
-  .nc-accessory-hoodie::after {
-    top: 6px !important;
-  }
-
-  /* Goggles (probe) */
-  .nc-accessory-goggles::before {
-    width: 6px !important;
-    height: 4px !important;
-    top: 7px !important;
-    left: 2px !important;
-    border: 1px solid rgba(239, 68, 68, 0.8);
-    background: rgba(239, 68, 68, 0.2) !important;
-    border-radius: 2px !important;
-  }
-  .nc-accessory-goggles::after {
-    width: 6px !important;
-    height: 4px !important;
-    top: 7px !important;
-    right: 2px !important;
-    border: 1px solid rgba(239, 68, 68, 0.8);
-    background: rgba(239, 68, 68, 0.2) !important;
-    border-radius: 2px !important;
-  }
-
-  /* Suit collar (advisor) */
-  .nc-accessory-suit {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 55% 100%, 50% 85%, 45% 100%, 0 100%);
-  }
-
-  /* ── Typing hands animation ── */
-  .nc-px-hands {
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-  }
-  .nc-px-hands span {
-    width: 4px;
-    height: 3px;
-    border-radius: 1px;
-    display: block;
-  }
-  .nc-typing .nc-px-hands span:first-child {
-    animation: nc-type-left 0.6s ease infinite;
-  }
-  .nc-typing .nc-px-hands span:last-child {
-    animation: nc-type-right 0.6s ease 0.15s infinite;
-  }
-
-  /* ── Mobile ── */
+  /* ═══ Responsive ═══ */
   @media (max-width: 640px) {
-    .nc-main-layout {
+    .rim-layout {
       grid-template-columns: 1fr;
     }
-    .nc-floor-tiles {
+    .rim-floorplan {
       border-right: none;
-      border-bottom: 1px solid rgba(138, 92, 255, 0.07);
+      border-bottom: 3px solid rgba(138, 92, 255, 0.12);
     }
     .nc-sidebar {
       flex-direction: row;
@@ -252,16 +310,21 @@
   }
 
   @media (max-width: 420px) {
-    .nc-agent-grid {
+    .rim-rooms {
       grid-template-columns: 1fr;
     }
     .nc-sidebar {
       flex-direction: column;
     }
   }
+
+  .nc-blink-cursor {
+    animation: nc-cursor 1s step-end infinite;
+    margin-left: 1px;
+  }
 }
 
-/* ── Animations ── */
+/* ═══ Animations ═══ */
 
 @keyframes nc-glitch {
   0%, 92%, 100% { text-shadow: none; }
@@ -271,102 +334,51 @@
   96% { text-shadow: none; transform: translate(0, 0); }
 }
 
-@keyframes nc-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-@keyframes nc-pulse {
-  0%, 100% { box-shadow: 0 0 4px var(--dot-color); opacity: 1; }
-  50% { box-shadow: 0 0 12px var(--dot-color); opacity: 0.7; }
-}
-
 @keyframes nc-cursor {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
 @keyframes nc-feed-in {
-  from { opacity: 0; transform: translateX(-6px); }
+  from { opacity: 0; transform: translateX(-4px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Active: character bounces like typing */
-@keyframes nc-agent-bounce {
+/* Colonist typing bob */
+@keyframes rim-bob {
   0%, 100% { transform: translateY(0); }
-  25%      { transform: translateY(-2px); }
-  50%      { transform: translateY(0); }
-  75%      { transform: translateY(-1px); }
+  50%      { transform: translateY(-1px); }
 }
 
-/* Idle: gentle breathing */
-@keyframes nc-agent-idle {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.02); }
-}
-
-/* Scanning: head looking side to side */
-@keyframes nc-agent-scan {
+/* Colonist scanning — head looks around */
+@keyframes rim-look {
   0%, 100% { transform: translateX(0); }
-  25%      { transform: translateX(-2px); }
-  75%      { transform: translateX(2px); }
+  30%      { transform: translateX(-2px); }
+  70%      { transform: translateX(2px); }
 }
 
 /* Typing hands */
-@keyframes nc-type-left {
+@keyframes rim-type-l {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-2px); }
 }
-@keyframes nc-type-right {
+@keyframes rim-type-r {
   0%, 100% { transform: translateY(0); }
   50%      { transform: translateY(-2px); }
 }
 
 /* Monitor screen flicker */
-@keyframes nc-screen-flicker {
-  0%, 100% { opacity: 0.6; }
+@keyframes rim-flicker {
+  0%, 100% { opacity: 0.7; }
   50%      { opacity: 1; }
-  85%      { opacity: 0.8; }
-  87%      { opacity: 0.3; }
-  89%      { opacity: 0.9; }
+  87%      { opacity: 0.4; }
+  89%      { opacity: 0.95; }
 }
 
-/* Security scan sweep line */
-.nc-scan-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(77, 163, 255, 0.7), transparent);
-  animation: nc-scan 2.4s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes nc-scan {
+/* Red scan line sweep inside security lab */
+@keyframes rim-sweep {
   0%   { top: 0;    opacity: 0; }
-  8%   { opacity: 0.9; }
-  92%  { opacity: 0.9; }
+  10%  { opacity: 0.8; }
+  90%  { opacity: 0.8; }
   100% { top: 100%; opacity: 0; }
-}
-
-/* Blinking cursor */
-.nc-blink-cursor {
-  animation: nc-cursor 1s step-end infinite;
-  margin-left: 2px;
-}
-
-/* Pending ghost effect */
-@keyframes nc-ghost-pulse {
-  0%, 100% { opacity: 0.25; }
-  50%      { opacity: 0.4; }
-}
-
-/* Chair (pixel box under character) */
-.nc-px-chair {
-  width: 22px;
-  height: 5px;
-  margin: 0 auto;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.04);
 }
