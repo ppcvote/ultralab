@@ -51,40 +51,8 @@ function MiniAccounts() {
   )
 }
 
-function MiniPipeline() {
-  const steps = [
-    { label: 'AI Script', icon: '✍' },
-    { label: 'Render', icon: '🎬' },
-    { label: 'Encode', icon: '⚡' },
-    { label: 'Publish', icon: '📡' },
-  ]
-  return (
-    <div className="flex items-center gap-1 mt-3">
-      {steps.map((s, i) => (
-        <div key={s.label} className="flex items-center gap-1">
-          <div
-            className="flex flex-col items-center gap-1 px-2 py-2 rounded-lg"
-            style={{
-              background: 'rgba(15,10,30,0.8)',
-              border: '1px solid rgba(16,185,129,0.2)',
-            }}
-          >
-            <span className="text-sm">{s.icon}</span>
-            <span className="text-[9px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-              {s.label}
-            </span>
-          </div>
-          {i < steps.length - 1 && (
-            <div className="w-3 h-px" style={{ background: 'rgba(16,185,129,0.4)' }} />
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
 function MiniScan() {
-  const vectors = ['XSS', 'SQLi', 'SSRF', 'RCE', 'LFI', 'XXE', 'IDOR', 'CSRF', 'SSTI', 'Open Redirect']
+  const vectors = ['Prompt Injection', 'Jailbreak', 'Data Leak', 'XSS', 'SSRF', 'RCE', 'SSTI', 'DAN', 'Unicode Bypass']
   return (
     <div className="flex flex-wrap gap-1.5 mt-3">
       {vectors.map((v) => (
@@ -143,6 +111,36 @@ function MiniSaasUI() {
   )
 }
 
+function MiniAgentFleet() {
+  const agents = [
+    { name: 'UltraLabTW', platform: 'Moltbook', color: '#FF6B35' },
+    { name: 'MindThreadBot', platform: 'Discord', color: '#CE4DFF' },
+    { name: 'UltraProbeBot', platform: 'Telegram', color: '#F59E0B' },
+    { name: 'UltraAdvisor', platform: 'LINE', color: '#2E6BFF' },
+  ]
+  return (
+    <div className="space-y-1.5 mt-3">
+      {agents.map((a) => (
+        <div
+          key={a.name}
+          className="flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs"
+          style={{
+            background: 'rgba(15,10,30,0.8)',
+            border: `1px solid ${a.color}20`,
+            fontFamily: "'JetBrains Mono', monospace",
+          }}
+        >
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#10B981' }} />
+            <span className="text-slate-300">{a.name}</span>
+          </div>
+          <span className="text-slate-600">{a.platform}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 /* ── Portfolio Data ── */
 
 interface PortfolioItem {
@@ -153,46 +151,61 @@ interface PortfolioItem {
   description: string
   techStack: string[]
   result: string
-  span?: 'wide'
-  visual?: 'chart' | 'accounts' | 'pipeline' | 'scan' | 'saas'
+  visual?: 'chart' | 'accounts' | 'scan' | 'saas' | 'agents'
   link?: string
   linkExternal?: boolean
 }
 
 const portfolioItems: PortfolioItem[] = [
   {
-    tag: 'AI 社群自動化',
+    tag: 'AI SaaS · 主力產品',
     tagColor: '#CE4DFF',
     accentColor: '#CE4DFF',
-    title: 'risk.clock.tw — AI 內容 24hr 破 1,300 追蹤',
+    title: 'MindThread — Threads AI 自動化 SaaS',
     description:
-      '全新 Threads 帳號，Gemini API 即時生成台灣風險數據內容，搭配 AI 自動回覆系統。',
-    techStack: ['Gemini API', 'Python', 'AI 自動回覆', 'Cron 排程'],
-    result: '24hr 破 1,300 追蹤 · 100% AI 生成',
-    visual: 'chart',
+      '我們最成熟的 SaaS 產品。串接 Meta 官方 Threads API + Gemini AI 文案引擎，多帳號管理+排程發布，台灣零競品。已獨立為子品牌。',
+    techStack: ['React', 'Meta Threads API', 'Gemini API', 'Firebase'],
+    result: '台灣零競品 · 最成熟產品 · 獨立子品牌',
+    visual: 'accounts',
+    link: 'https://mindthread.tw',
+    linkExternal: true,
   },
   {
-    tag: 'AI SaaS',
-    tagColor: '#4DA3FF',
-    accentColor: '#4DA3FF',
-    title: 'Mind Threads — Threads AI 自動化 SaaS（台灣零競品）',
+    tag: 'AI Agent · 主力產品',
+    tagColor: '#FF6B35',
+    accentColor: '#FF6B35',
+    title: 'AI Agent 艦隊 — 四個 Agent 24hr 運行',
     description:
-      '內部工具產品化。串接 Meta 官方 Threads API + Gemini AI 文案引擎，多帳號管理+排程發布。',
-    techStack: ['React', 'Meta Threads API', 'Gemini API', 'Firebase'],
-    result: '台灣零競品 · 已上線',
-    visual: 'accounts',
+      '基於 OpenClaw + Gemini 2.5 Flash 架構，四個 AI Agent 分別負責品牌推廣、產品銷售、安全掃描、財務諮詢，跨平台 24 小時自主運行。',
+    techStack: ['OpenClaw', 'Gemini AI', 'Discord', 'Moltbook'],
+    result: '4 Agent · 多平台 · 3 天部署',
+    visual: 'agents',
+    link: '/agent',
   },
   {
     tag: 'AI 安全',
     tagColor: '#F59E0B',
     accentColor: '#F59E0B',
-    title: 'UltraProbe — AI 安全掃描器（已上線）',
+    title: 'UltraProbe — AI 安全掃描器',
     description:
-      '自研 AI 安全掃描：10 種攻擊向量自動化滲透測試、URL 聊天機器人偵測、Email Gate Lead Gen。',
+      '自研 AI 安全掃描：19 種攻擊向量自動化滲透測試、URL 聊天機器人偵測、Email Gate Lead Gen。免費使用，已上線運營中。',
     techStack: ['Gemini 2.5 Flash', 'React', 'Vercel', 'AI Agent'],
-    result: '已上線 · 10 攻擊向量 · Lead Gen',
+    result: '已上線 · 19 攻擊向量 · 台灣唯一',
     visual: 'scan',
     link: '/probe',
+  },
+  {
+    tag: 'AI 財務平台',
+    tagColor: '#2E6BFF',
+    accentColor: '#2E6BFF',
+    title: 'Ultra Advisor — AI 驅動財務顧問平台',
+    description:
+      '為 MDRT 財務顧問打造的 AI 平台。線上預約、客戶管理、AI 輔助分析，同套 React + Firebase 架構驗證。',
+    techStack: ['React', 'Firebase', 'Vercel', 'AI 分析'],
+    result: '已上線 · 全端建置驗證',
+    visual: 'saas',
+    link: 'https://www.ultra-advisor.tw',
+    linkExternal: true,
   },
 ]
 
@@ -202,9 +215,9 @@ function VisualElement({ type }: { type?: string }) {
   switch (type) {
     case 'chart': return <MiniChart />
     case 'accounts': return <MiniAccounts />
-    case 'pipeline': return <MiniPipeline />
     case 'scan': return <MiniScan />
     case 'saas': return <MiniSaasUI />
+    case 'agents': return <MiniAgentFleet />
     default: return null
   }
 }
@@ -319,17 +332,17 @@ export default function Portfolio() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <span className="terminal-tag mb-4">git log --oneline --verified</span>
+          <span className="terminal-tag mb-4">git log --oneline --shipped</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            全部自己先跑，<span className="text-gradient-purple">驗證後才產品化</span>
+            四個產品，<span className="text-gradient-purple">全部我們造的</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            每個 AI 產品都從解決自己的問題開始，經實戰驗證後才對外服務
+            不是 mockup，不是規劃 — 是正在生產環境運行的 AI 產品
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Grid — 2x2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {portfolioItems.map((item, index) => (
             <div
               key={item.title}

@@ -67,7 +67,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-sm text-slate-500 leading-relaxed max-w-xs">
-              傲創實業旗下 AI 技術品牌。LLM 驅動的全自動化引擎 — 從 AI 內容生成、社群自動化到 SaaS 產品化。
+              AI Product Studio — 自己造 AI 產品，也幫你造。傲創實業旗下技術品牌。
             </p>
           </div>
 

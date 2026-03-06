@@ -1,4 +1,4 @@
-import { Video, MessageSquare, Code2, Sparkles, Globe, Shield, BookOpen, ArrowRight, Check, MessageCircle } from 'lucide-react'
+import { Code2, Shield, Bot, Sparkles, ArrowRight, Check } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 import { trackCTAClick } from '../lib/analytics'
 
@@ -14,84 +14,43 @@ interface ServicePlan {
   link?: string
 }
 
-const saasPlans: ServicePlan[] = [
-  {
-    icon: <Video size={20} />,
-    name: 'IG Reel 自動發布',
-    desc: 'Gemini AI 文案 → FFmpeg 影片 → 排程發布',
-    price: 'NT$2,999',
-    unit: '/月',
-    color: '#10B981',
-    features: ['Gemini AI 自動生成文案', 'FFmpeg 自動剪輯 + 上字幕', '排程發布到 IG Reels + Story', '數據追蹤儀表板'],
-  },
-  {
-    icon: <MessageSquare size={20} />,
-    name: 'MindThread',
-    desc: 'Meta API + Gemini AI 文案 + 多帳號自動發布',
-    price: 'NT$1,990',
-    unit: '/月起',
-    color: '#14B8A6',
-    features: ['多帳號統一管理', 'Gemini AI 文案生成 + 文案庫', '排程自動發布（Meta 官方 API）', '互動數據分析'],
-    popular: true,
-    link: 'https://mindthread.tw',
-  },
-]
-
-const projectPlans: ServicePlan[] = [
-  {
-    icon: <Code2 size={20} />,
-    name: 'SaaS 全端建置',
-    desc: 'React + Firebase + Vercel + AI 整合',
-    price: 'NT$50,000',
-    unit: '起',
-    color: '#2E6BFF',
-    features: ['需求分析 + AI 架構設計', '前後端完整開發 + LLM 串接', '部署 + CI/CD + Vercel Edge', '上線後 30 天維運'],
-  },
+const plans: ServicePlan[] = [
   {
     icon: <Sparkles size={20} />,
-    name: 'AI 串接應用',
-    desc: 'Gemini / Claude Multi-LLM + Prompt 工程',
-    price: 'NT$10,000',
-    unit: '起',
-    color: '#8A5CFF',
-    features: ['Multi-LLM API 串接 + 調校', 'Prompt 工程 + RAG 架構', 'AI Agent 業務流程整合', '技術文件交付'],
-  },
-  {
-    icon: <MessageCircle size={20} />,
-    name: '技術諮詢',
-    desc: 'AI 架構 + 自動化流程一對一諮詢',
+    name: 'AI 產品顧問',
+    desc: 'AI 架構 + 產品策略一對一諮詢',
     price: 'NT$3,000',
     unit: '/時',
     color: '#F59E0B',
-    features: ['AI 架構規劃建議', 'LLM 技術選型評估', '自動化 Pipeline 設計', '會後整理行動清單'],
-  },
-  {
-    icon: <Globe size={20} />,
-    name: '品牌官網全套',
-    desc: '官網 + 表單 + AI 通知 + SEO + 部署',
-    price: 'NT$30,000',
-    unit: '起',
-    color: '#4DA3FF',
-    features: ['RWD 品牌官網設計', '客戶表單 + AI 即時通知', 'SEO 優化 + 數據追蹤', '網域設定 + 一年維運'],
+    features: ['AI 架構規劃建議', 'LLM 技術選型評估', '產品策略 + MVP 路線圖', '會後整理行動清單'],
   },
   {
     icon: <Shield size={20} />,
-    name: 'AI 資安防護',
+    name: 'AI 安全掃描',
     desc: 'UltraProbe 掃描 + Prompt Injection 防禦',
     price: 'NT$15,000',
     unit: '起',
     color: '#F59E0B',
-    features: ['UltraProbe 10 攻擊向量掃描', '多層輸入/輸出防禦建置', 'Prompt Injection + Unicode 防護', '安全報告 + 修復方案'],
+    features: ['UltraProbe 19 攻擊向量掃描', '多層輸入/輸出防禦建置', 'Prompt Injection + Unicode 防護', '安全報告 + 修復方案'],
   },
   {
-    icon: <BookOpen size={20} />,
-    name: 'Ultra KB 知識中樞',
-    desc: 'Notion 知識庫建置 + 自動化匯入',
+    icon: <Bot size={20} />,
+    name: 'AI Agent 部署',
+    desc: 'OpenClaw + Gemini，三天上線你的品牌 Agent',
+    price: 'NT$30,000',
+    unit: '起',
+    color: '#FF6B35',
+    features: ['品牌聲音克隆 + 人設設定', '多平台部署（Discord / TG / Moltbook）', '自主發文 + 互動策略', '上線後 14 天調校'],
+    popular: true,
+  },
+  {
+    icon: <Code2 size={20} />,
+    name: 'AI 產品建置',
+    desc: 'React + Firebase + LLM，兩週上線 MVP',
     price: 'NT$50,000',
     unit: '起',
-    color: '#06B6D4',
-    features: ['6-10+ Notion databases 建置', '100-300+ pages 自動匯入（70%）', 'Automation scripts 交付', '30 分鐘 Onboarding Guide'],
-    link: '/kb',
+    color: '#2E6BFF',
+    features: ['需求分析 + AI 架構設計', '前後端完整開發 + LLM 串接', '部署 + CI/CD + Vercel Edge', '上線後 30 天維運'],
   },
 ]
 
@@ -165,7 +124,7 @@ function PlanCard({ plan }: { plan: ServicePlan }) {
           }
         }}
       >
-        {plan.link ? `前往 ${plan.name}` : plan.popular ? '立即開始' : '聯繫我們'}
+        {plan.popular ? '立即開始' : '聯繫我們'}
         <ArrowRight size={14} />
       </a>
     </div>
@@ -184,7 +143,7 @@ export default function Pricing() {
         }}
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <span className="terminal-tag mb-4">pricing --transparent</span>
@@ -192,56 +151,27 @@ export default function Pricing() {
             透明報價，<span className="text-gradient-purple">沒有隱藏費用</span>
           </h2>
           <p className="text-slate-500 max-w-lg mx-auto">
-            選擇適合你的方案，所有價格含稅，不滿意可隨時取消
+            從一小時諮詢到完整產品建置，選擇適合你的起點
           </p>
         </div>
 
-        {/* SaaS 訂閱 */}
-        <div className={`mb-12 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.1s' }}>
-          <h3
-            className="text-xs text-slate-500 uppercase tracking-wider mb-5"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            AI 自動化工具 — 月訂閱
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {saasPlans.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={isInView ? 'animate-fade-in-up' : 'opacity-0'}
-                style={{ animationDelay: `${(i + 1) * 0.1}s` }}
-              >
-                <PlanCard plan={plan} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 專案服務 */}
-        <div className={`${isInView ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
-          <h3
-            className="text-xs text-slate-500 uppercase tracking-wider mb-5"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            AI 技術服務 — 專案報價
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {projectPlans.map((plan, i) => (
-              <div
-                key={plan.name}
-                className={isInView ? 'animate-fade-in-up' : 'opacity-0'}
-                style={{ animationDelay: `${(i + 5) * 0.1}s` }}
-              >
-                <PlanCard plan={plan} />
-              </div>
-            ))}
-          </div>
+        {/* Plans — 2x2 grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {plans.map((plan, i) => (
+            <div
+              key={plan.name}
+              className={isInView ? 'animate-fade-in-up' : 'opacity-0'}
+              style={{ animationDelay: `${(i + 1) * 0.1}s` }}
+            >
+              <PlanCard plan={plan} />
+            </div>
+          ))}
         </div>
 
         {/* Bottom note */}
         <p
           className={`text-center text-xs text-slate-600 mt-10 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}
-          style={{ animationDelay: '0.7s', fontFamily: "'JetBrains Mono', monospace" }}
+          style={{ animationDelay: '0.6s', fontFamily: "'JetBrains Mono', monospace" }}
         >
           需要客製化方案？直接聯繫我們，依需求報價
         </p>

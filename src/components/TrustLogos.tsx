@@ -3,13 +3,13 @@ import { useInView } from '../hooks/useInView'
 const partners = [
   { name: 'Google Gemini', color: '#4DA3FF' },
   { name: 'Anthropic Claude', color: '#CE4DFF' },
-  { name: 'Meta Threads API', color: '#14B8A6' },
+  { name: 'OpenClaw Agent', color: '#FF6B35' },
   { name: 'Firebase', color: '#F59E0B' },
   { name: 'Vercel Edge', color: '#F8FAFC' },
   { name: 'React', color: '#61DAFB' },
   { name: 'TypeScript', color: '#3178C6' },
-  { name: 'FFmpeg GPU', color: '#10B981' },
-  { name: 'Playwright', color: '#2EAD33' },
+  { name: 'MCP Protocol', color: '#10B981' },
+  { name: 'Resend', color: '#14B8A6' },
 ]
 
 export default function TrustLogos() {

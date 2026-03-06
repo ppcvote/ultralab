@@ -1,4 +1,4 @@
-import { MessageSquare, Code2, Shield, Bot, ArrowRight } from 'lucide-react'
+import { Code2, MessageSquare, Bot, ArrowRight } from 'lucide-react'
 import { useInView } from '../hooks/useInView'
 
 interface Service {
@@ -17,54 +17,41 @@ interface Service {
 
 const services: Service[] = [
   {
+    icon: <MessageSquare size={28} />,
+    color: '#CE4DFF',
+    glowColor: 'rgba(206, 77, 255, 0.4)',
+    title: 'Threads / 社群自動化 SaaS',
+    tagline: 'MindThread — 台灣零競品的 Threads AI 自動化',
+    description:
+      '串接 Meta 官方 Threads API + Gemini AI 文案引擎，多帳號管理、AI 生成內容、排程自動發布。已產品化為獨立 SaaS，是我們最成熟的產品。',
+    tags: ['MindThread', 'Meta API', 'Gemini AI', 'SaaS'],
+    aiReady: 'Multi-LLM 切換 · 情緒分析 · 互動預測',
+    link: 'https://mindthread.tw',
+    linkLabel: '前往 MindThread',
+    external: true,
+  },
+  {
     icon: <Bot size={28} />,
     color: '#FF6B35',
     glowColor: 'rgba(255, 107, 53, 0.4)',
-    title: 'AI Agent 品牌部署服務',
-    tagline: '讓 AI 幫你的品牌 24 小時發聲',
+    title: 'AI Agent 品牌部署',
+    tagline: '三天上線，讓 AI 替你的品牌 24 小時發聲',
     description:
-      '基於 OpenClaw + Gemini 2.5 Flash，幫品牌在 Moltbook、Discord、Telegram 部署可自主發文、互動、導流的 AI Agent。三天內上線。Ultra Lab 自己的四個 Agent 就是活案例。',
+      '基於 OpenClaw + Gemini 2.5 Flash，在 Moltbook、Discord、Telegram 部署可自主發文、互動、導流的 AI Agent。Ultra Lab 自己的四個 Agent 就是活案例。',
     tags: ['OpenClaw', 'Gemini AI', '多平台同步', '三天上線'],
     aiReady: '品牌聲音克隆 · 自主互動策略 · 跨平台協作',
     link: '/agent',
     linkLabel: '看我們的 Agents',
   },
   {
-    icon: <MessageSquare size={28} />,
-    color: '#14B8A6',
-    glowColor: 'rgba(20, 184, 166, 0.4)',
-    title: 'Threads 多帳號自動化系統',
-    tagline: '已產品化為 Mind Threads SaaS',
-    description:
-      '串接 Meta 官方 Threads API + Gemini AI 文案生成引擎。6 帳號、35 篇/天全自動運行，已產品化為獨立 SaaS（台灣零競品）。',
-    tags: ['Meta API', 'Gemini AI', '6帳號/35篇天', 'SaaS'],
-    aiReady: 'Multi-LLM 切換 · 情緒分析 · 互動預測',
-    link: 'https://mindthread.tw',
-    linkLabel: '前往 Mind Threads',
-    external: true,
-  },
-  {
-    icon: <Shield size={28} />,
-    color: '#F59E0B',
-    glowColor: 'rgba(245, 158, 11, 0.4)',
-    title: 'AI 資安防護服務',
-    tagline: '你的 AI 系統，不該被反噬',
-    description:
-      '自研 UltraProbe AI 安全掃描器：12 種攻擊向量自動化滲透、Prompt Injection 防禦、多層輸入輸出驗證。已上線運營中。',
-    tags: ['UltraProbe', '12攻擊向量', 'Prompt防禦', '自動化掃描'],
-    aiReady: 'MCP Server · 即時監控 Webhook · 漏洞 RAG 知識庫',
-    link: '/probe',
-    linkLabel: '免費掃描',
-  },
-  {
     icon: <Code2 size={28} />,
     color: '#2E6BFF',
     glowColor: 'rgba(46, 107, 255, 0.4)',
-    title: 'SaaS 全端建置方案',
-    tagline: '你的 SaaS，兩週上線',
+    title: 'AI 產品全端建置',
+    tagline: '兩週上線 MVP，從概念到生產環境',
     description:
-      'React + TypeScript + Firebase + Vercel。已驗證的認證系統、訂閱管理、點數經濟、管理後台。從 Ultra Advisor 到 MindThread，全部同套架構。',
-    tags: ['全端', 'Firebase', '訂閱制', 'AI-Ready'],
+      'React + TypeScript + Firebase + Vercel，含認證、訂閱管理、管理後台。MindThread、Ultra Advisor 全部同套架構驗證，也能幫你造一個。',
+    tags: ['全端', 'Firebase', 'LLM 整合', '兩週上線'],
     aiReady: 'AI Copilot 模組 · 智能儀表板 · 預測分析引擎',
     link: '#contact',
     linkLabel: '免費諮詢',
@@ -169,17 +156,17 @@ export default function Services() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className={`text-center mb-16 ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
-          <span className="terminal-tag mb-4">ls --ai-services</span>
+          <span className="terminal-tag mb-4">ls --core-capabilities</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            四大 <span className="text-gradient-purple">AI 產品線</span>
+            三大<span className="text-gradient-purple">核心能力</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            每一條產品線都由 AI 驅動 — 從 LLM 內容生成、Agent 部署到 AI 安全防護
+            每一項能力都經自有產品驗證 — 造過才敢說會造
           </p>
         </div>
 
-        {/* Service Cards — 2x2 grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Service Cards — 3-col grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <div
               key={service.title}

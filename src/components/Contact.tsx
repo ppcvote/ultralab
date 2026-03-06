@@ -4,14 +4,11 @@ import { trackFormSubmit, trackCTAClick } from '../lib/analytics'
 import { useInView } from '../hooks/useInView'
 
 const SERVICE_OPTIONS = [
-  'IG Reel 全自動發布系統',
-  'MindThread — Threads 自動化 SaaS',
-  'SaaS 全端建置方案',
-  'AI 串接應用服務',
-  '品牌官網全套方案',
-  'AI 資安防護服務',
-  'Ultra KB 知識中樞建置',
-  '技術諮詢（一對一）',
+  'AI Agent 品牌部署',
+  'AI 安全掃描與防護',
+  'AI 產品 / SaaS 建置',
+  'AI 技術諮詢（一對一）',
+  'AI 整合到現有系統',
   '還不確定，想先聊聊',
 ]
 
@@ -129,9 +126,9 @@ export default function Contact() {
         <div className={`text-center ${isInView ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <span className="terminal-tag mb-6">ssh contact@ultralab.tw</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[800] text-white mb-4">
-            準備好用 AI
+            準備好打造你的
             <br />
-            <span className="text-gradient-purple">驅動你的業務了嗎？</span>
+            <span className="text-gradient-purple">AI 產品了嗎？</span>
           </h2>
           <p className="text-lg text-slate-400 mb-10 max-w-xl mx-auto">
             填寫表單，我們會在 24 小時內回覆 — 從 AI 諮詢到系統上線，全程支援

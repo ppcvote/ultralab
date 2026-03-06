@@ -9,34 +9,34 @@ interface FAQItem {
 
 const faqItems: FAQItem[] = [
   {
-    question: 'Ultra Lab 的核心技術是什麼？',
+    question: 'Ultra Lab 到底在做什麼？',
     answer:
-      '我們的核心是 AI 自動化基礎設施。透過 Gemini / Claude 等 LLM API 驅動內容生成、FFmpeg + Playwright 處理影音、Firebase 即時數據引擎、Vercel Edge 部署。所有產品從 AI Prompt 工程到端到端自動化全自研。',
+      'Ultra Lab 是一間 AI Product Studio — 我們自己造 AI 產品，也幫客戶造。目前已有四個自有產品上線運營中：MindThread（Threads 自動化 SaaS）、UltraProbe（AI 安全掃描器）、AI Agents（品牌推廣 Agent 艦隊）、Ultra Advisor（財務顧問平台）。這些產品就是我們能力的最佳證明。',
   },
   {
-    question: 'Ultra Lab 和 Ultra Advisor / Mind Threads 是什麼關係？',
+    question: 'Ultra Lab 和 MindThread / Ultra Advisor 是什麼關係？',
     answer:
-      '都是傲創實業（Ultra Creation）旗下品牌。Ultra Advisor 是 AI 財務顧問 SaaS，Mind Threads 是 Threads AI 自動化 SaaS（台灣零競品）。Ultra Lab 是技術引擎 — 負責打造這些 AI 產品並對外提供技術服務。',
+      '都是 Ultra Lab 造的產品。MindThread 是我們打造的 Threads 自動化 SaaS，已獨立為子品牌（mindthread.tw）。Ultra Advisor 是 AI 驅動的財務顧問平台。它們和 UltraProbe、AI Agents 一起，構成 Ultra Lab 的產品組合 — 每一個都是我們全端建置能力的活案例。',
   },
   {
-    question: '你們的 AI 系統真的是 100% 全自動嗎？',
+    question: 'AI Agent 部署要多久？可以部署在哪些平台？',
     answer:
-      '是的。從 Gemini API 生成內容、自動製作影片、到排程發布，全程零人工介入。我們同時運行 6 個 Threads 帳號、每天自動發布 35+ 篇 AI 內容，持續運作中。',
+      '三天。我們使用 OpenClaw + Gemini 2.5 Flash 架構，支援 Moltbook、Discord、Telegram、LINE 等平台。Agent 可以自主發文、互動回覆、跨平台協作。Ultra Lab 自己的四個 Agent 每天 24 小時運行中，就是最好的 demo。',
   },
   {
-    question: '你們用了哪些 AI / GPU 相關技術？',
+    question: 'UltraProbe 是做什麼的？',
     answer:
-      'LLM 端：Gemini 2.5 Flash / Pro、Claude API、多模型切換。影音端：FFmpeg GPU 編碼、Playwright 渲染引擎。安全端：自研 UltraProbe AI 安全掃描器（10 攻擊向量自動化測試）。我們正在評估將部分推理工作負載遷移到 NVIDIA GPU 以提升延遲效能。',
+      'UltraProbe 是我們自研的 AI 安全掃描器，針對 AI 應用進行 19 種攻擊向量的自動化滲透測試，包括 Prompt Injection、越獄攻擊、資料洩漏等。免費掃描，幾分鐘內出報告。目前是台灣唯一針對 AI 系統的安全掃描工具。',
   },
   {
-    question: '訂閱工具和專案服務有什麼差別？',
+    question: 'AI 產品建置服務包含什麼？多快可以上線？',
     answer:
-      '訂閱工具是「你自己用」— 我們提供 AI 自動化系統（IG Reel、Threads），月付即可開始。專案服務是「我們幫你做」— 包含 SaaS 建置、AI 串接、知識中樞、安全防護，依專案需求報價。',
+      '全端建置：React + TypeScript 前端、Firebase 後端、Vercel 部署、LLM API 整合、管理後台、訂閱系統。兩週內上線 MVP。我們所有自有產品都用同套架構，經過生產環境驗證。',
   },
   {
-    question: '可以先試用再決定嗎？',
+    question: '可以免費諮詢嗎？',
     answer:
-      '可以。我們提供免費諮詢，會根據你的需求建議最適合的方案。UltraProbe AI 安全掃描器可以直接免費使用。訂閱服務沒有合約綁定，隨時可以取消。',
+      '可以。UltraProbe AI 安全掃描完全免費使用。所有服務都提供免費初次諮詢，我們會根據你的需求建議最適合的方案。填寫聯絡表單後，我們會主動聯繫你。',
   },
 ]
 

@@ -3,7 +3,6 @@ import { ArrowRight } from 'lucide-react'
 import { trackCTAClick } from '../lib/analytics'
 import { useInView } from '../hooks/useInView'
 import { useCountUp } from '../hooks/useCountUp'
-import { useLiveStats } from '../hooks/useLiveStats'
 
 interface StatConfig {
   end: number
@@ -13,8 +12,8 @@ interface StatConfig {
 
 const techStack = [
   'Gemini API', 'Claude API', 'React', 'TypeScript', 'Firebase',
-  'FFmpeg GPU', 'Playwright', 'Python', 'Node.js', 'Vercel Edge',
-  'Meta Threads API', 'Prompt Engineering', 'RAG', 'AI Agent',
+  'OpenClaw Agent', 'Python', 'Node.js', 'Vercel Edge',
+  'Zod', 'MCP', 'Prompt Engineering', 'RAG', 'AI Agent',
 ]
 
 const words = ['Build.', 'Ship.', 'Scale.']
@@ -52,18 +51,18 @@ interface TLine {
 }
 
 const TERM_LINES: TLine[] = [
-  { type: 'cmd', text: 'ultra-lab deploy --production' },
-  { type: 'ok', text: 'Gemini 2.5 Flash API', meta: 'connected', time: '120ms' },
-  { type: 'ok', text: 'AI content pipeline', meta: 'auto-generating', time: '847ms' },
-  { type: 'ok', text: 'Threads API multi-account', meta: 'auto-publishing', time: '1.2s' },
-  { type: 'ok', text: 'FFmpeg GPU encoder', meta: 'IG Reels ready', time: '634ms' },
-  { type: 'ok', text: 'UltraProbe security scan', meta: '10/10 passed', time: '412ms' },
+  { type: 'cmd', text: 'ultra-lab deploy --ai-product-studio' },
+  { type: 'ok', text: 'MindThread SaaS', meta: 'Threads 自動化上線中', time: '120ms' },
+  { type: 'ok', text: 'AI Agent fleet (4 agents)', meta: 'deployed', time: '340ms' },
+  { type: 'ok', text: 'Multi-LLM routing', meta: 'Gemini + Claude', time: '89ms' },
+  { type: 'ok', text: 'UltraProbe security scan', meta: '19/19 passed', time: '412ms' },
+  { type: 'ok', text: 'Client product deployed', meta: 'production-ready', time: '1.2s' },
   { type: 'divider' },
   { type: 'status', text: 'ALL SYSTEMS OPERATIONAL' },
-  { type: 'summary', text: '' }, // dynamic — filled by LiveTerminal
+  { type: 'summary', text: 'MindThread + AI Agents 雙主力 · 4 products shipped · zero downtime' },
 ]
 
-function LiveTerminal({ stats }: { stats: { totalPosts: number; totalFollowers: number } }) {
+function LiveTerminal() {
   const { ref, isInView } = useInView({ threshold: 0.3 })
   const [visible, setVisible] = useState(0)
 
@@ -91,7 +90,7 @@ function LiveTerminal({ stats }: { stats: { totalPosts: number; totalFollowers: 
         <div className="w-3 h-3 rounded-full" style={{ background: '#FEBC2E' }} />
         <div className="w-3 h-3 rounded-full" style={{ background: '#28C840' }} />
         <span className="ml-2 text-[11px] text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-          ultra-lab — ai-engine v2.4
+          ultra-lab — ai-product-studio v3.0
         </span>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -132,7 +131,7 @@ function LiveTerminal({ stats }: { stats: { totalPosts: number; totalFollowers: 
           )
           if (line.type === 'summary') return (
             <div key={i} className="text-slate-500 text-xs animate-fade-in">
-              {stats.totalPosts.toLocaleString()}+ posts published · {stats.totalFollowers.toLocaleString()}+ followers · zero humans
+              {line.text}
             </div>
           )
           return null
@@ -181,13 +180,12 @@ function TechMarquee() {
 export default function Hero() {
   const { displayed, done } = useTypingEffect()
   const { ref: statsRef, isInView: statsVisible } = useInView({ threshold: 0.3 })
-  const liveStats = useLiveStats()
 
   const statConfigs: StatConfig[] = [
-    { end: liveStats.totalPosts, suffix: '+', label: 'AI 自動發文' },
-    { end: liveStats.totalFollowers, suffix: '+', label: 'AI 驅動粉絲' },
-    { end: 3, suffix: '', label: 'SaaS 產品上線' },
-    { end: 100, suffix: '%', label: '端到端自動化' },
+    { end: 4, suffix: '', label: 'AI 產品已上線' },
+    { end: 19, suffix: '', label: '安全掃描向量' },
+    { end: 3, suffix: '天', label: 'Agent 部署週期' },
+    { end: 100, suffix: '%', label: '自主技術棧' },
   ]
 
   return (
@@ -203,7 +201,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 text-center pt-28 pb-12 lg:pt-36 lg:pb-16 flex-1 flex flex-col justify-center min-w-0 overflow-hidden">
         {/* Terminal tag */}
         <div className="animate-fade-in-up">
-          <span className="terminal-tag">ultra-lab init — AI-Powered Automation Infrastructure</span>
+          <span className="terminal-tag">ultra-lab init — AI Product Studio</span>
         </div>
 
         {/* Title */}
@@ -214,7 +212,8 @@ export default function Hero() {
 
         {/* Subtitle */}
         <p className="mt-6 sm:mt-8 text-lg sm:text-2xl lg:text-3xl text-slate-200 font-light animate-fade-in-up delay-200">
-          AI 驅動的自動化引擎 — 已自動產出 {liveStats.totalPosts.toLocaleString()}+ 篇內容，完全零人工。
+          我們造 AI 產品，也幫你造。<br className="hidden sm:block" />
+          <span className="text-slate-400">MindThread SaaS + AI Agent 艦隊，雙主力產品驗證的建置能力。</span>
         </p>
 
         {/* CTA */}
@@ -231,21 +230,21 @@ export default function Hero() {
             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
           </a>
           <a
-            href="/agent"
-            onClick={() => trackCTAClick('看 AI Agents')}
-            className="inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-base font-semibold text-white rounded-xl border border-[rgba(255,107,53,0.4)] hover:border-[rgba(255,107,53,0.7)] transition-all duration-300 hover:-translate-y-1"
-            style={{ background: 'rgba(255,107,53,0.1)', backdropFilter: 'blur(8px)' }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 30px rgba(255,107,53,0.3)' }}
+            href="#portfolio"
+            onClick={() => trackCTAClick('看我們的產品')}
+            className="inline-flex items-center justify-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 text-base font-semibold text-white rounded-xl border border-[rgba(138,92,255,0.3)] hover:border-[rgba(138,92,255,0.6)] transition-all duration-300 hover:-translate-y-1"
+            style={{ background: 'rgba(138,92,255,0.08)', backdropFilter: 'blur(8px)' }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 0 30px rgba(138,92,255,0.2)' }}
             onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none' }}
           >
-            <span>⚡</span> 看 AI Agents
+            看我們的產品
             <ArrowRight size={18} />
           </a>
         </div>
 
         {/* Animated Terminal Demo */}
         <div className="mt-10 sm:mt-16 animate-fade-in-up delay-400">
-          <LiveTerminal stats={liveStats} />
+          <LiveTerminal />
         </div>
 
         {/* Stats */}
@@ -260,14 +259,16 @@ export default function Hero() {
           <p className="text-xs text-slate-600 uppercase tracking-widest mb-4" style={{ fontFamily: "'JetBrains Mono', monospace" }}>Live Products</p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-3xl mx-auto">
             {[
-              { label: 'UltraProbe', desc: 'AI 安全掃描器', href: '/probe', color: '#F59E0B' },
+              { label: 'MindThread', desc: 'Threads 自動化 SaaS', href: 'https://mindthread.tw', color: '#CE4DFF', external: true },
               { label: 'AI Agents', desc: 'AI 品牌推廣 Agents', href: '/agent', color: '#FF6B35' },
+              { label: 'UltraProbe', desc: 'AI 安全掃描器', href: '/probe', color: '#F59E0B' },
               { label: 'Blog', desc: '技術部落格', href: '/blog', color: '#06B6D4' },
             ].map((p) => (
               <a
                 key={p.label}
                 href={p.href}
-                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 w-[calc(33%-4px)] sm:w-auto"
+                {...('external' in p ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                className="group flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border transition-all duration-300 hover:-translate-y-0.5"
                 style={{
                   background: 'rgba(15, 10, 30, 0.6)',
                   borderColor: `${p.color}25`,
