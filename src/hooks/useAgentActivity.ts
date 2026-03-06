@@ -61,37 +61,92 @@ const FALLBACK: Omit<AgentActivity, 'loading'> = {
 let cached: Omit<AgentActivity, 'loading'> | null = null
 let fetchPromise: Promise<Omit<AgentActivity, 'loading'>> | null = null
 
+/* ── Map standard schema → legacy interface ── */
+function mapStandardToLegacy(data: Record<string, unknown>): Omit<AgentActivity, 'loading'> | null {
+  const agents = data.agents as Record<string, Record<string, unknown>> | undefined
+  const fleet = data.fleet as Record<string, unknown> | undefined
+  const events = data.events as Record<string, unknown>[] | undefined
+  if (!agents || !fleet) return null
+
+  const mappedAgents: Record<string, AgentStats> = {}
+  for (const [id, a] of Object.entries(agents)) {
+    const stats = (a.stats || {}) as Record<string, number>
+    mappedAgents[id] = {
+      status: (a.status as string) || 'idle',
+      posts: stats.actions || 0,
+      upvotes: 0,
+      comments: 0,
+      lastAction: (a.currentTask as string) || '',
+      lastActionAt: (a.updatedAt as string) || '',
+    }
+  }
+
+  const mappedEvents: AgentEvent[] = (events || []).slice(0, 8).map(e => {
+    const timeStr = (e.time as string) || ''
+    const t = timeStr.includes('T') ? timeStr.slice(11, 16) : timeStr
+    const typeMap: Record<string, string> = { post: 'POST', reply: 'ENGAGE', scan: 'SCAN', error: 'ERROR', learn: 'LEARN' }
+    return {
+      t,
+      agent: (e.agentId as string) || '',
+      action: typeMap[(e.type as string)] || 'POST',
+      detail: (e.detail as string) || '',
+    }
+  })
+
+  return {
+    agents: mappedAgents,
+    events: mappedEvents,
+    stats: {
+      postsTotal: (fleet.totalActions as number) || 0,
+      commentsTotal: 0,
+      upvotesTotal: 0,
+      errors: (fleet.totalErrors as number) || 0,
+      uptime: ((fleet.uptime as number) || 99) + '%',
+    },
+  }
+}
+
 async function fetchActivity(): Promise<Omit<AgentActivity, 'loading'>> {
   if (cached) return cached
 
   if (!fetchPromise) {
     fetchPromise = (async () => {
       try {
-        // Dynamic import to keep firebase out of initial bundle
         const { getDoc, doc } = await import('firebase/firestore')
         const { getDb } = await import('../lib/firebase')
-        const snap = await getDoc(doc(getDb(), 'agent-activity', 'latest'))
+        const db = getDb()
 
-        if (!snap.exists()) {
-          cached = FALLBACK
-          return FALLBACK
-        }
-
-        const data = snap.data()
-        cached = {
-          agents: data.agents || FALLBACK.agents,
-          events: (data.events || []).slice(0, 8),
-          stats: data.stats || FALLBACK.stats,
-        }
-
-        // Fill in any missing agents
-        for (const id of ['main', 'mind', 'probe', 'adv']) {
-          if (!cached.agents[id]) {
-            cached.agents[id] = FALLBACK.agents[id]
+        // Try standard path first (dashboards/ultralab/activity/latest)
+        const stdSnap = await getDoc(doc(db, 'dashboards', 'ultralab', 'activity', 'latest'))
+        if (stdSnap.exists()) {
+          const mapped = mapStandardToLegacy(stdSnap.data())
+          if (mapped) {
+            // Fill missing agents
+            for (const id of ['main', 'mind', 'probe', 'adv']) {
+              if (!mapped.agents[id]) mapped.agents[id] = FALLBACK.agents[id]
+            }
+            cached = mapped
+            return cached
           }
         }
 
-        return cached
+        // Fallback: legacy path (agent-activity/latest)
+        const legSnap = await getDoc(doc(db, 'agent-activity', 'latest'))
+        if (legSnap.exists()) {
+          const data = legSnap.data()
+          cached = {
+            agents: data.agents || FALLBACK.agents,
+            events: (data.events || []).slice(0, 8),
+            stats: data.stats || FALLBACK.stats,
+          }
+          for (const id of ['main', 'mind', 'probe', 'adv']) {
+            if (!cached.agents[id]) cached.agents[id] = FALLBACK.agents[id]
+          }
+          return cached
+        }
+
+        cached = FALLBACK
+        return FALLBACK
       } catch {
         cached = FALLBACK
         return FALLBACK
@@ -103,8 +158,10 @@ async function fetchActivity(): Promise<Omit<AgentActivity, 'loading'>> {
 }
 
 /**
- * Fetches live agent activity from Firestore (agent-activity/latest).
- * Module-level cache — shared across components. Falls back to static data on error.
+ * Fetches live agent activity from Firestore.
+ * Reads from dashboards/ultralab/activity/latest (standard schema),
+ * falls back to agent-activity/latest (legacy), then to static data.
+ * Module-level cache — shared across components.
  */
 export function useAgentActivity(): AgentActivity {
   const [data, setData] = useState<Omit<AgentActivity, 'loading'>>(cached || FALLBACK)
