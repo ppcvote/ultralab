@@ -74,6 +74,13 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
+    // Agent activity — public read (displayed on /agent page)
+    // Write: server-side only via Admin SDK (sync script)
+    match /agent-activity/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
