@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { ExternalLink, Send, X } from 'lucide-react'
-import { AGENTS_META } from './agent-data'
+import { AGENTS_META, AGENTS_VISUAL } from './agent-data'
 import { useAgentActivity } from '../hooks/useAgentActivity'
 import './space-station.css'
 
@@ -354,92 +354,163 @@ function ModulePopup({ agentId, onClose }: { agentId: string; onClose: () => voi
 }
 
 /* ═══════════════════════════════════
-   Module Card
+   Module Card — alive with task cycling + mini terminal
    ═══════════════════════════════════ */
-function ModuleCard({ agentId, activity, onClick }: {
+function ModuleCard({ agentId, activity, taskIndex, terminalLines, onClick }: {
   agentId: string
   activity: ReturnType<typeof useAgentActivity>
+  taskIndex: number
+  terminalLines: string[]
   onClick: () => void
 }) {
   const meta = AGENTS_META.find(a => a.id === agentId)
-  if (!meta) return null
+  const visual = AGENTS_VISUAL.find(a => a.id === agentId)
+  if (!meta || !visual) return null
 
   const color = meta.color
   const pos = MODULE_POS[agentId]
   const agentData = activity.agents[agentId]
-  const status = agentData?.status || (meta.comingSoon ? 'pending' : 'online')
-  const task = agentData?.lastAction || ''
-  const isPending = meta.comingSoon
+  const status = agentData?.status || 'online'
+  const liveTask = agentData?.lastAction || ''
+  const currentTask = liveTask || visual.tasks[taskIndex % visual.tasks.length]
   const signalStrength = status === 'active' || status === 'online' ? 4
-    : status === 'idle' ? 3 : status === 'busy' ? 4 : 1
+    : status === 'idle' ? 3 : status === 'busy' ? 4 : 2
 
   return (
     <div
-      className={`ss-module ${isPending ? 'ss-module-pending' : ''}`}
+      className="ss-module"
       onClick={onClick}
       style={{
         ...pos,
-        borderColor: h2a(color, isPending ? 0.15 : 0.3),
-        boxShadow: isPending ? 'none' : `0 0 20px ${h2a(color, 0.06)}, inset 0 0 24px ${h2a(color, 0.02)}`,
+        borderColor: h2a(color, 0.3),
+        boxShadow: `0 0 20px ${h2a(color, 0.06)}, inset 0 0 24px ${h2a(color, 0.02)}`,
       }}
       onMouseEnter={(e) => {
-        if (!isPending) {
-          e.currentTarget.style.boxShadow = `0 0 30px ${h2a(color, 0.18)}, inset 0 0 30px ${h2a(color, 0.04)}`
-          e.currentTarget.style.borderColor = h2a(color, 0.55)
-        }
+        e.currentTarget.style.boxShadow = `0 0 30px ${h2a(color, 0.18)}, inset 0 0 30px ${h2a(color, 0.04)}`
+        e.currentTarget.style.borderColor = h2a(color, 0.55)
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = isPending ? 'none' : `0 0 20px ${h2a(color, 0.06)}, inset 0 0 24px ${h2a(color, 0.02)}`
-        e.currentTarget.style.borderColor = h2a(color, isPending ? 0.15 : 0.3)
+        e.currentTarget.style.boxShadow = `0 0 20px ${h2a(color, 0.06)}, inset 0 0 24px ${h2a(color, 0.02)}`
+        e.currentTarget.style.borderColor = h2a(color, 0.3)
       }}
     >
       {/* Scan line effect */}
-      {!isPending && <div className="ss-module-scan" style={{ color }} />}
+      <div className="ss-module-scan" style={{ color }} />
 
-      {/* Pulse ring for active modules */}
-      {!isPending && status !== 'offline' && (
-        <div className="ss-module-pulse-ring" style={{ borderColor: h2a(color, 0.15) }} />
-      )}
+      {/* Pulse ring */}
+      <div className="ss-module-pulse-ring" style={{ borderColor: h2a(color, 0.15) }} />
 
-      <div className="ss-module-label" style={{ color }}>MODULE-{agentId.toUpperCase()}</div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4, position: 'relative', zIndex: 2 }}>
-        <div className="ss-module-name" style={{ color: 'rgba(255,255,255,0.9)' }}>
-          {meta.emoji} {meta.shortName || meta.name}
+      {/* Header: avatar + name + signal */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, position: 'relative', zIndex: 2 }}>
+        {/* Animated avatar */}
+        <div className="ss-avatar" style={{
+          width: 32, height: 32, borderRadius: 6,
+          background: h2a(color, 0.12),
+          border: `1.5px solid ${h2a(color, 0.3)}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 16, flexShrink: 0,
+          animation: 'ss-avatar-bob 2.5s ease-in-out infinite',
+          animationDelay: `${AGENT_IDS.indexOf(agentId as typeof AGENT_IDS[number]) * 0.6}s`,
+        }}>
+          {meta.emoji}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.9)' }}>
+            {meta.shortName}
+          </div>
+          <div style={{ fontSize: 8, color, letterSpacing: 1 }}>{meta.role.toUpperCase()}</div>
         </div>
         <SignalBars strength={signalStrength} color={color} />
       </div>
-      <div className="ss-module-role">{meta.role}</div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, marginBottom: 6, position: 'relative', zIndex: 2 }}>
-        <span className={`ss-status-dot ${STATUS_CLASS[status] || 'offline'}`} />
-        <span style={{ color, fontWeight: 600 }}>{STATUS_LABEL[status] || status.toUpperCase()}</span>
+      {/* Status line */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 9, marginBottom: 4, position: 'relative', zIndex: 2 }}>
+        <span className={`ss-status-dot ${STATUS_CLASS[status] || 'online'}`} />
+        <span style={{ color, fontWeight: 600 }}>{STATUS_LABEL[status] || 'ONLINE'}</span>
       </div>
 
-      {task && !isPending && (
-        <div className="ss-module-task">{task}</div>
-      )}
-      {isPending && (
-        <div className="ss-module-task" style={{ fontStyle: 'italic', opacity: 0.4 }}>
-          AWAITING DEPLOYMENT...
-        </div>
-      )}
+      {/* Current task with typing indicator */}
+      <div className="ss-module-task" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+        <span className="ss-typing-dots" style={{ color }}>
+          <span />
+          <span />
+          <span />
+        </span>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentTask}</span>
+      </div>
+
+      {/* Mini terminal output */}
+      <div className="ss-mini-terminal" style={{ position: 'relative', zIndex: 2 }}>
+        {terminalLines.map((line, i) => (
+          <div key={i} style={{
+            fontSize: 8, color: h2a(color, 0.4 + i * 0.15),
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            lineHeight: 1.6,
+          }}>
+            <span style={{ color: h2a(color, 0.25) }}>&gt; </span>{line}
+          </div>
+        ))}
+      </div>
 
       {/* Activity bar with shimmer */}
-      {!isPending && (
-        <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.04)', overflow: 'hidden', position: 'relative', zIndex: 2 }}>
-          <div style={{
-            height: '100%',
-            width: `${Math.min(100, (agentData?.posts || 0) * 18 + 25)}%`,
-            background: `linear-gradient(90deg, ${h2a(color, 0.4)}, ${color}, ${h2a(color, 0.4)})`,
-            backgroundSize: '200% 100%',
-            borderRadius: 2,
-            animation: 'ss-bar-shimmer 3s ease-in-out infinite',
-          }} />
-        </div>
-      )}
+      <div style={{ height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.04)', overflow: 'hidden', position: 'relative', zIndex: 2, marginTop: 6 }}>
+        <div style={{
+          height: '100%',
+          width: `${Math.min(100, (agentData?.posts || 0) * 18 + 30)}%`,
+          background: `linear-gradient(90deg, ${h2a(color, 0.4)}, ${color}, ${h2a(color, 0.4)})`,
+          backgroundSize: '200% 100%',
+          borderRadius: 2,
+          animation: 'ss-bar-shimmer 3s ease-in-out infinite',
+        }} />
+      </div>
     </div>
   )
+}
+
+/* ═══════════════════════════════════
+   Terminal log lines per agent (cycling)
+   ═══════════════════════════════════ */
+const TERMINAL_LOGS: Record<string, string[]> = {
+  main: [
+    'POST → moltbook/ultralabtw',
+    'ENGAGE → replied to trending post',
+    'STRATEGY.md check — OKR on track',
+    'Fleet briefing generated',
+    'Discord #general → daily digest',
+    'Content pillar: agent-ops',
+    'Bluesky sync: 3 posts queued',
+    'Cross-engage: mindthread + probe',
+  ],
+  mind: [
+    'QUEUE → 5 posts scheduled',
+    'Hashtag analysis → #threads',
+    'POST → mindthreadbot',
+    'Content gen → engagement hook',
+    'A/B test → hook variant B wins',
+    'ENGAGE → replied to prospect',
+    'Analytics: 21 accounts active',
+    'POST → 35+ daily target met',
+  ],
+  probe: [
+    'SCAN → gemini-2.5-flash probe',
+    'VULN → prompt injection detected',
+    'REPORT → anonymized + posted',
+    'TARGET → poe.com chatbot',
+    'SCAN → 19 attack vectors',
+    'ENGAGE → security thread',
+    'DATA → scan-results/ updated',
+    'ALERT → new CVE in LLM wrapper',
+  ],
+  adv: [
+    'POST → retirement planning tips',
+    'RESEARCH → market trends Q1',
+    'ENGAGE → insurance strategy thread',
+    'CONTENT → asset allocation guide',
+    'Discord → financial tip of the day',
+    'ANALYSIS → portfolio rebalance',
+    'POST → MDRT insights',
+    'RESEARCH → regulatory updates',
+  ],
 }
 
 /* ═══════════════════════════════════
@@ -449,6 +520,44 @@ export default function SpaceStation() {
   const activity = useAgentActivity()
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null)
   const closePopup = useCallback(() => setSelectedAgent(null), [])
+
+  // Task cycling (like Colony View sprite task rotation)
+  const [taskIndices, setTaskIndices] = useState<Record<string, number>>(
+    () => Object.fromEntries(AGENT_IDS.map(id => [id, 0]))
+  )
+  // Terminal log cycling
+  const [terminalOffsets, setTerminalOffsets] = useState<Record<string, number>>(
+    () => Object.fromEntries(AGENT_IDS.map(id => [id, 0]))
+  )
+
+  useEffect(() => {
+    const timers: ReturnType<typeof setTimeout>[] = []
+
+    // Each agent cycles tasks at different rates (staggered)
+    AGENT_IDS.forEach((id, i) => {
+      const visual = AGENTS_VISUAL.find(a => a.id === id)
+      if (!visual) return
+      const baseInterval = 3000 + i * 700 // stagger
+
+      const cycleTask = () => {
+        setTaskIndices(prev => ({ ...prev, [id]: (prev[id] + 1) % visual.tasks.length }))
+        timers.push(setTimeout(cycleTask, baseInterval + Math.random() * 1500))
+      }
+      timers.push(setTimeout(cycleTask, 2000 + i * 800))
+
+      // Terminal logs cycle at a different rate
+      const cycleLogs = () => {
+        setTerminalOffsets(prev => ({
+          ...prev,
+          [id]: (prev[id] + 1) % (TERMINAL_LOGS[id]?.length || 1),
+        }))
+        timers.push(setTimeout(cycleLogs, 2200 + Math.random() * 2000))
+      }
+      timers.push(setTimeout(cycleLogs, 1500 + i * 600))
+    })
+
+    return () => timers.forEach(clearTimeout)
+  }, [])
 
   return (
     <section className="space-station" style={{ paddingBottom: '5rem' }}>
@@ -519,14 +628,25 @@ export default function SpaceStation() {
               </div>
 
               {/* Module cards */}
-              {AGENT_IDS.map(id => (
-                <ModuleCard
-                  key={id}
-                  agentId={id}
-                  activity={activity}
-                  onClick={() => setSelectedAgent(id)}
-                />
-              ))}
+              {AGENT_IDS.map(id => {
+                const logs = TERMINAL_LOGS[id] || []
+                const offset = terminalOffsets[id] || 0
+                const visibleLines = [
+                  logs[offset % logs.length],
+                  logs[(offset + 1) % logs.length],
+                  logs[(offset + 2) % logs.length],
+                ]
+                return (
+                  <ModuleCard
+                    key={id}
+                    agentId={id}
+                    activity={activity}
+                    taskIndex={taskIndices[id] || 0}
+                    terminalLines={visibleLines}
+                    onClick={() => setSelectedAgent(id)}
+                  />
+                )
+              })}
 
               {/* Popup */}
               {selectedAgent && (

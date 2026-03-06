@@ -132,7 +132,6 @@ export const AGENTS_META: AgentMeta[] = [
       { name: 'deep-research', label: '深度網路研究' },
       { name: 'youtube-transcript', label: 'YouTube 字幕擷取' },
     ],
-    comingSoon: true,
   },
 ]
 

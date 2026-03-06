@@ -432,6 +432,42 @@
     animation: ss-module-scanline 3s linear infinite;
   }
 
+  /* ── Typing dots (agent working indicator) ── */
+  .ss-typing-dots {
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .ss-typing-dots span {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: ss-typing-bounce 1.4s ease-in-out infinite;
+  }
+  .ss-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .ss-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ── Avatar bob (agent breathing) ── */
+  .ss-avatar {
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .ss-module:hover .ss-avatar {
+    transform: scale(1.1);
+  }
+
+  /* ── Mini terminal ── */
+  .ss-mini-terminal {
+    padding: 4px 5px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 3px;
+    margin-top: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    min-height: 36px;
+    overflow: hidden;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 768px) {
     .ss-layout {
@@ -615,4 +651,16 @@
 @keyframes ss-bar-shimmer {
   0%   { background-position: -100% 0; }
   100% { background-position: 200% 0; }
+}
+
+/* Avatar idle bob (like Colony rim-bob) */
+@keyframes ss-avatar-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+
+/* Typing dots bounce */
+@keyframes ss-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+  30%           { transform: translateY(-3px); opacity: 1; }
 }
