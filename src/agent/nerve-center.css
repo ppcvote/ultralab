@@ -178,6 +178,22 @@
     text-align: center;
   }
 
+  /* Meeting bubble when agents cross in corridor */
+  .nc-meeting-bubble {
+    background: rgba(138, 92, 255, 0.15);
+    border: 1px solid rgba(138, 92, 255, 0.25);
+    border-radius: 8px;
+    padding: 2px 6px;
+    font-size: 12px;
+    animation: nc-meeting-pop 2s ease-out forwards;
+    white-space: nowrap;
+  }
+
+  /* Screen flash for monitors (occasional notification) */
+  .nc-screen-flash {
+    animation: nc-screen-flash 15s ease infinite;
+  }
+
   /* Typewriter reveal for event detail */
   .nc-typewrite-detail {
     display: inline-block;
@@ -472,4 +488,21 @@
 @keyframes nc-type-reveal {
   from { max-width: 0; }
   to   { max-width: 25ch; }
+}
+
+/* Meeting bubble pop-in-out */
+@keyframes nc-meeting-pop {
+  0%   { opacity: 0; transform: scale(0.5) translateY(4px); }
+  15%  { opacity: 1; transform: scale(1) translateY(0); }
+  80%  { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.8) translateY(-6px); }
+}
+
+/* Screen notification flash */
+@keyframes nc-screen-flash {
+  0%, 93%, 100% { filter: brightness(1); }
+  94%  { filter: brightness(2.2); }
+  95%  { filter: brightness(0.9); }
+  96%  { filter: brightness(1.6); }
+  97%  { filter: brightness(1); }
 }
