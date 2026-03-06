@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Bot, MessageSquare, Zap, Shield, DollarSign, ExternalLink, Send, Wrench } from 'lucide-react'
 import NerveCenter from './NerveCenter'
 import SpaceStation from './SpaceStation'
+import Aquarium from './Aquarium'
 import { AGENTS_META } from './agent-data'
 
 const THEMES = [
   { id: 'colony', label: 'Colony View', icon: '🏢' },
   { id: 'orbital', label: 'Orbital Command', icon: '🛰️' },
+  { id: 'aquarium', label: 'Deep Ocean', icon: '🐠' },
 ] as const
 type ThemeId = typeof THEMES[number]['id']
 
@@ -168,7 +170,9 @@ export default function AgentApp() {
       </div>
 
       {/* Dashboard (theme-switchable) */}
-      {theme === 'colony' ? <NerveCenter /> : <SpaceStation />}
+      {theme === 'colony' && <NerveCenter />}
+      {theme === 'orbital' && <SpaceStation />}
+      {theme === 'aquarium' && <Aquarium />}
 
       {/* Agent Cards */}
       <section style={{ paddingBottom: '5rem' }}>

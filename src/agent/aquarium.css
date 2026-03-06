@@ -1,0 +1,257 @@
+/* ── Ultra Aquarium Theme ──
+   Deep-ocean aesthetic with bioluminescent accents.
+   All classes scoped under .aq-* prefix. */
+
+@layer components {
+
+  /* ── Water Surface ── */
+  @keyframes aq-wave-alt {
+    0%, 100% { transform: translateX(0) scaleY(1); }
+    30%      { transform: translateX(-6px) scaleY(1.2); }
+    70%      { transform: translateX(4px) scaleY(0.8); }
+  }
+
+  /* ── Bubbles ── */
+  @keyframes aq-bubble-rise {
+    0%   { transform: translateY(0) scale(1); opacity: 0.6; }
+    40%  { transform: translateY(-50px) scale(1.15); opacity: 0.5; }
+    70%  { transform: translateY(-90px) scale(0.9); opacity: 0.3; }
+    100% { transform: translateY(-130px) scale(0.6); opacity: 0; }
+  }
+
+  @keyframes aq-bubble-wobble {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(4px); }
+    50%      { transform: translateX(-3px); }
+    80%      { transform: translateX(2px); }
+  }
+
+  /* ── Octopus ── */
+  @keyframes aq-octo-drift {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    20%  { transform: translate(6px, -8px) rotate(3deg); }
+    40%  { transform: translate(-3px, -4px) rotate(-2deg); }
+    60%  { transform: translate(4px, 2px) rotate(1deg); }
+    80%  { transform: translate(-5px, -6px) rotate(-3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @keyframes aq-octo-pulse {
+    0%, 100% { rx: 14; ry: 12; }
+    35%      { rx: 13; ry: 13.5; }
+    65%      { rx: 15; ry: 11; }
+  }
+
+  @keyframes aq-tentacle-1 {
+    0%, 100% { d: path("M38,48 Q30,58 26,66 Q24,72 28,68 Q26,74 30,70"); }
+    50%      { d: path("M38,48 Q34,60 32,68 Q30,74 34,70 Q32,76 36,72"); }
+  }
+  @keyframes aq-tentacle-2 {
+    0%, 100% { d: path("M43,50 Q38,62 35,70 Q33,76 37,72"); }
+    50%      { d: path("M43,50 Q40,60 40,70 Q40,76 42,72"); }
+  }
+  @keyframes aq-tentacle-3 {
+    0%, 100% { d: path("M50,51 Q48,64 46,72 Q44,78 48,74"); }
+    50%      { d: path("M50,51 Q52,64 50,72 Q48,78 52,74"); }
+  }
+  @keyframes aq-tentacle-4 {
+    0%, 100% { d: path("M57,50 Q62,62 65,70 Q67,76 63,72"); }
+    50%      { d: path("M57,50 Q60,60 60,70 Q60,76 58,72"); }
+  }
+  @keyframes aq-tentacle-5 {
+    0%, 100% { d: path("M62,48 Q70,58 74,66 Q76,72 72,68"); }
+    50%      { d: path("M62,48 Q66,60 68,68 Q70,74 66,70"); }
+  }
+
+  @keyframes aq-octo-blink {
+    0%, 92%, 100% { ry: 2.5; }
+    95%            { ry: 0.3; }
+  }
+
+  @keyframes aq-octo-eye-look {
+    0%, 40%  { cx: 45.5; cy: 35.5; }
+    50%, 70% { cx: 46.5; cy: 34.5; }
+    80%, 100%{ cx: 45; cy: 36; }
+  }
+
+  /* ── Fish School ── */
+  @keyframes aq-fish-glide-1 {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(18px, -6px); }
+    50%  { transform: translate(28px, 2px); }
+    75%  { transform: translate(12px, 8px); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes aq-fish-glide-2 {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-14px, 5px); }
+    50%  { transform: translate(-22px, -3px); }
+    75%  { transform: translate(-8px, -7px); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes aq-fish-glide-3 {
+    0%   { transform: translate(0, 0); }
+    30%  { transform: translate(10px, -10px); }
+    60%  { transform: translate(-5px, -5px); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes aq-fish-glide-4 {
+    0%   { transform: translate(0, 0); }
+    35%  { transform: translate(-12px, 8px); }
+    65%  { transform: translate(6px, 4px); }
+    100% { transform: translate(0, 0); }
+  }
+  @keyframes aq-fish-tail {
+    0%, 100% { transform: rotate(0deg); }
+    25%      { transform: rotate(12deg); }
+    75%      { transform: rotate(-12deg); }
+  }
+
+  /* ── Anglerfish ── */
+  @keyframes aq-angler-prowl {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    15%  { transform: translate(-8px, -3px) rotate(-2deg); }
+    35%  { transform: translate(5px, 4px) rotate(1deg); }
+    55%  { transform: translate(-4px, -2px) rotate(-1deg); }
+    75%  { transform: translate(10px, 3px) rotate(2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @keyframes aq-angler-jaw {
+    0%, 80%, 100% { d: path("M34,56 Q42,62 50,63 Q58,62 66,56"); }
+    85%           { d: path("M34,56 Q42,70 50,72 Q58,70 66,56"); }
+    90%           { d: path("M34,56 Q42,64 50,65 Q58,64 66,56"); }
+  }
+
+  @keyframes aq-angler-light {
+    0%, 100% { r: 4; opacity: 0.4; }
+    15%      { r: 6; opacity: 0.9; }
+    30%      { r: 3; opacity: 0.3; }
+    50%      { r: 7; opacity: 1; }
+    65%      { r: 4; opacity: 0.5; }
+    80%      { r: 5; opacity: 0.7; }
+  }
+
+  @keyframes aq-angler-inner-light {
+    0%, 100% { r: 2; opacity: 0.6; }
+    50%      { r: 3; opacity: 1; }
+  }
+
+  @keyframes aq-lure-swing {
+    0%, 100% { d: path("M40,38 Q33,26 38,18"); }
+    30%      { d: path("M40,38 Q30,24 35,16"); }
+    60%      { d: path("M40,38 Q36,28 42,20"); }
+  }
+
+  @keyframes aq-angler-fin {
+    0%, 100% { transform: rotate(0deg); }
+    50%      { transform: rotate(-20deg); }
+  }
+
+  /* ── Sea Turtle ── */
+  @keyframes aq-turtle-swim {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    20%  { transform: translate(10px, -5px) rotate(2deg); }
+    40%  { transform: translate(18px, 0) rotate(0deg); }
+    60%  { transform: translate(10px, 5px) rotate(-2deg); }
+    80%  { transform: translate(3px, 2px) rotate(-1deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+
+  @keyframes aq-flipper-stroke {
+    0%   { transform: rotate(-10deg); }
+    30%  { transform: rotate(-45deg); }
+    60%  { transform: rotate(5deg); }
+    100% { transform: rotate(-10deg); }
+  }
+
+  @keyframes aq-flipper-stroke-rear {
+    0%, 100% { transform: rotate(0deg); }
+    40%      { transform: rotate(-15deg); }
+  }
+
+  @keyframes aq-turtle-head-bob {
+    0%, 100% { transform: translateX(0); }
+    50%      { transform: translateX(-2px); }
+  }
+
+  /* ── Flora ── */
+  @keyframes aq-seaweed-sway {
+    0%, 100% { transform: rotate(-4deg) scaleY(1); }
+    25%      { transform: rotate(2deg) scaleY(1.02); }
+    50%      { transform: rotate(4deg) scaleY(0.98); }
+    75%      { transform: rotate(-1deg) scaleY(1.01); }
+  }
+
+  @keyframes aq-coral-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50%      { transform: scale(1.08); opacity: 1; }
+  }
+
+  /* ── Ambient ── */
+  @keyframes aq-biolum {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.6; }
+  }
+
+  @keyframes aq-status-pulse {
+    0%, 100% { box-shadow: 0 0 4px currentColor; }
+    50%      { box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+  }
+
+  @keyframes aq-feed-in {
+    from { transform: translateX(-10px); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes aq-title-shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  @keyframes aq-current {
+    0%   { stroke-dashoffset: 20; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  /* ── Tank Container ── */
+  .aq-tank {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .aq-tank:hover {
+    transform: translateY(-4px);
+  }
+
+  /* ── Feeding Log ── */
+  .aq-feed-line {
+    animation: aq-feed-in 0.4s ease-out both;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .aq-grid {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .aq-bottom-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .aq-tank {
+      min-height: 200px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .aq-grid {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+    .aq-tank {
+      min-height: 180px !important;
+    }
+  }
+}
