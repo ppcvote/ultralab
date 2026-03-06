@@ -1,0 +1,36 @@
+/* Nerve Center — Cyberpunk Dashboard Animations */
+/* Scoped under .nerve-center to avoid polluting other pages */
+
+@layer components {
+  .nerve-center {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@keyframes nc-glitch {
+  0%, 92%, 100% { text-shadow: none; }
+  93% { text-shadow: 2px 0 #FF6A6A, -2px 0 #4DA3FF; }
+  94% { text-shadow: -2px 0 #FF6A6A, 2px 0 #4DA3FF; transform: translate(1px, 0); }
+  95% { text-shadow: 2px 0 #4DA3FF, -2px 0 #FF6A6A; transform: translate(-1px, 0); }
+  96% { text-shadow: none; transform: translate(0, 0); }
+}
+
+@keyframes nc-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes nc-pulse {
+  0%, 100% { box-shadow: 0 0 4px var(--dot-color); opacity: 1; }
+  50% { box-shadow: 0 0 12px var(--dot-color); opacity: 0.7; }
+}
+
+@keyframes nc-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes nc-feed-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,4 +1,5 @@
 import { Bot, MessageSquare, Zap, Shield, DollarSign, ExternalLink, Send } from 'lucide-react'
+import NerveCenter from './NerveCenter'
 
 const agents = [
   {
@@ -172,6 +173,9 @@ export default function AgentApp() {
           </div>
         </div>
       </section>
+
+      {/* Nerve Center Dashboard */}
+      <NerveCenter />
 
       {/* Agent Cards */}
       <section style={{ paddingBottom: '5rem' }}>
