@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/kb", "destination": "/kb.html" },
     { "source": "/product-threads", "destination": "/product-threads.html" },
+    { "source": "/blog/:path*", "destination": "/blog/:path*" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

@@ -50,6 +50,21 @@ function CommandFurniture({ color }: { color: string }) {
     </div>
     {/* Ultra Lab logo glow */}
     <div style={{ position: 'absolute', top: '10%', left: '6%', width: 14, height: 14, background: h2a(color, 0.4), boxShadow: `0 0 12px ${h2a(color, 0.3)}`, borderRadius: 2 }} />
+    {/* Coffee mug + steam */}
+    <div style={{ position: 'absolute', top: '44%', left: '56%' }}>
+      <div style={{ width: 8, height: 8, background: '#4A3520', borderRadius: 2, border: '1px solid rgba(74,53,32,0.5)' }} />
+      <div className="nc-steam" style={{ position: 'absolute', top: -5, left: 2, width: 4, height: 5 }} />
+    </div>
+    {/* Desk plant */}
+    <div style={{ position: 'absolute', top: '40%', left: '68%' }}>
+      <div style={{ width: 8, height: 5, background: 'rgba(80,56,36,0.6)', borderRadius: '0 0 2px 2px' }} />
+      <div style={{ position: 'absolute', top: -5, left: -2, width: 12, height: 8, background: 'rgba(34,197,94,0.35)', borderRadius: '50%' }} />
+    </div>
+    {/* Pen holder */}
+    <div style={{ position: 'absolute', top: '46%', left: '64%', width: 6, height: 10, background: 'rgba(255,255,255,0.06)', borderRadius: '1px 1px 0 0', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ position: 'absolute', top: -4, left: 1, width: 1, height: 5, background: h2a(color, 0.3), transform: 'rotate(-8deg)' }} />
+      <div style={{ position: 'absolute', top: -3, left: 3, width: 1, height: 4, background: 'rgba(239,68,68,0.3)', transform: 'rotate(5deg)' }} />
+    </div>
   </>
 }
 
@@ -118,6 +133,21 @@ function SocialFurniture({ color }: { color: string }) {
     </div>
     {/* Chair */}
     <Chair top="54%" left="20%" color={color} />
+    {/* Trend line chart on wall */}
+    <div style={{ position: 'absolute', bottom: '10%', right: '6%', width: 36, height: 22, background: 'rgba(0,0,0,0.3)', border: `1px solid ${h2a(color, 0.15)}`, borderRadius: 2, overflow: 'hidden' }}>
+      {/* Trend line (SVG) */}
+      <svg width="36" height="22" viewBox="0 0 36 22" style={{ position: 'absolute', inset: 0 }}>
+        <polyline points="2,18 8,14 14,16 20,8 26,10 32,4" fill="none" stroke={h2a(color, 0.5)} strokeWidth="1.5" />
+        <circle cx="32" cy="4" r="2" fill={color} opacity={0.6} />
+      </svg>
+    </div>
+    {/* Calendar icon */}
+    <div style={{ position: 'absolute', bottom: '10%', left: '52%', width: 14, height: 16, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 2 }}>
+      <div style={{ height: 4, background: h2a(color, 0.3), borderRadius: '2px 2px 0 0' }} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, padding: '2px 1px' }}>
+        {[...Array(6)].map((_, i) => <div key={i} style={{ width: 3, height: 2, background: 'rgba(255,255,255,0.08)' }} />)}
+      </div>
+    </div>
   </>
 }
 
@@ -159,6 +189,29 @@ function SecLabFurniture({ color }: { color: string }) {
     </div>
     {/* Chair */}
     <Chair top="36%" left="18%" color={color} />
+    {/* Evidence board (detective strings) */}
+    <div style={{ position: 'absolute', top: '8%', left: '58%', width: 34, height: 24, background: 'rgba(20,10,10,0.6)', border: `1px solid ${h2a(color, 0.15)}`, borderRadius: 2 }}>
+      {/* Evidence photos */}
+      <div style={{ position: 'absolute', top: 3, left: 3, width: 8, height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 1 }} />
+      <div style={{ position: 'absolute', top: 3, left: 22, width: 8, height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 1 }} />
+      <div style={{ position: 'absolute', top: 14, left: 12, width: 8, height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 1 }} />
+      {/* Red strings connecting evidence */}
+      <svg width="34" height="24" viewBox="0 0 34 24" style={{ position: 'absolute', inset: 0 }}>
+        <line x1="11" y1="6" x2="26" y2="6" stroke={h2a(color, 0.25)} strokeWidth="0.5" />
+        <line x1="7" y1="9" x2="16" y2="17" stroke={h2a(color, 0.2)} strokeWidth="0.5" />
+        <line x1="26" y1="9" x2="20" y2="17" stroke={h2a(color, 0.2)} strokeWidth="0.5" />
+      </svg>
+      {/* Push pins */}
+      <div style={{ position: 'absolute', top: 1, left: 6, width: 3, height: 3, borderRadius: '50%', background: h2a(color, 0.5) }} />
+      <div style={{ position: 'absolute', top: 1, left: 25, width: 3, height: 3, borderRadius: '50%', background: h2a(color, 0.5) }} />
+    </div>
+    {/* Terminal output on side monitor */}
+    <div className="nc-screen-flash" style={{ position: 'absolute', top: '32%', left: '60%', width: 14, height: 10, background: h2a(color, 0.6), borderRadius: 1, boxShadow: `0 0 4px ${h2a(color, 0.3)}`, overflow: 'hidden' }}>
+      {/* Fake terminal lines */}
+      <div style={{ position: 'absolute', top: 2, left: 2, width: 8, height: 1, background: 'rgba(255,255,255,0.2)' }} />
+      <div style={{ position: 'absolute', top: 4, left: 2, width: 5, height: 1, background: 'rgba(255,255,255,0.15)' }} />
+      <div style={{ position: 'absolute', top: 6, left: 2, width: 9, height: 1, background: 'rgba(255,255,255,0.12)' }} />
+    </div>
   </>
 }
 
@@ -196,6 +249,23 @@ function AdvisoryFurniture({ color }: { color: string }) {
       <div style={{ position: 'absolute', top: 2, left: 3, width: 5, height: 12, background: h2a(color, 0.3) }} />
       <div style={{ position: 'absolute', top: 2, left: 10, width: 5, height: 12, background: 'rgba(255,255,255,0.08)' }} />
       <div style={{ position: 'absolute', top: 2, left: 17, width: 5, height: 12, background: h2a(color, 0.25) }} />
+    </div>
+    {/* Certificate frame on wall */}
+    <div style={{ position: 'absolute', top: '8%', left: '38%', width: 22, height: 16, border: `1.5px solid ${h2a(color, 0.3)}`, borderRadius: 2, background: 'rgba(0,0,0,0.3)' }}>
+      <div style={{ position: 'absolute', top: 3, left: 4, width: 14, height: 2, background: h2a(color, 0.2) }} />
+      <div style={{ position: 'absolute', top: 7, left: 6, width: 10, height: 2, background: h2a(color, 0.15) }} />
+      <div style={{ position: 'absolute', top: 11, left: 7, width: 8, height: 2, background: h2a(color, 0.1) }} />
+    </div>
+    {/* Calculator on desk */}
+    <div style={{ position: 'absolute', top: '34%', left: '52%', width: 10, height: 14, background: 'rgba(30,25,40,0.8)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 1 }}>
+      <div style={{ position: 'absolute', top: 2, left: 2, width: 6, height: 3, background: 'rgba(16,185,129,0.3)', borderRadius: 1 }} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1, padding: '7px 1px 1px' }}>
+        {[...Array(9)].map((_, i) => <div key={i} style={{ width: 2, height: 2, background: 'rgba(255,255,255,0.06)' }} />)}
+      </div>
+    </div>
+    {/* Desk phone */}
+    <div style={{ position: 'absolute', top: '36%', left: '66%', width: 8, height: 12, background: 'rgba(25,20,35,0.8)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 1 }}>
+      <div style={{ position: 'absolute', top: 2, left: 2, width: 4, height: 3, background: h2a(color, 0.25), borderRadius: 1 }} />
     </div>
   </>
 }

@@ -1,10 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { ROOMS, AGENTS_META, AGENTS_VISUAL, type RoomDef } from './agent-data'
 import { buildRoute, INIT_STEPS, type Pos } from './pathfinding'
 import { AgentPixelSprite } from './sprites'
 import RoomFurniture from './Furniture'
 import AgentPopup from './AgentPopup'
 import ParticleCanvas from './ParticleCanvas'
+import CorridorDecor from './CorridorDecor'
 import { useAgentActivity } from '../hooks/useAgentActivity'
 import './nerve-center.css'
 
@@ -18,6 +19,9 @@ const h2a = (h: string, a: number) => {
 const AGENT_COLORS: Record<string, string> = {
   main: '#8A5CFF', mind: '#14B8A6', probe: '#EF4444', adv: '#F59E0B',
 }
+
+/* ── Meeting chat bubbles when agents cross in corridor ── */
+const MEETING_CHATS = ['👋', '💬', '☕', '🤝', '⚡']
 
 /* ── Precompute routes ── */
 const ROUTES = Object.fromEntries(
@@ -43,6 +47,13 @@ function Room({ r, hovered, isActive, onHover }: { r: RoomDef; hovered: boolean;
         overflow: 'visible',
       }}
     >
+      {/* Ceiling light glow */}
+      <div style={{
+        position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+        width: '50%', height: '35%',
+        background: `radial-gradient(ellipse at 50% 0%, ${h2a(r.color, 0.06)}, transparent 80%)`,
+        pointerEvents: 'none', zIndex: 0,
+      }} />
       {/* Room inner tile grid */}
       <div style={{
         position: 'absolute', inset: 0,
@@ -69,6 +80,14 @@ function Room({ r, hovered, isActive, onHover }: { r: RoomDef; hovered: boolean;
           <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
           <div style={{ width: 28, height: 10, background: '#060210' }} />
           <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+          {/* Door LED */}
+          <div style={{
+            position: 'absolute', right: -8, top: 3,
+            width: 4, height: 4, borderRadius: '50%',
+            background: isActive ? h2a(r.color, 0.8) : 'rgba(255,255,255,0.08)',
+            boxShadow: isActive ? `0 0 6px ${h2a(r.color, 0.5)}` : 'none',
+            transition: 'all 0.5s ease',
+          }} />
         </div>
       ) : (
         /* Bottom rooms: door at top */
@@ -76,6 +95,14 @@ function Room({ r, hovered, isActive, onHover }: { r: RoomDef; hovered: boolean;
           <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
           <div style={{ width: 28, height: 10, background: '#060210' }} />
           <div style={{ width: 4, height: 10, background: h2a(r.color, 0.3), borderRadius: 1 }} />
+          {/* Door LED */}
+          <div style={{
+            position: 'absolute', right: -8, top: 3,
+            width: 4, height: 4, borderRadius: '50%',
+            background: isActive ? h2a(r.color, 0.8) : 'rgba(255,255,255,0.08)',
+            boxShadow: isActive ? `0 0 6px ${h2a(r.color, 0.5)}` : 'none',
+            transition: 'all 0.5s ease',
+          }} />
         </div>
       )}
       {/* Furniture */}
@@ -228,6 +255,31 @@ export default function NerveCenter() {
 
   const closePopup = useCallback(() => setSelectedAgent(null), [])
 
+  // Detect corridor meetings (two agents walking close together)
+  const corridorMeetings = useMemo(() => {
+    const inCorridor: { id: string; pos: Pos }[] = []
+    for (const a of activeAgents) {
+      const route = ROUTES[a.id]
+      const pos = route?.[steps[a.id]]?.pos
+      if (pos && agentStates[a.id] === 'walking' && pos.y >= 43 && pos.y <= 57) {
+        inCorridor.push({ id: a.id, pos })
+      }
+    }
+    const meetings: { x: number; y: number; ids: string[] }[] = []
+    for (let i = 0; i < inCorridor.length; i++) {
+      for (let j = i + 1; j < inCorridor.length; j++) {
+        if (Math.abs(inCorridor[i].pos.x - inCorridor[j].pos.x) < 15) {
+          meetings.push({
+            x: (inCorridor[i].pos.x + inCorridor[j].pos.x) / 2,
+            y: Math.min(inCorridor[i].pos.y, inCorridor[j].pos.y) - 4,
+            ids: [inCorridor[i].id, inCorridor[j].id],
+          })
+        }
+      }
+    }
+    return meetings
+  }, [steps, agentStates])
+
   return (
     <section className="nerve-center" style={{ paddingBottom: '5rem' }}>
       <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' }}>
@@ -265,6 +317,8 @@ export default function NerveCenter() {
               {/* Corridor decorations */}
               <div className="nc-corridor-deco nc-watercooler" />
               <div className="nc-corridor-deco nc-plant" />
+              {/* Corridor decorations */}
+              <CorridorDecor />
               {/* Ambient particles */}
               <ParticleCanvas />
               {/* Rooms */}
@@ -289,6 +343,19 @@ export default function NerveCenter() {
                   />
                 )
               })}
+              {/* Corridor meeting indicators */}
+              {corridorMeetings.map((m, i) => (
+                <div key={`meet-${m.ids.join('-')}`} style={{
+                  position: 'absolute',
+                  left: `${m.x}%`, top: `${m.y}%`,
+                  transform: 'translate(-50%, -100%)',
+                  zIndex: 25, pointerEvents: 'none',
+                }}>
+                  <div className="nc-meeting-bubble">
+                    {MEETING_CHATS[(i + Math.floor(m.x)) % MEETING_CHATS.length]}
+                  </div>
+                </div>
+              ))}
               {/* Agent popup */}
               {selectedAgent && (
                 <AgentPopup agentId={selectedAgent} onClose={closePopup} />
