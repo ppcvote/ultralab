@@ -1,46 +1,62 @@
+import { useState, useEffect } from 'react'
 import './nerve-center.css'
 
-const agents = [
+type AgentStatus = 'online' | 'idle' | 'scanning' | 'pending'
+
+interface AgentConfig {
+  id: string
+  name: string
+  emoji: string
+  room: string
+  color: string
+  status: AgentStatus
+  tasks: string[]
+  postsToday: number
+  commentsToday: number
+  nextScheduled: string
+}
+
+const AGENTS: AgentConfig[] = [
   {
-    id: 'main', name: 'UltraLabTW', emoji: '⚡', color: '#8A5CFF',
-    status: 'online' as const, postsToday: 4, avgUpvotes: 12,
-    commentsToday: 8, errors24h: 0, lastActivity: '14:06 Engage r/tech',
-    nextScheduled: '15:00',
+    id: 'main', name: 'UltraLabTW', emoji: '⚡', room: 'CONTENT OPS', color: '#8A5CFF',
+    status: 'online',
+    tasks: ['Analyzing trending topics...', 'Writing post draft...', 'Publishing to Moltbook...', 'Engaging community...', 'Generating TG report...'],
+    postsToday: 4, commentsToday: 8, nextScheduled: '15:00',
   },
   {
-    id: 'mindthread', name: 'MindThreadBot', emoji: '🧵', color: '#14B8A6',
-    status: 'idle' as const, postsToday: 3, avgUpvotes: 8,
-    commentsToday: 5, errors24h: 0, lastActivity: '14:57 Posted r/general',
-    nextScheduled: '21:00',
+    id: 'mindthread', name: 'MindThreadBot', emoji: '🧵', room: 'SOCIAL HUB', color: '#14B8A6',
+    status: 'idle',
+    tasks: ['Queue ready...', 'Awaiting schedule...', 'Standby mode...'],
+    postsToday: 3, commentsToday: 5, nextScheduled: '21:00',
   },
   {
-    id: 'probe', name: 'UltraProbeBot', emoji: '🔍', color: '#EF4444',
-    status: 'scanning' as const, postsToday: 2, avgUpvotes: 6,
-    commentsToday: 3, errors24h: 0, lastActivity: '13:58 Scanned target',
-    nextScheduled: '19:00',
+    id: 'probe', name: 'UltraProbeBot', emoji: '🔍', room: 'SECURITY LAB', color: '#EF4444',
+    status: 'scanning',
+    tasks: ['Probing AI endpoints...', 'Scanning prompt injections...', 'Analyzing LLM responses...', 'Flagging vulnerabilities...', 'Writing security report...'],
+    postsToday: 2, commentsToday: 3, nextScheduled: '19:00',
   },
   {
-    id: 'advisor', name: 'UltraAdvisor', emoji: '💰', color: '#F59E0B',
-    status: 'pending' as const, postsToday: 0, avgUpvotes: 0,
-    commentsToday: 0, errors24h: 0, lastActivity: 'Awaiting deployment',
-    nextScheduled: '—',
+    id: 'advisor', name: 'UltraAdvisor', emoji: '💰', room: 'ADVISORY', color: '#F59E0B',
+    status: 'pending',
+    tasks: ['Awaiting deployment...'],
+    postsToday: 0, commentsToday: 0, nextScheduled: '—',
   },
 ]
 
-const feed = [
-  { time: '14:57', agent: 'mindthread', color: '#14B8A6', text: 'Posted to r/general — Multi-Account Strategy' },
-  { time: '14:06', agent: 'main', color: '#8A5CFF', text: 'Engage r/tech — commented on AI thread' },
-  { time: '13:58', agent: 'probe', color: '#EF4444', text: 'Scanned AI chatbot — 3 vulns found' },
-  { time: '13:36', agent: 'main', color: '#8A5CFF', text: 'TG notification sent to Boss' },
-  { time: '13:00', agent: 'probe', color: '#EF4444', text: 'Posted r/tech — Data Leak Risk Report' },
+const EVENTS = [
+  { time: '14:57', agentId: 'mindthread', color: '#14B8A6', action: 'POSTED', detail: 'Multi-Account Strategy' },
+  { time: '14:06', agentId: 'main', color: '#8A5CFF', action: 'ENGAGED', detail: 'r/tech → +12 upvotes' },
+  { time: '13:58', agentId: 'probe', color: '#EF4444', action: 'ALERT', detail: '3 vulns detected' },
+  { time: '13:36', agentId: 'main', color: '#8A5CFF', action: 'REPORT', detail: 'Daily summary → TG' },
+  { time: '13:00', agentId: 'probe', color: '#EF4444', action: 'POSTED', detail: 'Data Leak Report' },
+  { time: '12:30', agentId: 'mindthread', color: '#14B8A6', action: 'QUEUED', detail: '3 posts for next run' },
 ]
 
-const STATUS_DOTS: Record<string, { bg: string; animate: boolean }> = {
-  online: { bg: '#10B981', animate: true },
-  idle: { bg: '#F59E0B', animate: false },
-  scanning: { bg: '#4DA3FF', animate: true },
-  error: { bg: '#EF4444', animate: true },
-  pending: { bg: 'rgba(255,255,255,0.2)', animate: false },
+const STATUS_META: Record<AgentStatus, { label: string; color: string; pulse: boolean }> = {
+  online:  { label: 'ONLINE',   color: '#10B981', pulse: true  },
+  idle:    { label: 'IDLE',     color: '#F59E0B', pulse: false },
+  scanning:{ label: 'SCANNING', color: '#4DA3FF', pulse: true  },
+  pending: { label: 'OFFLINE',  color: 'rgba(255,255,255,0.15)', pulse: false },
 }
 
 function hexToRgba(hex: string, alpha: number) {
@@ -50,179 +66,238 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-function NodeCard({ agent, idx }: { agent: typeof agents[0]; idx: number }) {
+/* ── Individual Agent Workstation ── */
+function Workstation({ agent }: { agent: AgentConfig }) {
+  const [taskIdx, setTaskIdx] = useState(0)
+  const [progress, setProgress] = useState(Math.random() * 50 + 20)
   const isPending = agent.status === 'pending'
-  const dot = STATUS_DOTS[agent.status]
-  const barWidth = Math.min((agent.postsToday / 10) * 100, 100)
+  const isIdle = agent.status === 'idle'
+  const isActive = agent.status === 'online' || agent.status === 'scanning'
+  const sm = STATUS_META[agent.status]
+
+  // Cycle tasks
+  useEffect(() => {
+    if (!isActive) return
+    const t = setInterval(() => setTaskIdx(i => (i + 1) % agent.tasks.length), 3800)
+    return () => clearInterval(t)
+  }, [isActive, agent.tasks.length])
+
+  // Progress bar
+  useEffect(() => {
+    if (isPending) return
+    const speed = isActive ? 300 : 700
+    const step = isActive ? 1.5 : 0.3
+    const t = setInterval(() => setProgress(p => p >= 98 ? (isIdle ? 35 : 4) : p + step), speed)
+    return () => clearInterval(t)
+  }, [isActive, isIdle, isPending])
 
   return (
     <div
-      className="group"
+      className="nc-workstation"
+      onMouseEnter={e => { if (!isPending) (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 20px ${hexToRgba(agent.color, 0.25)}` }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none' }}
       style={{
-        background: 'rgba(10, 5, 21, 0.85)',
-        backdropFilter: 'blur(12px)',
-        border: `1px solid ${hexToRgba(agent.color, 0.2)}`,
-        borderStyle: isPending ? 'dashed' : 'solid',
-        borderRadius: 12,
-        padding: '14px 16px',
-        position: 'relative',
+        background: isPending ? 'rgba(8, 4, 18, 0.5)' : 'rgba(12, 6, 24, 0.92)',
+        border: `1px solid ${isPending ? 'rgba(255,255,255,0.06)' : hexToRgba(agent.color, 0.3)}`,
+        borderRadius: 8,
         overflow: 'hidden',
-        opacity: isPending ? 0.5 : 1,
-        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        opacity: isPending ? 0.38 : 1,
+        backdropFilter: 'blur(10px)',
+        transition: 'box-shadow 0.3s ease, opacity 0.3s ease',
+        position: 'relative',
       }}
-      onMouseEnter={e => { if (!isPending) (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 20px ${hexToRgba(agent.color, 0.3)}`; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)' }}
-      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'; (e.currentTarget as HTMLDivElement).style.transform = 'none' }}
     >
-      {/* Top accent line */}
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: agent.color, opacity: 0.6 }} />
+      {/* Room label strip */}
+      <div style={{
+        padding: '5px 10px',
+        background: isPending ? 'rgba(255,255,255,0.02)' : hexToRgba(agent.color, 0.12),
+        borderBottom: `1px solid ${hexToRgba(agent.color, 0.15)}`,
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      }}>
+        <span style={{ fontSize: 8, letterSpacing: 2.5, color: hexToRgba(agent.color, isPending ? 0.3 : 0.85), fontWeight: 700 }}>
+          {agent.room}
+        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <div style={{
+            width: 5, height: 5, borderRadius: '50%', background: sm.color, flexShrink: 0,
+            animation: sm.pulse ? 'nc-pulse 2s ease-in-out infinite' : 'none',
+            '--dot-color': sm.color,
+          } as React.CSSProperties} />
+          <span style={{ fontSize: 7.5, color: sm.color, letterSpacing: 1.5 }}>{sm.label}</span>
+        </div>
+      </div>
 
-      {/* Pending overlay */}
-      {isPending && (
-        <div style={{
-          position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(245,158,11,0.03) 8px, rgba(245,158,11,0.03) 16px)',
-          zIndex: 2,
-        }}>
-          <span style={{ fontSize: 10, letterSpacing: 2, color: '#F59E0B', animation: 'nc-blink 2s ease-in-out infinite' }}>
-            AWAITING DEPLOYMENT
+      {/* Body */}
+      <div style={{ padding: '14px 12px' }}>
+        {/* Avatar */}
+        <div style={{ textAlign: 'center', marginBottom: 8 }}>
+          <span style={{
+            fontSize: 38,
+            display: 'inline-block',
+            animation: isActive
+              ? 'nc-agent-bounce 2.8s ease-in-out infinite'
+              : isIdle
+              ? 'nc-agent-idle 4s ease-in-out infinite'
+              : 'none',
+          }}>
+            {agent.emoji}
           </span>
         </div>
-      )}
 
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <span style={{ fontSize: 10, color: 'rgba(226,232,240,0.4)', letterSpacing: 2 }}>NODE-0{idx + 1}</span>
-        <div style={{
-          width: 6, height: 6, borderRadius: '50%', background: dot.bg,
-          animation: dot.animate ? 'nc-pulse 2s ease-in-out infinite' : 'none',
-          '--dot-color': dot.bg,
-        } as React.CSSProperties} />
-      </div>
-
-      {/* Name */}
-      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 2 }}>
-        <span style={{ fontSize: 18, marginRight: 6 }}>{agent.emoji}</span>
-        <span style={{ color: agent.color }}>{agent.name.replace('Bot', '').replace('Ultra', '')}</span>
-      </div>
-      <div style={{ fontSize: 10, color: 'rgba(226,232,240,0.4)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
-        {agent.status.toUpperCase()}
-      </div>
-
-      {/* Activity bar */}
-      <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, marginBottom: 10, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${barWidth}%`, background: agent.color, borderRadius: 2, boxShadow: `0 0 8px ${agent.color}` }} />
-      </div>
-
-      {/* Stats (hidden for pending) */}
-      {!isPending && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 10px', fontSize: 11, marginBottom: 8 }}>
-          <span style={{ color: 'rgba(226,232,240,0.4)' }}>Posts</span>
-          <span style={{ textAlign: 'right', fontWeight: 500 }}>{agent.postsToday}</span>
-          <span style={{ color: 'rgba(226,232,240,0.4)' }}>↑ Avg</span>
-          <span style={{ textAlign: 'right', fontWeight: 500 }}>{agent.avgUpvotes}</span>
-          <span style={{ color: 'rgba(226,232,240,0.4)' }}>Comments</span>
-          <span style={{ textAlign: 'right', fontWeight: 500 }}>{agent.commentsToday}</span>
-          <span style={{ color: 'rgba(226,232,240,0.4)' }}>Errors</span>
-          <span style={{ textAlign: 'right', fontWeight: 500, color: agent.errors24h > 0 ? '#EF4444' : '#10B981' }}>{agent.errors24h}</span>
+        {/* Name */}
+        <div style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: agent.color, marginBottom: 5 }}>
+          {agent.name}
         </div>
-      )}
 
-      {/* Footer */}
-      <div style={{ fontSize: 10, color: 'rgba(226,232,240,0.4)', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: 6, display: 'flex', justifyContent: 'space-between' }}>
-        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 130 }}>{agent.lastActivity}</span>
-        <span style={{ color: agent.color }}>{agent.nextScheduled}</span>
+        {!isPending ? (
+          <>
+            {/* Current task */}
+            <div style={{
+              textAlign: 'center', fontSize: 9.5, color: 'rgba(226,232,240,0.4)',
+              minHeight: 14, marginBottom: 7, fontStyle: 'italic', lineHeight: 1.4,
+            }}>
+              {agent.tasks[taskIdx]}
+              {isActive && <span className="nc-blink-cursor">_</span>}
+            </div>
+
+            {/* Progress bar */}
+            <div style={{ height: 3, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden', marginBottom: 9 }}>
+              <div style={{
+                height: '100%', borderRadius: 2,
+                width: `${Math.round(progress)}%`,
+                background: isActive
+                  ? `linear-gradient(90deg, ${agent.color}, ${hexToRgba(agent.color, 0.7)})`
+                  : hexToRgba(agent.color, 0.35),
+                boxShadow: isActive ? `0 0 8px ${hexToRgba(agent.color, 0.7)}` : 'none',
+                transition: 'width 0.3s ease',
+              }} />
+            </div>
+
+            {/* Mini stats */}
+            <div style={{
+              display: 'flex', justifyContent: 'space-around',
+              fontSize: 9, color: 'rgba(226,232,240,0.35)',
+              borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: 7,
+            }}>
+              <span>📝 {agent.postsToday}</span>
+              <span>💬 {agent.commentsToday}</span>
+              <span>⏰ {agent.nextScheduled}</span>
+            </div>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', fontSize: 9, color: 'rgba(245,158,11,0.5)', letterSpacing: 2, paddingBottom: 8, animation: 'nc-blink 2s ease-in-out infinite' }}>
+            ◌ DEPLOYING SOON
+          </div>
+        )}
       </div>
+
+      {/* Scanning sweep line */}
+      {agent.status === 'scanning' && <div className="nc-scan-line" />}
     </div>
   )
 }
 
+/* ── NerveCenter: RimWorld colony floor view ── */
 export default function NerveCenter() {
   return (
-    <section className="nerve-center" style={{ paddingBottom: '4rem' }}>
-      <div style={{ maxWidth: '70rem', margin: '0 auto', padding: '0 1.5rem' }}>
-        {/* Container with border glow */}
-        <div style={{
-          borderRadius: 16,
-          border: '1px solid rgba(138, 92, 255, 0.15)',
-          background: 'rgba(10, 5, 21, 0.6)',
-          padding: '20px 24px',
-          overflow: 'hidden',
-        }}>
-          {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, paddingBottom: 10, borderBottom: '1px solid rgba(138, 92, 255, 0.1)' }}>
-            <div style={{ fontSize: 16, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase' }}>
-              <span style={{ color: 'rgba(226,232,240,0.4)' }}>▓▓ </span>
-              <span style={{ color: '#8A5CFF', animation: 'nc-glitch 5s infinite', display: 'inline-block' }}>NERVE_CENTER</span>
-              <span style={{ color: 'rgba(226,232,240,0.4)' }}> ▓▓</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
-              <div style={{
-                width: 8, height: 8, borderRadius: '50%', background: '#10B981',
-                animation: 'nc-pulse 2s ease-in-out infinite',
-                '--dot-color': '#10B981',
-              } as React.CSSProperties} />
-              <span style={{ color: '#10B981' }}>ONLINE</span>
+    <section className="nerve-center" style={{ paddingBottom: '5rem' }}>
+      <div style={{ maxWidth: '72rem', margin: '0 auto', padding: '0 1.5rem' }}>
+
+        {/* Section label */}
+        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <span style={{
+            display: 'inline-block', padding: '0.3rem 0.8rem', borderRadius: 4,
+            background: 'rgba(138, 92, 255, 0.1)', border: '1px solid rgba(138, 92, 255, 0.2)',
+            color: '#8A5CFF', fontSize: '0.75rem', fontFamily: "'JetBrains Mono', monospace",
+            marginBottom: '1rem',
+          }}>
+            openclaw agents --view colony
+          </span>
+          <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, marginBottom: '0.4rem' }}>
+            Agent 辦公室 — <span style={{ background: 'linear-gradient(135deg, #8A5CFF, #CE4DFF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>即時鳥瞰</span>
+          </h2>
+          <p style={{ color: '#64748b', fontSize: '0.85rem' }}>4 隻 AI 員工正在他們的崗位上工作</p>
+        </div>
+
+        {/* Colony container with tile floor */}
+        <div className="nc-colony-box">
+
+          {/* Header bar */}
+          <div className="nc-header">
+            <span className="nc-title">▓▓ AGENT COLONY — FLOOR VIEW ▓▓</span>
+            <div style={{ display: 'flex', gap: 16, fontSize: 11 }}>
+              <span style={{ color: '#10B981' }}>● 3 ACTIVE</span>
+              <span style={{ color: 'rgba(226,232,240,0.25)' }}>○ 1 PENDING</span>
             </div>
           </div>
 
-          {/* Agent grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3" style={{ marginBottom: 16 }}>
-            {agents.map((a, i) => <NodeCard key={a.id} agent={a} idx={i} />)}
-          </div>
+          {/* Main: floor plan + right panel */}
+          <div className="nc-main-layout">
 
-          {/* Bottom: Feed + Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_240px] gap-3">
-            {/* Live Feed */}
-            <div style={{
-              background: 'rgba(10, 5, 21, 0.85)', backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(138, 92, 255, 0.1)', borderRadius: 12, padding: '12px 14px',
-            }}>
-              <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(226,232,240,0.4)', textTransform: 'uppercase', marginBottom: 8 }}>
-                ── LIVE FEED ──
+            {/* Floor plan with tile background */}
+            <div className="nc-floor-tiles">
+              {/* Corridor label */}
+              <div style={{ fontSize: 8, letterSpacing: 3, color: 'rgba(138,92,255,0.3)', marginBottom: 10, textAlign: 'center' }}>
+                ── ACTIVE WORKSTATIONS ──
               </div>
-              {feed.map((item, i) => (
-                <div key={i} style={{ fontSize: 12, padding: '3px 0', display: 'flex', gap: 8, animation: `nc-feed-in 0.4s ease ${i * 0.08}s both` }}>
-                  <span style={{ color: 'rgba(226,232,240,0.4)', flexShrink: 0, fontSize: 11 }}>{item.time}</span>
-                  <span style={{ color: item.color, fontWeight: 700, flexShrink: 0 }}>{item.agent}:</span>
-                  <span style={{ color: 'rgba(226,232,240,0.7)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.text}</span>
-                </div>
-              ))}
-              <div style={{ marginTop: 4 }}>
-                <span style={{ display: 'inline-block', width: 7, height: 14, background: '#8A5CFF', animation: 'nc-cursor 1s step-end infinite', verticalAlign: 'middle' }} />
+              <div className="nc-agent-grid">
+                {AGENTS.map(a => <Workstation key={a.id} agent={a} />)}
               </div>
             </div>
 
-            {/* Fleet Stats */}
-            <div style={{
-              background: 'rgba(10, 5, 21, 0.85)', backdropFilter: 'blur(12px)',
-              border: '1px solid rgba(138, 92, 255, 0.1)', borderRadius: 12, padding: '12px 14px',
-            }}>
-              <div style={{ fontSize: 11, letterSpacing: 2, color: 'rgba(226,232,240,0.4)', textTransform: 'uppercase', marginBottom: 8 }}>
-                ── FLEET STATS ──
-              </div>
-              {[
-                { label: 'Total Posts', value: '9' },
-                { label: 'Avg Upvotes', value: '8.7' },
-                { label: 'Comments', value: '16' },
-                { label: 'Errors 24h', value: '0', color: '#10B981' },
-                { label: 'Uptime', value: '99.2%', color: '#10B981' },
-              ].map(s => (
-                <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: 12 }}>
-                  <span style={{ color: 'rgba(226,232,240,0.4)' }}>{s.label}</span>
-                  <span style={{ fontWeight: 700, color: s.color }}>{s.value}</span>
+            {/* Right sidebar */}
+            <div className="nc-sidebar">
+
+              {/* Event log */}
+              <div style={{ flex: 1, padding: '12px 14px', borderBottom: '1px solid rgba(138, 92, 255, 0.08)', minHeight: 0, overflow: 'hidden' }}>
+                <div style={{ fontSize: 8, letterSpacing: 2.5, color: 'rgba(226,232,240,0.25)', marginBottom: 10 }}>
+                  ── EVENT LOG ──
                 </div>
-              ))}
-              {/* RPD bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', fontSize: 12 }}>
-                <span style={{ color: 'rgba(226,232,240,0.4)' }}>RPD</span>
-                <span style={{ fontWeight: 700 }}>~85 / 1,500</span>
+                {EVENTS.map((ev, i) => (
+                  <div key={i} style={{ marginBottom: 9, animation: `nc-feed-in 0.4s ease ${i * 0.07}s both` }}>
+                    <div style={{ fontSize: 8.5, color: 'rgba(226,232,240,0.25)', marginBottom: 1 }}>{ev.time}</div>
+                    <span style={{ fontSize: 8.5, fontWeight: 700, color: ev.color, marginRight: 4 }}>[{ev.action}]</span>
+                    <span style={{ fontSize: 9.5, color: 'rgba(226,232,240,0.55)' }}>{ev.detail}</span>
+                  </div>
+                ))}
+                <span style={{ display: 'inline-block', width: 6, height: 12, background: '#8A5CFF', animation: 'nc-cursor 1s step-end infinite', verticalAlign: 'middle', marginTop: 2 }} />
               </div>
-              <div style={{ height: 4, background: 'rgba(255,255,255,0.06)', borderRadius: 2, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: '5.7%', background: 'linear-gradient(90deg, #10B981, #F59E0B)', borderRadius: 2 }} />
+
+              {/* Fleet stats */}
+              <div style={{ padding: '12px 14px', flexShrink: 0 }}>
+                <div style={{ fontSize: 8, letterSpacing: 2.5, color: 'rgba(226,232,240,0.25)', marginBottom: 10 }}>
+                  ── FLEET STATS ──
+                </div>
+                {[
+                  { label: 'Posts / day', value: '9' },
+                  { label: 'Comments',    value: '16' },
+                  { label: 'Errors 24h',  value: '0',      color: '#10B981' },
+                  { label: 'Uptime',      value: '99.2%',  color: '#10B981' },
+                  { label: 'Ops cost',    value: '$0 / mo', color: '#10B981' },
+                ].map(s => (
+                  <div key={s.label} style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                    padding: '4px 0', borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: 10.5,
+                  }}>
+                    <span style={{ color: 'rgba(226,232,240,0.3)' }}>{s.label}</span>
+                    <span style={{ fontWeight: 700, color: s.color ?? 'rgba(226,232,240,0.75)' }}>{s.value}</span>
+                  </div>
+                ))}
+                <div style={{ marginTop: 10 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8.5, color: 'rgba(226,232,240,0.25)', marginBottom: 3 }}>
+                    <span>API Usage (RPD)</span>
+                    <span>85 / 1,500</span>
+                  </div>
+                  <div style={{ height: 3, background: 'rgba(255,255,255,0.05)', borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: '5.7%', background: 'linear-gradient(90deg, #10B981, #F59E0B)', borderRadius: 2 }} />
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
         </div>
+
       </div>
     </section>
   )

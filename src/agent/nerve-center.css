@@ -1,11 +1,108 @@
-/* Nerve Center — Cyberpunk Dashboard Animations */
+/* Nerve Center — RimWorld Colony Floor View */
 /* Scoped under .nerve-center to avoid polluting other pages */
 
 @layer components {
   .nerve-center {
     font-family: 'JetBrains Mono', monospace;
   }
+
+  /* Colony outer box */
+  .nc-colony-box {
+    border: 1px solid rgba(138, 92, 255, 0.12);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(8, 4, 18, 0.95);
+  }
+
+  /* Top header bar */
+  .nc-header {
+    padding: 10px 20px;
+    background: rgba(10, 5, 21, 0.98);
+    border-bottom: 1px solid rgba(138, 92, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nc-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #8A5CFF;
+    animation: nc-glitch 6s infinite;
+  }
+
+  /* Main layout: floor plan left, sidebar right */
+  .nc-main-layout {
+    display: grid;
+    grid-template-columns: 1fr 210px;
+    min-height: 400px;
+  }
+
+  /* Floor plan with tile background */
+  .nc-floor-tiles {
+    padding: 16px;
+    border-right: 1px solid rgba(138, 92, 255, 0.07);
+    /* RimWorld tile grid */
+    background-image:
+      linear-gradient(rgba(138, 92, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(138, 92, 255, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-color: rgba(6, 3, 14, 0.8);
+  }
+
+  /* 2x2 agent workstation grid */
+  .nc-agent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Workstation card base */
+  .nc-workstation {
+    transition: box-shadow 0.3s ease;
+  }
+
+  /* Right sidebar */
+  .nc-sidebar {
+    background: rgba(6, 3, 14, 0.9);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Mobile: stack vertically */
+  @media (max-width: 640px) {
+    .nc-main-layout {
+      grid-template-columns: 1fr;
+    }
+    .nc-floor-tiles {
+      border-right: none;
+      border-bottom: 1px solid rgba(138, 92, 255, 0.07);
+    }
+    .nc-sidebar {
+      flex-direction: row;
+    }
+    .nc-sidebar > div {
+      flex: 1;
+    }
+    .nc-sidebar > div:first-child {
+      border-bottom: none !important;
+      border-right: 1px solid rgba(138, 92, 255, 0.08);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .nc-agent-grid {
+      grid-template-columns: 1fr;
+    }
+    .nc-sidebar {
+      flex-direction: column;
+    }
+  }
 }
+
+/* ── Animations ── */
 
 @keyframes nc-glitch {
   0%, 92%, 100% { text-shadow: none; }
@@ -20,17 +117,59 @@
   50% { opacity: 0.3; }
 }
 
+/* Status dot pulse with color glow */
 @keyframes nc-pulse {
   0%, 100% { box-shadow: 0 0 4px var(--dot-color); opacity: 1; }
   50% { box-shadow: 0 0 12px var(--dot-color); opacity: 0.7; }
 }
 
+/* Blinking text cursor */
 @keyframes nc-cursor {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
+/* Feed items slide in */
 @keyframes nc-feed-in {
-  from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Active agent bounce — like RimWorld colonist moving */
+@keyframes nc-agent-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg);  }
+  20%       { transform: translateY(-4px) rotate(-3deg); }
+  40%       { transform: translateY(0) rotate(0deg); }
+  60%       { transform: translateY(-2px) rotate(2deg); }
+  80%       { transform: translateY(0) rotate(0deg); }
+}
+
+/* Idle agent gentle sway */
+@keyframes nc-agent-idle {
+  0%, 100% { transform: rotate(-4deg); }
+  50%       { transform: rotate(4deg); }
+}
+
+/* Security scan sweep line */
+.nc-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(77, 163, 255, 0.7), transparent);
+  animation: nc-scan 2.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes nc-scan {
+  0%   { top: 0;    opacity: 0; }
+  8%   { opacity: 0.9; }
+  92%  { opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Blinking cursor next to task text */
+.nc-blink-cursor {
+  animation: nc-cursor 1s step-end infinite;
+  margin-left: 2px;
 }
