@@ -16,6 +16,18 @@ async function sendTelegram(text: string) {
   })
 }
 
+async function notifyAgent(text: string) {
+  const token = process.env.AGENT_TG_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+  if (!token || !chatId) return
+
+  await fetch(`${TG_API}${token}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' }),
+  })
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
@@ -109,6 +121,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     </div>
   </body></html>`
 
+  // Agent notification — appears in @Ultra_Agentbot chat so boss can reply directly
+  const agentLines = isMinYi
+    ? null  // MinYi inquiries handled separately
+    : [
+        `📋 <b>新諮詢進來了</b>`,
+        ``,
+        `<b>客戶：</b>${name}${company ? ` (${company})` : ''}`,
+        `<b>Email：</b>${email}`,
+        phone ? `<b>電話：</b>${phone}` : '',
+        `<b>服務：</b>${service}`,
+        `<b>偏好聯繫：</b>${contactMethodLabel}`,
+        message ? `<b>需求：</b>${message}` : '',
+        ``,
+        `回覆「幫我回」我就幫你擬回覆稿 ✉️`,
+      ].filter(Boolean).join('\n')
+
   const results = { email: false, telegram: false, notion: false }
 
   try {
@@ -129,6 +157,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })(),
       (async () => {
         await sendTelegram(tgLines)
+        if (agentLines) await notifyAgent(agentLines)
         results.telegram = true
       })(),
       (async () => {

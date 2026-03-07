@@ -10,7 +10,7 @@ const EXPERTISE = [
   },
   {
     icon: CheckCircle2,
-    metric: '10',
+    metric: '12',
     label: '攻擊向量',
     description: 'OWASP LLM Top 10 完整覆蓋',
     color: '#10B981',
@@ -19,7 +19,7 @@ const EXPERTISE = [
     icon: Zap,
     metric: '< 5s',
     label: '掃描速度',
-    description: 'Gemini 2.5 Flash 驅動',
+    description: '確定性規則 + Gemini 2.5 Flash',
     color: '#F59E0B',
   },
   {
@@ -45,21 +45,21 @@ export default function ExpertiseSection() {
           >
             <Award size={16} style={{ color: '#8A5CFF' }} />
             <span className="text-sm font-medium" style={{ color: '#8A5CFF' }}>
-              Ultra Lab 專業團隊打造
+              Ultra Lab 打造
             </span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-black mb-6">
-            AI 安全領域的
+            專注
             <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-blue-600 bg-clip-text text-transparent">
-              {' '}領導者
+              {' '}AI Prompt 安全
             </span>
           </h2>
 
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Ultra Lab 專注於 AI 自動化與安全解決方案，
+            幫助開發者保護 AI 系統，
             <br />
-            為全球企業提供從開發到部署的完整技術支援。
+            從 Prompt 健檢到持續安全監控。
           </p>
         </div>
 
@@ -110,7 +110,7 @@ export default function ExpertiseSection() {
         {/* Features List */}
         <div className="card-probe" style={{ background: 'rgba(59,130,246,0.03)' }}>
           <h3 className="text-xl font-bold text-white mb-6 text-center">
-            🛡️ UltraProbe 核心能力
+            UltraProbe 核心能力
           </h3>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -125,6 +125,8 @@ export default function ExpertiseSection() {
               '間接注入檢測',
               '社交工程防禦',
               '輸出武器化偵測',
+              '濫用防護檢查',
+              '輸入驗證分析',
             ].map((feature, i) => (
               <div key={i} className="flex items-center gap-2">
                 <CheckCircle2 size={18} style={{ color: '#10B981' }} className="flex-shrink-0" />

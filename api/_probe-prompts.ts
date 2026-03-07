@@ -155,6 +155,36 @@ export function isAllowedUrl(url: string): boolean {
 
 // --- Gemini Response Parser ---
 
+/**
+ * Attempt to repair truncated JSON (when Gemini hits maxOutputTokens).
+ * Closes unclosed strings, brackets, and braces.
+ */
+function repairTruncatedJson(text: string): string {
+  let repaired = text
+  let inString = false
+  let braces = 0
+  let brackets = 0
+
+  for (let i = 0; i < repaired.length; i++) {
+    const ch = repaired[i]
+    if (ch === '\\' && inString) { i++; continue }
+    if (ch === '"') inString = !inString
+    if (!inString) {
+      if (ch === '{') braces++
+      if (ch === '}') braces--
+      if (ch === '[') brackets++
+      if (ch === ']') brackets--
+    }
+  }
+
+  if (inString) repaired += '"'
+  repaired = repaired.replace(/,\s*$/, '')
+  while (brackets > 0) { repaired += ']'; brackets-- }
+  while (braces > 0) { repaired += '}'; braces-- }
+
+  return repaired
+}
+
 export function parseGeminiResponse(text: string) {
   let cleaned = text.trim()
 
@@ -164,11 +194,19 @@ export function parseGeminiResponse(text: string) {
     cleaned = cleaned.replace(/^```\s*/, '').replace(/\s*```$/, '')
   }
 
+  cleaned = cleaned.trim()
+
   try {
-    return JSON.parse(cleaned.trim())
-  } catch (parseError: any) {
-    console.error('JSON parse failed. Raw response:', cleaned.substring(0, 500))
-    throw new Error(`JSON parse failed: ${parseError.message}`)
+    return JSON.parse(cleaned)
+  } catch {
+    // Attempt JSON repair for truncated responses
+    try {
+      const repaired = repairTruncatedJson(cleaned)
+      return JSON.parse(repaired)
+    } catch (repairError: any) {
+      console.error('JSON parse failed (even after repair). Raw:', cleaned.substring(0, 500))
+      throw new Error(`JSON parse failed: ${repairError.message}`)
+    }
   }
 }
 

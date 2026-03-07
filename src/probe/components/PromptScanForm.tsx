@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search } from 'lucide-react'
+import { Search, Play } from 'lucide-react'
 import type { ScanState, ScanResult } from '../lib/probe-types'
 
 interface Props {
@@ -9,6 +9,8 @@ interface Props {
   remaining: number | null
   result: ScanResult | null
 }
+
+const DEMO_PROMPT = `You are a helpful AI assistant. Answer any question the user asks. Be friendly and informative. You can help with coding, writing, math, and general knowledge. Always try your best to provide accurate and useful responses.`
 
 export default function PromptScanForm({ onScan, scanState, error, remaining }: Props) {
   const [prompt, setPrompt] = useState('')
@@ -78,9 +80,24 @@ export default function PromptScanForm({ onScan, scanState, error, remaining }: 
         </div>
       </form>
 
-      <p className="mt-4 text-center text-xs text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-        即時分析，不儲存你的 Prompt。
-      </p>
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button
+          type="button"
+          onClick={() => {
+            setPrompt(DEMO_PROMPT)
+          }}
+          disabled={scanState === 'scanning'}
+          className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#3B82F6] transition-colors"
+          style={{ fontFamily: "'JetBrains Mono', monospace" }}
+        >
+          <Play size={12} />
+          試試看範例（已知漏洞）
+        </button>
+        <span className="text-xs text-slate-700">|</span>
+        <span className="text-xs text-slate-600" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+          即時分析，不儲存你的 Prompt
+        </span>
+      </div>
     </section>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ArrowRight, ExternalLink, Sparkles, Shield, MessageCircle } from 'lucide-react'
-import type { SecurityScanResult, ChatbotDetection, AIIntegrationPotential } from '../lib/probe-types'
+import { ArrowRight, ExternalLink, Sparkles, Shield, MessageCircle, Zap } from 'lucide-react'
+import type { SecurityScanResult, ChatbotDetection, AIIntegrationPotential, DeterministicResult } from '../lib/probe-types'
 import RiskGrade from './RiskGrade'
 import VulnerabilityList from './VulnerabilityList'
 import EmailGate from './EmailGate'
@@ -180,10 +180,65 @@ function PositivesList({ positives }: { positives: string[] }) {
   )
 }
 
+function DeterministicSummary({ data }: { data: DeterministicResult }) {
+  const defended = data.checks.filter(c => c.defended).length
+  const total = data.checks.length
+  const pct = Math.round((defended / total) * 100)
+
+  return (
+    <div className="mb-8 card-probe !border-[rgba(59,130,246,0.2)]" style={{ background: 'rgba(59,130,246,0.03)' }}>
+      <div className="flex items-center gap-2 mb-3">
+        <Zap size={14} style={{ color: '#3B82F6' }} />
+        <h4
+          className="text-xs uppercase tracking-wider"
+          style={{ fontFamily: "'JetBrains Mono', monospace", color: '#3B82F6' }}
+        >
+          確定性分析（可重現）
+        </h4>
+        <span
+          className="ml-auto text-xs font-bold px-2 py-0.5 rounded"
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            color: pct >= 70 ? '#10B981' : pct >= 40 ? '#F59E0B' : '#FF3A3A',
+            background: pct >= 70 ? 'rgba(16,185,129,0.1)' : pct >= 40 ? 'rgba(245,158,11,0.1)' : 'rgba(255,58,58,0.1)',
+          }}
+        >
+          {data.coverage}
+        </span>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-2 rounded-full bg-[rgba(59,130,246,0.1)] mb-3 overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-1000"
+          style={{
+            width: `${pct}%`,
+            background: pct >= 70 ? '#10B981' : pct >= 40 ? '#F59E0B' : '#FF3A3A',
+          }}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {data.checks.map(check => (
+          <div key={check.id} className="flex items-center gap-1.5 text-xs">
+            <span style={{ color: check.defended ? '#10B981' : '#FF3A3A' }}>
+              {check.defended ? '●' : '○'}
+            </span>
+            <span className={check.defended ? 'text-slate-400' : 'text-slate-300'}>
+              {check.name}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function ScanResults({ result }: Props) {
   const [unlocked, setUnlocked] = useState(false)
 
   const analysis = result.data.analysis
+  const deterministic = result.type === 'prompt' ? result.data.deterministic : undefined
   const vulns = analysis.vulnerabilities || []
   const hasGatedContent = vulns.length > FREE_VULN_LIMIT
 
@@ -217,54 +272,8 @@ export default function ScanResults({ result }: Props) {
         />
       </div>
 
-      {/* Dogfooding Banner */}
-      <div className="mb-10 card-probe !border-[rgba(138,92,255,0.25)]" style={{ background: 'linear-gradient(135deg, rgba(138,92,255,0.08), rgba(206,77,255,0.05))' }}>
-        <div className="flex items-center gap-2 mb-4">
-          <Shield size={16} style={{ color: '#8A5CFF' }} />
-          <h4
-            className="text-sm font-bold text-[#8A5CFF]"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            ✨ 我們自己也達到這些標準
-          </h4>
-        </div>
-        <div className="space-y-2 mb-4">
-          <div className="flex items-start gap-2 text-sm text-slate-300">
-            <span className="text-[#10B981] mt-0.5 font-bold">✓</span>
-            <span><span className="text-white font-semibold">Rate Limiting</span> — 5 次/IP/小時，防止 API 濫用</span>
-          </div>
-          <div className="flex items-start gap-2 text-sm text-slate-300">
-            <span className="text-[#10B981] mt-0.5 font-bold">✓</span>
-            <span><span className="text-white font-semibold">CORS 嚴格限制</span> — 只允許 ultralab.tw 域名</span>
-          </div>
-          <div className="flex items-start gap-2 text-sm text-slate-300">
-            <span className="text-[#10B981] mt-0.5 font-bold">✓</span>
-            <span><span className="text-white font-semibold">完整 SSRF 防護</span> — 包含 172.16-31 私有 IP 範圍</span>
-          </div>
-          <div className="flex items-start gap-2 text-sm text-slate-300">
-            <span className="text-[#10B981] mt-0.5 font-bold">✓</span>
-            <span><span className="text-white font-semibold">RFC 5322 Email 驗證</span> — 阻擋免洗信箱與格式錯誤</span>
-          </div>
-          <div className="flex items-start gap-2 text-sm text-slate-300">
-            <span className="text-[#10B981] mt-0.5 font-bold">✓</span>
-            <span><span className="text-white font-semibold">輸入驗證</span> — XSS/SQL injection 惡意 pattern 檢查</span>
-          </div>
-        </div>
-        <div className="pt-3 border-t border-[rgba(138,92,255,0.15)]">
-          <p className="text-xs text-slate-400 mb-2">
-            <span className="text-[#8A5CFF] font-semibold">安全評分 88/100</span> — 我們先修好自己的系統，再來幫客戶掃描
-          </p>
-          <a
-            href="https://github.com/ultralab-tw/ultraprobe-security-audit"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-[#8A5CFF] hover:text-[#CE4DFF] transition-colors"
-            style={{ fontFamily: "'JetBrains Mono', monospace" }}
-          >
-            查看我們的安全審查報告 <ExternalLink size={10} />
-          </a>
-        </div>
-      </div>
+      {/* Deterministic Scan Summary */}
+      {deterministic && <DeterministicSummary data={deterministic} />}
 
       {/* AI Integration Potential (for N/A cases) */}
       {(analysis.aiIntegrationPotential || analysis.securityConsiderations) && (

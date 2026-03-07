@@ -59,14 +59,23 @@ export default function ProblemSection() {
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-6">
             <span className="bg-gradient-to-r from-red-500 via-orange-500 to-red-600 bg-clip-text text-transparent">
-              90% 的 AI 系統
+              Prompt Injection
             </span>
             <br />
-            存在 Prompt Injection 漏洞
+            是 LLM 應用的 #1 威脅
           </h2>
 
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            根據 OWASP 2023 報告，Prompt Injection 是 LLM 應用的頭號安全威脅。
+            根據{' '}
+            <a
+              href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FF3A3A] hover:underline"
+            >
+              OWASP LLM Top 10
+            </a>
+            ，Prompt Injection 被列為大語言模型應用的頭號安全風險。
             <br />
             一個簡單的攻擊指令，就能讓你的 AI 系統徹底失控。
           </p>

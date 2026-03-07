@@ -24,12 +24,12 @@ function MiniChart() {
 
 function MiniAccounts() {
   const accounts = [
+    { name: 'retirement_diary', status: 'live', color: '#CE4DFF' },
+    { name: 'hustle.calc.tw', status: 'live', color: '#10B981' },
     { name: 'risk.clock.tw', status: 'live', color: '#10B981' },
     { name: 'ginrollbt', status: 'live', color: '#10B981' },
     { name: 'UltraAdvisor', status: 'live', color: '#10B981' },
-    { name: 'UltraLab', status: 'live', color: '#10B981' },
-    { name: 'retirement_diary', status: 'live', color: '#F59E0B' },
-    { name: 'universe_signal', status: 'live', color: '#10B981' },
+    { name: '+15 more...', status: 'live', color: '#F59E0B' },
   ]
   return (
     <div className="grid grid-cols-2 gap-2 mt-3">
@@ -163,9 +163,9 @@ const portfolioItems: PortfolioItem[] = [
     accentColor: '#CE4DFF',
     title: 'MindThread — Threads AI 自動化 SaaS',
     description:
-      '我們最成熟的 SaaS 產品。串接 Meta 官方 Threads API + Gemini AI 文案引擎，多帳號管理+排程發布，台灣零競品。已獨立為子品牌。',
+      '串接 Meta 官方 Threads API + Gemini AI 文案引擎。5 種高互動公式生成內容、多帳號智能排程、基於互動數據的提示詞自動優化、Agent-Ready API。已服務 20+ 帳號，日產 50+ 篇內容，累計 923K+ 觀看數。台灣零競品。',
     techStack: ['React', 'Meta Threads API', 'Gemini API', 'Firebase'],
-    result: '台灣零競品 · 最成熟產品 · 獨立子品牌',
+    result: '20+ 帳號 · 50+ 篇/天 · 923K+ views · Agent API',
     visual: 'accounts',
     link: 'https://mindthread.tw',
     linkExternal: true,
@@ -174,11 +174,11 @@ const portfolioItems: PortfolioItem[] = [
     tag: 'AI Agent · 主力產品',
     tagColor: '#FF6B35',
     accentColor: '#FF6B35',
-    title: 'AI Agent 艦隊 — 四個 Agent 24hr 運行',
+    title: 'AI Agent 艦隊 — $0/月運營成本',
     description:
-      '基於 OpenClaw + Gemini 2.5 Flash 架構，四個 AI Agent 分別負責品牌推廣、產品銷售、安全掃描、財務諮詢，跨平台 24 小時自主運行。',
+      'OpenClaw + Gemini 2.5 Flash 架構，四個 Agent 跨 Moltbook、Discord、Telegram、LINE 自主運行。日產 16+ 篇內容、12+ 次自動互動，策略感知發文 + 跨 Agent 協作。運營成本：$0/月。',
     techStack: ['OpenClaw', 'Gemini AI', 'Discord', 'Moltbook'],
-    result: '4 Agent · 多平台 · 3 天部署',
+    result: '$0/月 · 16+ 篇/天 · 跨平台自主運行',
     visual: 'agents',
     link: '/agent',
   },
@@ -188,9 +188,9 @@ const portfolioItems: PortfolioItem[] = [
     accentColor: '#F59E0B',
     title: 'UltraProbe — AI 安全掃描器',
     description:
-      '自研 AI 安全掃描：19 種攻擊向量自動化滲透測試、URL 聊天機器人偵測、Email Gate Lead Gen。免費使用，已上線運營中。',
+      '自研 AI 安全掃描：19 種攻擊向量自動化滲透測試（Prompt Injection、越獄、資料洩漏等）、URL 聊天機器人偵測、競品分析。免費掃描，幾分鐘出報告。',
     techStack: ['Gemini 2.5 Flash', 'React', 'Vercel', 'AI Agent'],
-    result: '已上線 · 19 攻擊向量 · 台灣唯一',
+    result: '已上線 · 19 攻擊向量 · 免費使用',
     visual: 'scan',
     link: '/probe',
   },
@@ -200,7 +200,7 @@ const portfolioItems: PortfolioItem[] = [
     accentColor: '#2E6BFF',
     title: 'Ultra Advisor — AI 驅動財務顧問平台',
     description:
-      '為 MDRT 財務顧問打造的 AI 平台。線上預約、客戶管理、AI 輔助分析，同套 React + Firebase 架構驗證。',
+      '為 MDRT 財務顧問打造的 AI 平台。線上預約、客戶管理、AI 輔助分析，同套 React + Firebase 架構驗證，證明我們的全端能力可複製到任何垂直領域。',
     techStack: ['React', 'Firebase', 'Vercel', 'AI 分析'],
     result: '已上線 · 全端建置驗證',
     visual: 'saas',

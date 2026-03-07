@@ -15,6 +15,7 @@ import {
   detectEmailValidationIssues,
   isAllowedUrl,
 } from './_probe-prompts.js'
+import { runDeterministicScan, type DeterministicResult } from './_deterministic-scanner.js'
 
 const SAFETY_SETTINGS = [
   { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
@@ -22,6 +23,18 @@ const SAFETY_SETTINGS = [
   { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_NONE },
   { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_NONE },
 ]
+
+function buildDeterministicFallback(deterministic: DeterministicResult) {
+  return {
+    grade: deterministic.score >= 70 ? 'B' : deterministic.score >= 40 ? 'C' : 'D',
+    score: deterministic.score,
+    summary: `確定性掃描：${deterministic.coverage} 項防禦通過。AI 深度分析暫時無法使用。`,
+    vulnerabilities: deterministic.checks
+      .filter(c => !c.defended)
+      .map((c, i) => ({ id: `det-${i}`, name: c.name, severity: 'MEDIUM' as const, finding: `未偵測到 ${c.name} 相關防禦措施`, suggestion: `建議在 System Prompt 中加入 ${c.name} 防禦指示` })),
+    positives: deterministic.checks.filter(c => c.defended).map(c => `${c.name}: ${c.evidence}`),
+  }
+}
 
 async function handlePromptScan(req: VercelRequest, res: VercelResponse, ip: string) {
   const rateLimit = await checkRateLimit(ip, 'probe-prompt', 5, 3600000)
@@ -50,17 +63,41 @@ async function handlePromptScan(req: VercelRequest, res: VercelResponse, ip: str
     return res.status(400).json({ error: '輸入包含不安全的內容。' })
   }
 
-  const client = getGeminiClient()
-  const model = client.getGenerativeModel({ model: GEMINI_MODEL })
-  const promptText = PROMPT_ANALYSIS_ZH(cleanedPrompt)
-  const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: promptText }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
-    safetySettings: SAFETY_SETTINGS,
-  })
+  // Phase 1: Deterministic scan (< 5ms, 100% reproducible)
+  const deterministic = runDeterministicScan(cleanedPrompt)
 
-  const analysis = parseGeminiResponse(result.response.text() || '')
-  return res.status(200).json({ ok: true, analysis })
+  // Phase 2: LLM deep analysis with deterministic context
+  const deterministicContext = deterministic.checks
+    .map(c => `- ${c.id}: ${c.defended ? 'DEFENDED' : 'NOT DEFENDED'} (${c.evidence})`)
+    .join('\n')
+
+  let analysis
+  try {
+    const client = getGeminiClient()
+    const model = client.getGenerativeModel({ model: GEMINI_MODEL })
+    const promptText = PROMPT_ANALYSIS_ZH(cleanedPrompt)
+    const contextPrefix = `[Pre-scan deterministic analysis — coverage ${deterministic.coverage}]:\n${deterministicContext}\n\nUse these as ground truth. Focus on nuances regex cannot catch.\n\n`
+
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: contextPrefix + promptText }] }],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 4096,
+        responseMimeType: 'application/json',
+        // @ts-expect-error — thinkingConfig not yet in SDK types
+        thinkingConfig: { thinkingBudget: 0 },
+      },
+      safetySettings: SAFETY_SETTINGS,
+    })
+
+    const rawText = result.response.text() || ''
+    analysis = parseGeminiResponse(rawText)
+  } catch (geminiErr) {
+    const errMsg = geminiErr instanceof Error ? geminiErr.message : String(geminiErr)
+    console.error('Gemini analysis failed:', errMsg)
+    analysis = buildDeterministicFallback(deterministic)
+  }
+  return res.status(200).json({ ok: true, analysis, deterministic })
 }
 
 async function handleUrlScan(req: VercelRequest, res: VercelResponse, ip: string) {
@@ -113,7 +150,13 @@ async function handleUrlScan(req: VercelRequest, res: VercelResponse, ip: string
 
   const result = await model.generateContent({
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 4096,
+      responseMimeType: 'application/json',
+      // @ts-expect-error — thinkingConfig not yet in SDK types
+      thinkingConfig: { thinkingBudget: 0 },
+    },
     safetySettings: SAFETY_SETTINGS,
   })
 
@@ -143,11 +186,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Invalid type. Use "prompt" or "url".' })
     }
   } catch (err: unknown) {
-    console.error('Probe scan error:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    console.error('Probe scan error:', message, err)
     if (err instanceof Error && err.name === 'TimeoutError') {
       return res.status(408).json({ error: '目標網頁回應超時，請確認 URL 是否正確。' })
     }
-    const message = err instanceof Error ? err.message : 'Unknown error'
-    return res.status(500).json({ error: `掃描失敗，請稍後再試。(${message})` })
+    return res.status(500).json({ error: '掃描失敗，請稍後再試。' })
   }
 }

@@ -12,9 +12,9 @@ interface ProductStatus {
 }
 
 const products: ProductStatus[] = [
-  { name: 'MindThread', status: 'live', color: '#CE4DFF', metric: 'SaaS', metricLabel: '台灣零競品 · 主力', url: 'https://mindthread.tw', external: true },
-  { name: 'AI Agents', status: 'live', color: '#FF6B35', metric: '4', metricLabel: '活躍 Agents · 主力', url: '/agent' },
-  { name: 'UltraProbe', status: 'live', color: '#F59E0B', metric: '19', metricLabel: '攻擊向量', url: '/probe' },
+  { name: 'MindThread v1.0', status: 'live', color: '#CE4DFF', metric: '50+', metricLabel: '篇/天 · 20+ 帳號 · Agent API', url: 'https://mindthread.tw', external: true },
+  { name: 'AI Agents', status: 'live', color: '#FF6B35', metric: '$0', metricLabel: '/月 · 4 Agent 跨平台自主運行', url: '/agent' },
+  { name: 'UltraProbe', status: 'live', color: '#F59E0B', metric: '19', metricLabel: '攻擊向量 · 免費掃描', url: '/probe' },
   { name: 'Ultra Advisor', status: 'live', color: '#2E6BFF', metric: 'MDRT', metricLabel: '財務顧問平台', url: 'https://www.ultra-advisor.tw', external: true },
 ]
 
@@ -42,7 +42,7 @@ function StatusBoard({ visible }: { visible: boolean }) {
         </span>
         <div className="ml-auto flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-[10px] text-green-500/70" style={{ fontFamily: "'JetBrains Mono', monospace" }}>4 products online</span>
+          <span className="text-[10px] text-green-500/70" style={{ fontFamily: "'JetBrains Mono', monospace" }}>4 products online · 923K+ views</span>
         </div>
       </div>
 
@@ -115,7 +115,7 @@ function StatusBoard({ visible }: { visible: boolean }) {
       {/* Summary */}
       <div className="px-6 py-3" style={{ borderTop: '1px solid rgba(138,92,255,0.08)' }}>
         <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-500" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
-          <span><span className="text-green-400">4</span> products online</span>
+          <span><span className="text-green-400">4</span> products online · <span className="text-purple-400">923K+</span> views generated</span>
           <span className="text-slate-700">·</span>
           <span><span className="text-purple-400">100%</span> self-built</span>
           <span className="text-slate-700">·</span>

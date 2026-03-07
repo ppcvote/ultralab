@@ -16,6 +16,17 @@ interface CollectEmailRequest {
 
 const TG_API = 'https://api.telegram.org/bot'
 
+function unsubPage(message: string, success: boolean) {
+  const color = success ? '#10B981' : '#FF6A6A'
+  return `<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>取消訂閱 — Ultra Lab</title></head>
+<body style="margin:0;padding:0;background:#0A0515;font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;">
+<div style="text-align:center;padding:40px;max-width:400px;">
+<h1 style="color:#CE4DFF;font-size:24px;font-weight:800;margin:0 0 16px;">ULTRA LAB</h1>
+<p style="color:${color};font-size:16px;margin:0 0 24px;">${message}</p>
+<a href="https://ultralab.tw" style="color:#8A5CFF;font-size:14px;">← 回到首頁</a>
+</div></body></html>`
+}
+
 async function notifyTelegram(email: string, scanType: string, metadata?: any) {
   const token = process.env.TELEGRAM_BOT_TOKEN
   const chatId = process.env.TELEGRAM_CHAT_ID
@@ -58,6 +69,26 @@ async function notifyTelegram(email: string, scanType: string, metadata?: any) {
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (setCorsHeaders(req, res)) {
     return res.status(200).end()
+  }
+
+  // GET: one-click unsubscribe
+  if (req.method === 'GET' && req.query.unsubscribe) {
+    try {
+      const emailB64 = req.query.unsubscribe as string
+      const email = Buffer.from(emailB64, 'base64url').toString('utf-8')
+      if (!email || !email.includes('@')) {
+        return res.status(400).send(unsubPage('連結無效。', false))
+      }
+      const db = getAdminDb()
+      const snap = await db.collection('subscribers').where('email', '==', email.toLowerCase()).limit(1).get()
+      if (snap.empty) {
+        return res.status(200).send(unsubPage('此 email 未在訂閱名單中。', true))
+      }
+      await snap.docs[0].ref.update({ status: 'unsubscribed', unsubscribedAt: new Date() })
+      return res.status(200).send(unsubPage('已成功取消訂閱。你不會再收到 Ultra Lab 週報。', true))
+    } catch {
+      return res.status(500).send(unsubPage('處理失敗，請稍後再試。', false))
+    }
   }
 
   if (req.method !== 'POST') {

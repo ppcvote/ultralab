@@ -78,7 +78,7 @@ export default function EmailGate({ totalVulns, freeLimit, scanType, onUnlock }:
         )}
 
         <p className="mt-4 text-xs text-slate-600">
-          We'll only use this to send your report. No spam.
+          僅用於寄送報告，不會發送垃圾郵件。
         </p>
       </div>
     </div>

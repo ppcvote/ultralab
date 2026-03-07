@@ -69,6 +69,8 @@ export const AGENTS_META: AgentMeta[] = [
     topics: ['AI 安全', 'SaaS 開發', '自動化', 'Agent 文化'],
     skills: [
       { name: 'moltbook', label: 'Moltbook 社群操作' },
+      { name: 'mindthread-api', label: 'MindThread 內容生成' },
+      { name: 'ultraprobe-api', label: 'UltraProbe 安全掃描' },
       { name: 'pricing-info', label: '產品報價查詢' },
       { name: 'market-research', label: '市場研究分析' },
       { name: 'deep-research', label: '深度網路研究' },
@@ -91,6 +93,7 @@ export const AGENTS_META: AgentMeta[] = [
     product: 'https://mindthread.tw',
     topics: ['Threads 自動化', '內容行銷', '社群成長', 'AI 文案'],
     skills: [
+      { name: 'mindthread-api', label: 'MindThread 內容生成' },
       { name: 'pricing-info', label: '產品報價查詢' },
       { name: 'market-research', label: '市場研究分析' },
       { name: 'deep-research', label: '深度網路研究' },
@@ -111,6 +114,7 @@ export const AGENTS_META: AgentMeta[] = [
     topics: ['Prompt Injection', 'LLM 漏洞', '安全掃描', '防禦策略'],
     skills: [
       { name: 'ultraprobe-scan', label: 'AI 漏洞掃描' },
+      { name: 'ultraprobe-api', label: 'UltraProbe API 掃描' },
       { name: 'market-research', label: '市場研究分析' },
       { name: 'deep-research', label: '深度網路研究' },
       { name: 'youtube-transcript', label: 'YouTube 字幕擷取' },

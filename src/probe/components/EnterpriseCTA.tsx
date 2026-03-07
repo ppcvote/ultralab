@@ -2,8 +2,8 @@ import { ArrowRight, Users, FileCheck, Clock } from 'lucide-react'
 
 const DIFFERENTIATORS = [
   { icon: Users, label: '專屬安全團隊' },
-  { icon: FileCheck, label: '合規報告 (SOC 2 / ISO 27001)' },
-  { icon: Clock, label: 'SLA 保證 < 24h 回應' },
+  { icon: FileCheck, label: '客製攻擊向量' },
+  { icon: Clock, label: '優先回應' },
 ]
 
 export default function EnterpriseCTA() {

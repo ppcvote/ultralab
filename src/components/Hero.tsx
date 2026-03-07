@@ -52,14 +52,15 @@ interface TLine {
 
 const TERM_LINES: TLine[] = [
   { type: 'cmd', text: 'ultra-lab deploy --ai-product-studio' },
-  { type: 'ok', text: 'MindThread SaaS', meta: 'Threads 自動化上線中', time: '120ms' },
-  { type: 'ok', text: 'AI Agent fleet (4 agents)', meta: 'deployed', time: '340ms' },
+  { type: 'ok', text: 'MindThread SaaS v1.0', meta: '20+ 帳號 · 50+ 篇/天 · AI 優化+排程+Agent API', time: '120ms' },
+  { type: 'ok', text: 'AI Agent fleet (4 agents)', meta: '$0/月 · 16+ 篇/天 · 跨平台', time: '340ms' },
+  { type: 'ok', text: 'UltraProbe security scan', meta: '19 攻擊向量 · 免費掃描', time: '412ms' },
   { type: 'ok', text: 'Multi-LLM routing', meta: 'Gemini + Claude', time: '89ms' },
-  { type: 'ok', text: 'UltraProbe security scan', meta: '19/19 passed', time: '412ms' },
-  { type: 'ok', text: 'Client product deployed', meta: 'production-ready', time: '1.2s' },
+  { type: 'ok', text: 'Agent-Ready API', meta: 'Bearer Auth · JSON · Crypto payments', time: '52ms' },
+  { type: 'ok', text: 'Full-stack infra', meta: 'React + Firebase + Vercel', time: '1.2s' },
   { type: 'divider' },
   { type: 'status', text: 'ALL SYSTEMS OPERATIONAL' },
-  { type: 'summary', text: 'MindThread + AI Agents 雙主力 · 4 products shipped · zero downtime' },
+  { type: 'summary', text: 'MindThread v1.0 + AI Agents · 923K+ views generated · zero downtime' },
 ]
 
 function LiveTerminal() {
@@ -213,7 +214,7 @@ export default function Hero() {
         {/* Subtitle */}
         <p className="mt-6 sm:mt-8 text-lg sm:text-2xl lg:text-3xl text-slate-200 font-light animate-fade-in-up delay-200">
           我們造 AI 產品，也幫你造。<br className="hidden sm:block" />
-          <span className="text-slate-400">MindThread SaaS + AI Agent 艦隊，雙主力產品驗證的建置能力。</span>
+          <span className="text-slate-400">MindThread v1.0 正式版 + AI Agent $0 運營艦隊 + Agent-Ready API，四個產品驗證的全端建置能力。</span>
         </p>
 
         {/* CTA */}

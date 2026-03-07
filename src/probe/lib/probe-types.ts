@@ -37,9 +37,24 @@ export interface ChatbotDetection {
   evidence: string
 }
 
+export interface DefenseCheck {
+  id: string
+  name: string
+  defended: boolean
+  confidence: number
+  evidence: string
+}
+
+export interface DeterministicResult {
+  checks: DefenseCheck[]
+  score: number
+  coverage: string
+}
+
 export interface PromptScanResult {
   ok: true
   analysis: ScanAnalysis
+  deterministic?: DeterministicResult
 }
 
 export interface UrlScanResult {

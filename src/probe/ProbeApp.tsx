@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { ScanMode } from './lib/probe-types'
 import { useProbeScan } from './hooks/useProbeScan'
 import ProbeNavbar from './components/ProbeNavbar'
@@ -20,11 +20,11 @@ import './probe.css'
 
 function useProbeMeta() {
   useEffect(() => {
-    document.title = 'UltraProbe — 全球首個免費 AI 安全掃描平台 | Ultra Lab'
+    document.title = 'UltraProbe — 免費 AI Prompt Injection 掃描器 | Ultra Lab'
 
     const metaDescription = document.querySelector('meta[name="description"]')
     if (metaDescription) {
-      metaDescription.setAttribute('content', '免費掃描你的 AI 系統，偵測 Prompt Injection 漏洞。Ultra Lab 專業團隊打造，涵蓋 OWASP LLM Top 10 攻擊向量。')
+      metaDescription.setAttribute('content', '免費掃描你的 AI 系統，偵測 Prompt Injection 漏洞。確定性規則引擎 + AI 深度分析，涵蓋 OWASP LLM Top 10 攻擊向量。')
     }
 
     const themeColor = document.querySelector('meta[name="theme-color"]')
@@ -35,6 +35,7 @@ function useProbeMeta() {
 export default function ProbeApp() {
   useProbeMeta()
   const [scanMode, setScanMode] = useState<ScanMode>('prompt')
+  const resultsRef = useRef<HTMLDivElement>(null)
 
   const promptScan = useProbeScan('prompt')
   const urlScan = useProbeScan('url')
@@ -50,6 +51,13 @@ export default function ProbeApp() {
 
   const showLandingPage = activeScan.scanState === 'idle' && !rivalScan.needsManualInput
   const showResults = activeScan.scanState === 'done' && activeScan.result !== null
+
+  // Auto-scroll to results when scan completes
+  useEffect(() => {
+    if (showResults && resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [showResults])
 
   return (
     <div className="probe-app min-h-screen bg-probe-grid text-slate-50" style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}>
@@ -96,17 +104,21 @@ export default function ProbeApp() {
           </div>
         )}
 
-        {showResults && activeScan.result && (
-          activeScan.result.type === 'rival'
-            ? <RivalResults analysis={activeScan.result.data.analysis} />
-            : <ScanResults result={activeScan.result} />
-        )}
+        <div ref={resultsRef}>
+          {showResults && activeScan.result && (
+            activeScan.result.type === 'rival'
+              ? <RivalResults analysis={activeScan.result.data.analysis} />
+              : <ScanResults result={activeScan.result} />
+          )}
+        </div>
 
         {(showLandingPage || showResults) && <ExpertiseSection />}
 
         {(showLandingPage || showResults) && <ApiPricingSection />}
 
-        {showLandingPage && <DeveloperSection />}
+        <div id="api-docs">
+          {showLandingPage && <DeveloperSection />}
+        </div>
 
         {showLandingPage && <LiveStatsSection />}
 

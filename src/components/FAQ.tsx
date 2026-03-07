@@ -11,27 +11,27 @@ const faqItems: FAQItem[] = [
   {
     question: 'Ultra Lab 到底在做什麼？',
     answer:
-      'Ultra Lab 是一間 AI Product Studio — 我們自己造 AI 產品，也幫客戶造。目前已有四個自有產品上線運營中：MindThread（Threads 自動化 SaaS）、UltraProbe（AI 安全掃描器）、AI Agents（品牌推廣 Agent 艦隊）、Ultra Advisor（財務顧問平台）。這些產品就是我們能力的最佳證明。',
+      'Ultra Lab 是一間 AI Product Studio — 我們自己造 AI 產品，也幫客戶造。目前已有四個自有產品上線運營中：MindThread v1.0（Threads AI 自動化 SaaS，20+ 帳號、50+ 篇/天、923K+ 觀看數）、AI Agent 艦隊（四個跨平台 Agent，$0/月運營）、UltraProbe（AI 安全掃描器）、Ultra Advisor（財務顧問平台）。這些產品就是我們能力的最佳證明。',
   },
   {
-    question: 'Ultra Lab 和 MindThread / Ultra Advisor 是什麼關係？',
+    question: 'MindThread 有什麼功能？和一般排程工具有何不同？',
     answer:
-      '都是 Ultra Lab 造的產品。MindThread 是我們打造的 Threads 自動化 SaaS，已獨立為子品牌（mindthread.tw）。Ultra Advisor 是 AI 驅動的財務顧問平台。它們和 UltraProbe、AI Agents 一起，構成 Ultra Lab 的產品組合 — 每一個都是我們全端建置能力的活案例。',
+      'MindThread v1.0 不只是排程工具。它串接 Meta 官方 Threads API + Gemini AI，核心差異在於：① 5 種高互動公式自動生成文案（爭議觀點、好奇鉤子、二選一等）② 基於互動數據（留言、分享、按讚）自動優化提示詞 — 每篇都比上一篇更好 ③ 多帳號智能排程（時段優化、頻率建議）④ Agent-Ready API 支援 AI Agent 直接串接。已服務 20+ 帳號、日產 50+ 篇、累計 923K+ 觀看數，台灣零競品。',
   },
   {
-    question: 'AI Agent 部署要多久？可以部署在哪些平台？',
+    question: 'AI Agent 部署要多久？運營成本多少？',
     answer:
-      '三天。我們使用 OpenClaw + Gemini 2.5 Flash 架構，支援 Moltbook、Discord、Telegram、LINE 等平台。Agent 可以自主發文、互動回覆、跨平台協作。Ultra Lab 自己的四個 Agent 每天 24 小時運行中，就是最好的 demo。',
+      '三天上線，每月 $0 運營成本。使用 OpenClaw 開源框架 + Gemini 2.5 Flash 免費額度，支援 Moltbook、Discord、Telegram、LINE。Agent 具備策略感知發文、自動互動回覆、跨 Agent 協作能力。MindThread 提供 Agent-Ready API（Bearer Auth + JSON），AI Agent 可直接串接文案生成、排程、加密貨幣支付等功能。Ultra Lab 自己的四個 Agent 每天產出 16+ 篇內容、12+ 次互動，全自動 24 小時運行。',
   },
   {
     question: 'UltraProbe 是做什麼的？',
     answer:
-      'UltraProbe 是我們自研的 AI 安全掃描器，針對 AI 應用進行 19 種攻擊向量的自動化滲透測試，包括 Prompt Injection、越獄攻擊、資料洩漏等。免費掃描，幾分鐘內出報告。目前是台灣唯一針對 AI 系統的安全掃描工具。',
+      'UltraProbe 是我們自研的 AI 安全掃描器，針對 AI 應用進行 19 種攻擊向量的自動化滲透測試，包括 Prompt Injection、越獄攻擊、資料洩漏、SSRF、RCE 等。另有 URL 聊天機器人偵測和競品分析功能。完全免費掃描，幾分鐘內出報告。',
   },
   {
     question: 'AI 產品建置服務包含什麼？多快可以上線？',
     answer:
-      '全端建置：React + TypeScript 前端、Firebase 後端、Vercel 部署、LLM API 整合、管理後台、訂閱系統。兩週內上線 MVP。我們所有自有產品都用同套架構，經過生產環境驗證。',
+      '全端建置：React + TypeScript 前端、Firebase 後端、Vercel 部署、LLM API 整合、管理後台、訂閱系統。兩週內上線 MVP。MindThread、Ultra Advisor 全部同套架構，經過生產環境驗證 — 我們幫你也造一個。',
   },
   {
     question: '可以免費諮詢嗎？',

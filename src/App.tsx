@@ -15,6 +15,7 @@ const MinYiApp = lazy(() => import('./minyi/MinYiApp'))
 const ProbeApp = lazy(() => import('./probe/ProbeApp'))
 const AgentApp = lazy(() => import('./agent/AgentApp'))
 const AgentPartnerPage = lazy(() => import('./agent/AgentPartnerPage'))
+const DevApp = lazy(() => import('./developers/DevApp'))
 
 function ScrollProgress() {
   const [progress, setProgress] = useState(0)
@@ -78,8 +79,17 @@ export default function App() {
   const isAdmin = path.startsWith('/admin')
   const isMinYi = path.startsWith('/minyi')
   const isProbe = path.startsWith('/probe')
+  const isDev = path.startsWith('/developers')
   const isAgentPartner = path.startsWith('/agent-partner')
   const isAgent = path.startsWith('/agent')
+
+  if (isDev) {
+    return (
+      <Suspense fallback={<LoadingSpinner />}>
+        <DevApp />
+      </Suspense>
+    )
+  }
 
   if (isAgentPartner) {
     return (

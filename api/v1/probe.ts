@@ -15,6 +15,7 @@ import {
   detectEmailValidationIssues,
   isAllowedUrl,
 } from '../_probe-prompts.js'
+import { runDeterministicScan } from '../_deterministic-scanner.js'
 
 const SAFETY_SETTINGS = [
   { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
@@ -102,13 +103,28 @@ async function handleScanPrompt(req: VercelRequest, res: VercelResponse, auth: {
     return res.status(400).json({ error: lang === 'zh-TW' ? 'Prompt 不可超過 10,000 字元。' : 'Prompt cannot exceed 10,000 characters.' })
   }
 
+  // Phase 1: Deterministic scan
+  const deterministic = runDeterministicScan(prompt)
+
+  // Phase 2: LLM analysis with deterministic context
+  const deterministicContext = deterministic.checks
+    .map(c => `- ${c.id}: ${c.defended ? 'DEFENDED' : 'NOT DEFENDED'} (${c.evidence})`)
+    .join('\n')
+  const contextPrefix = `[Pre-scan deterministic analysis — coverage ${deterministic.coverage}]:\n${deterministicContext}\n\nUse these as ground truth. Focus on nuances regex cannot catch.\n\n`
+
   const gemini = getGeminiClient()
   const model = gemini.getGenerativeModel({ model: GEMINI_MODEL })
   const promptText = getPromptAnalysisPrompt(lang, prompt)
 
   const result = await model.generateContent({
-    contents: [{ role: 'user', parts: [{ text: promptText }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
+    contents: [{ role: 'user', parts: [{ text: contextPrefix + promptText }] }],
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 4096,
+      responseMimeType: 'application/json',
+      // @ts-expect-error — thinkingConfig not yet in SDK types
+      thinkingConfig: { thinkingBudget: 0 },
+    },
     safetySettings: SAFETY_SETTINGS,
   })
 
@@ -120,6 +136,7 @@ async function handleScanPrompt(req: VercelRequest, res: VercelResponse, auth: {
   return res.status(200).json({
     ok: true,
     analysis,
+    deterministic,
     usage: { current: auth.usage + 1, limit: auth.limit, tier: auth.tier },
   })
 }
@@ -165,7 +182,13 @@ async function handleScanUrl(req: VercelRequest, res: VercelResponse, auth: { ap
 
   const result = await model.generateContent({
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 4096, responseMimeType: 'application/json' },
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 4096,
+      responseMimeType: 'application/json',
+      // @ts-expect-error — thinkingConfig not yet in SDK types
+      thinkingConfig: { thinkingBudget: 0 },
+    },
     safetySettings: SAFETY_SETTINGS,
   })
 
@@ -182,7 +205,7 @@ async function handleScanUrl(req: VercelRequest, res: VercelResponse, auth: { ap
   })
 }
 
-async function handleUsage(req: VercelRequest, res: VercelResponse, auth: { apiKey: string, tier: string, limit: number | null }) {
+async function handleUsage(_req: VercelRequest, res: VercelResponse, auth: { apiKey: string, tier: string, limit: number | null }) {
   const db = getAdminDb()
   const now = new Date()
   const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`

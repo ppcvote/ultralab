@@ -47,7 +47,7 @@ export async function validateApiKey(apiKey: string): Promise<ApiKeyValidation> 
   }
 }
 
-export async function checkApiKeyUsage(apiKey: string, tier: string, monthlyLimit: number | null): Promise<{
+export async function checkApiKeyUsage(apiKey: string, _tier: string, monthlyLimit: number | null): Promise<{
   allowed: boolean
   usage: number
   limit: number | null

@@ -279,6 +279,8 @@ async function analyzeWithGemini(url: string, content: string, res: VercelRespon
         temperature: 0.4,
         maxOutputTokens: 8192,
         responseMimeType: 'application/json',
+        // @ts-expect-error — thinkingConfig not yet in SDK types
+        thinkingConfig: { thinkingBudget: 0 },
       },
       safetySettings: [
         { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },

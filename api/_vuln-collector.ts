@@ -161,7 +161,6 @@ export async function getVulnerabilityStats(days: number = 30): Promise<{
   const averageScore = Math.round(totalScore / totalScans)
 
   // Calculate average grade
-  const gradeMap: Record<string, number> = { A: 5, B: 4, C: 3, D: 2, E: 1, F: 0 }
   const reverseMap = ['F', 'E', 'D', 'C', 'B', 'A']
   const gradeIndex = Math.floor(averageScore / 20)
   const averageGrade = reverseMap[Math.min(gradeIndex, 5)]
